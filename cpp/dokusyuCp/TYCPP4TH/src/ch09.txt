@@ -1,0 +1,733 @@
+■第9章：目次■
+･････････････････････
+●リスト9.1：例【1】
+●リスト9.1：例【2】
+●リスト9.1：例【3】
+●リスト9.2：例【1】
+●リスト9.2：例【2】
+●リスト9.2：例【3】
+●リスト9.3：例【1】
+●リスト9.3：例【2】
+●リスト9.3：例【3】
+●リスト9.3：例【4】
+●リスト9.3：例【5】
+●リスト9.3：練習問題【2】
+●リスト9.4：例【1】
+●リスト9.4：例【2】
+●リスト9.5：例【1】
+●リスト9.5：例【2】
+●リスト9.6：例【1】
+●リスト9.6：例【2】
+●リスト9.7：例【1】
+●リスト9.7：例【2】
+●リスト第9章：総合理解度チェック【1】
+･････････････････････
+
+●リスト9.1：例【1】
+#include <iostream>
+using namespace std;
+
+ostream &setup(ostream &stream)
+{
+  stream.width(10);
+  stream.precision(4);
+  stream.fill('*');
+
+  return stream;
+}
+
+int main()
+{
+  cout << setup << 123.123456 << "\n";
+
+  return 0;
+}
+
+●リスト9.1：例【2】
+#include <iostream>
+using namespace std;
+
+// 警告
+ostream &atn(ostream &stream)
+{
+  stream << "警告: ";
+
+  return stream;
+}
+
+// 注意書き
+ostream &note(ostream &stream)
+{
+  stream << "注意: ";
+
+  return stream;
+}
+
+int main()
+{
+  cout << atn << "高圧回路\n";
+  cout << note << "消灯\n";
+
+  return 0;
+}
+
+●リスト9.1：例【3】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+// 簡単な入力マニピュレータ
+istream &getpass(istream &stream)
+{
+  cout << '\a';  // ビープ音を鳴らす
+  cout << "パスワードを入力: ";
+
+  return stream;
+}
+
+int main()
+{
+  char pw[80];
+
+  do {
+    cin >> getpass >> pw;
+  } while (strcmp(pw, "password"));
+
+  cout << "ログオン完了\n";
+
+  return 0;
+}
+
+●リスト9.2：例【1】
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main()
+{
+  ofstream fout("test");  // 出力ファイルを作成する
+
+  if(!fout) {
+    cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+
+  fout << "Hello!\n";
+  fout << 100 << ' ' << hex << 100 << endl;
+
+  fout.close();
+  ifstream fin("test"); // 入力ファイルを開く
+
+  if(!fin) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  char str[80];
+  int i;
+
+  fin >> str >> i;
+  cout << str << ' ' << i << endl;
+
+  fin.close();
+
+  return 0;
+}
+
+●リスト9.2：例【2】
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  if(argc!=2) {
+    cout << "使い方: WRITE <ファイル名>\n";
+    return 1;
+  }
+  ofstream out(argv[1]); // 出力ファイル
+
+  if(!out) {
+    cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+
+  char str[80];
+  cout << "文字列をディスクに書き込み、$で停止します\n";
+
+  do {
+    cout << ": ";
+    cin >> str;
+    out << str << endl;
+  } while (*str != '$');
+
+  out.close();
+  return 0;
+}
+
+●リスト9.2：例【3】
+// スペースを|に変換する
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  if(argc!=3) {
+    cout << "使い方: CONVERT <入力ファイル名> <出力ファイル名>\n";
+    return 1;
+  }
+
+  ifstream fin(argv[1]);   // 入力ファイルを開く
+  ofstream fout(argv[2]);  // 出力ファイルを作成する
+
+  if(!fout) {
+    cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+  if(!fin) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  char ch;
+
+  fin.unsetf(ios::skipws);  // スペースをスキップしない
+  while(!fin.eof()) {
+    fin >> ch;
+    if(ch==' ') ch = '|';
+    if(!fin.eof()) fout << ch;
+  }
+
+  fin.close();
+  fout.close();
+
+  return 0;
+}
+
+●リスト9.3：例【1】
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  char ch;
+
+  if(argc!=2) {
+    cout << "使い方: PR <ファイル名>\n";
+    return 1;
+  }
+
+  ifstream in(argv[1], ios::in | ios::binary);
+  if(!in) {
+    cout << "ファイルが開けません\n";
+    return 1;
+  }
+
+  while(!in.eof()) {
+    in.get(ch);
+    cout << ch;
+  }
+
+  in.close();
+
+  return 0;
+}
+
+●リスト9.3：例【2】
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  char ch;
+
+  if(argc!=2) {
+    cout << "使い方: WRITE <ファイル名>\n";
+    return 1;
+  }
+
+  ofstream out(argv[1], ios::out | ios::binary);
+
+  if(!out) {
+    cout << "ファイルが開けません\n";
+    return 1;
+  }
+
+  cout << "$で入力を終了します\n";
+  do {
+    cout << ": ";
+    cin.get(ch);
+    out.put(ch);
+  } while (ch!='$');
+
+  out.close();
+
+  return 0;
+}
+
+●リスト9.3：例【3】
+#include <iostream>
+#include <fstream>
+#include <cstring>
+using namespace std;
+
+int main()
+{
+  ofstream out("test", ios::out | ios::binary);
+
+  if(!out) {
+    cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+
+  double num = 100.45;
+  char str[] = "This is a test";
+
+  out.write((char *) &num, sizeof(double));
+  out.write(str, strlen(str));
+ 
+  out.close();
+
+  return 0;
+}
+
+●リスト9.3：例【4】
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main()
+{
+  ifstream in("test", ios::in | ios::binary);
+
+  if(!in) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  double num;
+  char str[80];
+
+  in.read((char *) &num, sizeof(double));
+  in.read(str, 14);
+  str[14] = '\0'; // ヌル終端文字列
+  cout << num << ' ' << str << "\n";
+
+  in.close();
+
+  return 0;
+}
+
+●リスト9.3：例【5】
+// gcount()の働きを示す
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main()
+{
+  ofstream out("test", ios::out | ios::binary);
+
+  if(!out) {
+    cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+
+  double nums[4] = {1.1, 2.2, 3.3, 4.4 };
+  out.write((char *) nums, sizeof(nums));
+  out.close();
+
+  ifstream in("test", ios::in | ios::binary);
+
+  if(!in) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  in.read((char *) &nums, sizeof(nums));
+
+  int i;
+  for(i=0; i<4; i++) 
+    cout << nums[i] << ' ';
+
+  cout << "\n";
+
+  cout << in.gcount() << " 文字を読み込みました\n";
+  in.close();
+
+  return 0;
+}
+
+●リスト9.3：練習問題【2】
+class account {
+  int custnum;
+  char name[80];
+  double balance;
+public:
+  account(int c, char *n, double b) 
+  {
+    custnum = c;
+    strcpy(name, n);
+    balance = b;
+  }
+  // ここに挿入子を作成する
+};
+
+●リスト9.4：例【1】
+// getline()を使用して、スペースを含む文字列を読み取る
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main()
+{ 
+  char str[80];
+
+  cout << "名前を入力する: ";
+  cin.getline(str, 79);
+
+  cout << str << "\n";
+
+  return 0;
+}
+
+●リスト9.4：例【2】
+// peek()の使用例
+#include <iostream>
+#include <fstream>
+#include <cctype>
+#include <cstdlib>
+using namespace std;
+
+int main()
+{ 
+  char ch;
+
+  ofstream out("test", ios::out | ios::binary);
+
+  if(!out) {
+    cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+  char str[80], *p;
+ 
+  out << 123 << "this is a test" << 23;
+  out << "Hello there!" << 99 << "sdf" << endl;
+  out.close();
+  
+  ifstream in("test", ios::in | ios::binary);
+
+  if(!in) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  do {
+    p = str;
+    ch = in.peek(); // 次の文字の種類を見る
+
+    if(isdigit(ch)) {
+      while(isdigit(*p=in.get())) p++; // 整数を読み取る
+      in.putback(*p); // 文字をストリームに返す
+      *p = '\0'; // 文字列をヌルで終了させる
+      cout << "整数: " << atoi(str);
+    }
+    else if(isalpha(ch)) { // 文字列を読み取る
+      while(isalpha(*p=in.get())) p++;
+      in.putback(*p); // 文字をストリームに返す
+      *p = '\0'; // 文字列をヌルで終了させる
+      cout << "文字列: " << str;
+    }
+    else in.get(); // 無視
+    cout << "\n";
+  } while(!in.eof());
+  
+  in.close();
+  return 0;
+}
+
+●リスト9.5：例【1】
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  if(argc!=4) {
+    cout << "使い方: CHANGE <ファイル名> <バイト> <文字>\n";
+    return 1;
+  }
+
+  fstream out(argv[1], ios::in | ios::out | ios::binary);
+
+  if(!out) {
+    cout << "ファイルが開けません\n";
+    return 1;
+  }
+
+  out.seekp(atoi(argv[2]), ios::beg);
+  out.put(*argv[3]);
+  out.close();
+
+  return 0;
+}
+
+●リスト9.5：例【2】
+// seekg()の働きを示す
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  char ch;
+
+  if(argc!=3) {
+    cout << "使い方: LOCATE <ファイル名> <位置>\n";
+    return 1;
+  }
+
+  ifstream in(argv[1], ios::in | ios::binary);
+
+  if(!in) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  in.seekg(atoi(argv[2]), ios::beg);
+
+  while(!in.eof()) { 
+    in.get(ch);
+    cout << ch;
+  }
+
+  in.close();
+  return 0;
+}
+
+●リスト9.6：例【1】
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+void checkstatus(ifstream &in);
+
+int main(int argc, char *argv[])
+{
+  if(argc!=2) {
+    cout << "使い方: DISPLAY <ファイル名>\n";
+    return 1;
+  }
+
+  ifstream in(argv[1]);
+
+  if(!in) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  char c;
+  while(in.get(c)) {
+    cout << c;
+    checkstatus(in);
+  }
+
+  checkstatus(in);  // 最終状態をチェックする
+  in.close();
+
+  return 0;
+}
+
+void checkstatus(ifstream &in)
+{
+  ios::iostate i;
+  i = in.rdstate();
+  
+  if(i & ios::eofbit) 
+    cout << "EOFが見つかりました\n";
+  else if(i & ios::failbit)
+    cout << "致命的ではない入出力エラー\n";
+  else if(i & ios::badbit)
+    cout << "致命的な入出力エラー\n";
+}
+
+●リスト9.6：例【2】
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  char ch;
+
+  if(argc!=2) {
+    cout << "使い方: PR <ファイル名>\n";
+    return 1;
+  }
+
+  ifstream in(argv[1]);
+
+  if(!in) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  while(!in.eof()) { 
+    in.get(ch);
+    // エラーの有無をチェック
+    if(!in.good() && !in.eof()) {
+      cout << "入出力エラー...終了\n";
+      return 1;
+    }
+    cout << ch;
+  }
+
+  in.close();
+
+  return 0;
+}
+
+●リスト9.7：例【1】
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+class coord {
+  int x, y;
+public:
+  coord(int i, int j) { x = i; y = j; }
+  friend ostream &operator<<(ostream &stream, coord ob);
+  friend istream &operator>>(istream &stream, coord &ob);
+};
+
+ostream &operator<<(ostream &stream, coord ob)
+{
+  stream << ob.x << ' ' << ob.y << "\n";
+  return stream;
+}
+
+istream &operator>>(istream &stream, coord &ob)
+{
+  stream >> ob.x >> ob.y;
+  return stream;
+}
+
+int main()
+{
+  coord o1(1, 2), o2(3, 4);
+
+  ofstream out("test");
+
+  if(!out) {
+    cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+
+  out << o1 << o2;
+  out.close();
+
+  ifstream in("test");
+
+  if(!in) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  coord o3(0, 0), o4(0, 0);
+  in >> o3 >> o4;
+  cout << o3 << o4;
+  in.close();
+
+  return 0;
+}
+
+●リスト9.7：例【2】
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+using namespace std;
+
+// 警告
+ostream &atn(ostream &stream)
+{
+  stream << "警告: ";
+  return stream;
+}
+
+// 注意書き
+ostream &note(ostream &stream)
+{
+  stream << "注意: ";
+  return stream;
+}
+
+int main()
+{
+  ofstream out("test");
+
+  if(!out) {
+    cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+
+  // 画面への書き出し
+  cout << atn << "高圧回路\n";
+  cout << note << "消灯\n";
+
+  // ファイルへの書き出し
+  out << atn << "高圧回路\n";
+  out << note << "消灯\n";
+  out.close();
+
+  return 0;
+}
+
+●リスト第9章：総合理解度チェック【1】
+#include <fstream>
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+#define SIZE 40
+
+class inventory {
+  char item[SIZE]; // 品名
+  int onhand; // 在庫数量
+  double cost;  // 原価
+public:
+  inventory(char *i, int o, double c)
+  {
+    strcpy(item, i);
+    onhand = o;
+    cost = c;
+  }
+  void store(fstream &stream);
+  void retrieve(fstream &stream);
+  friend ostream &operator<<(ostream &stream, inventory ob);
+  friend istream &operator>>(istream &stream, inventory &ob);
+};
+
+ostream &operator<<(ostream &stream, inventory ob)
+{
+  stream << ob.item << ": 在庫数は: " << ob.onhand;
+  stream << " 費用は: $" << ob.cost << "\n";
+
+  return stream;
+}
+
+istream &operator>>(istream &stream, inventory &ob)
+{
+  cout << "品名を入力: ";
+  stream >> ob.item;
+  cout << "在庫数を入力: ";
+  stream >> ob.onhand;
+  cout << "原価を入力: ";
+  stream >> ob.cost;
+
+  return stream;
+}

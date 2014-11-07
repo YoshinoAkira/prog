@@ -1,0 +1,1130 @@
+■第2章：目次■
+･････････････････････
+●リスト第2章：前章の理解度チェック【4】
+●リスト2.1
+●リスト2.1
+●リスト2.1：例【1】
+●リスト2.1：例【2】
+●リスト2.1：例【3】
+●リスト2.1：練習問題【3】
+●リスト2.2
+●リスト2.2：例【1】
+●リスト2.2：例【2】
+●リスト2.2：例【3】
+●リスト2.2：例【4】
+●リスト2.3
+●リスト2.3：例【1】
+●リスト2.4：例【1】
+●リスト2.5
+●リスト2.5：例【1】
+●リスト2.5：例【1】
+●リスト2.5：例【2】
+●リスト2.5：例【3】
+●リスト2.5：例【4】
+●リスト2.6
+●リスト2.6：例【1】
+●リスト2.6：例【2】
+●リスト2.7
+●リスト2.7
+●リスト2.7：例【1】
+●リスト2.7：例【2】
+●リスト第2章の理解度チェック【3】
+●リスト第2章の理解度チェック【6】
+●リスト第2章の理解度チェック【8】
+･････････････････････
+
+●リスト第2章：前章の理解度チェック【4】
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int i;
+public:
+.
+.
+.
+};
+
+int main()
+{
+  myclass ob;
+  ob.i = 10;
+.
+.
+.
+}
+
+●リスト2.1
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int a;
+public:
+  myclass(); // コンストラクタ
+  void show();
+};
+
+myclass::myclass()
+{
+  cout << "コンストラクタ呼び出し\n";
+  a = 10;
+}
+
+void myclass::show()
+{
+  cout << a << "\n";
+}
+
+int main()
+{
+  myclass ob;
+
+  ob.show();
+
+  return 0;
+}
+
+●リスト2.1
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int a;
+public:
+  myclass(); // コンストラクタ
+  ~myclass(); // デストラクタ
+  void show();
+};
+
+myclass::myclass()
+{
+  cout << "コンストラクタ呼び出し\n";
+  a = 10;
+}
+
+myclass::~myclass()
+{
+  cout << "デストラクタ呼び出し中\n";
+}
+
+void myclass::show()
+{
+  cout << a << "\n";
+}
+
+int main()
+{
+  myclass ob;
+
+  ob.show();
+
+  return 0;
+}
+
+●リスト例：2.1【1】
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 文字を保存するstackクラスを宣言する
+class stack { 
+  char stck[SIZE];    // スタック領域を確保する
+  int tos;            // スタック先頭の索引
+public:
+  stack();            // コンストラクタ
+  void push(char ch); // スタックに文字をプッシュする
+  char pop();         // スタックから文字をポップする
+};
+
+// スタックを初期化する
+stack::stack()
+{
+  cout << "スタックを生成する\n";
+  tos = 0;
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==SIZE) {
+    cout << "スタックは一杯です\n";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字をポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です\n";
+    return 0; // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+int main()
+{
+  // 自動的に初期化される2つのスタックを作成する
+  stack s1, s2;
+  int i;
+
+  s1.push('a');
+  s2.push('x');
+  s1.push('b');
+  s2.push('y');
+  s1.push('c');
+  s2.push('z');
+
+  for(i=0; i<3; i++) cout << "s1をポップする: " << s1.pop() << "\n";
+  for(i=0; i<3; i++) cout << "s2をポップする: " << s2.pop() << "\n";
+
+  return 0;
+}
+
+●リスト2.1：例【2】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+#define SIZE 255
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype();  // コンストラクタ
+  ~strtype(); // デストラクタ
+  void set(char *ptr);
+  void show();
+};
+
+// 文字列オブジェクトを初期化する
+strtype::strtype()
+{
+  p = (char *) malloc(SIZE);
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  *p = '\0';
+  len = 0;
+}
+
+// 文字列オブジェクトを破棄する際にメモリを解放する
+strtype::~strtype()
+{
+  cout << "pを解放する\n";
+  free(p);
+}
+
+void strtype::set(char *ptr)
+{
+  if(strlen(p) >= SIZE) {
+    cout << "文字列が大きすぎる\n";
+    return;
+  }
+  strcpy(p, ptr);
+  len = strlen(p);
+}
+
+void strtype::show()
+{
+  cout << p << " - 長さ: " << len;
+  cout << "\n";
+}
+
+int main()
+{
+  strtype s1, s2;
+
+  s1.set("This is a test.");
+  s2.set("I like C++.");
+  s1.show();
+  s2.show();
+
+  return 0;
+}
+
+●リスト2.1：例【3】
+#include <iostream>
+#include <ctime>
+using namespace std;
+
+class timer {
+  clock_t start;
+public:
+  timer(); // コンストラクタ
+  ~timer(); // デストラクタ
+};
+
+timer::timer()
+{
+  start = clock();
+}
+
+timer::~timer()
+{
+  clock_t end;
+  end = clock();
+  cout << "経過時間: "
+    << (end-start) / CLOCKS_PER_SEC << "\n";
+}
+
+int main()
+{
+  timer ob;
+  char c;
+
+  // 遅延 ...
+  cout << "最後が［ENTER］になるようにキーを入力: ";
+  cin >> c;
+
+  return 0;
+}
+
+●リスト2.1：練習問題【3】
+class sample {
+  double a, b, c;
+public:
+  double sample();  // エラーになる理由は？
+};
+
+●リスト2.2
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int a;
+public:
+  myclass(int x); // コンストラクタ
+  void show();
+};
+
+myclass::myclass(int x)
+{
+  cout << "コンストラクタ呼び出し\n";
+  a = x;
+}
+
+void myclass::show()
+{
+  cout << a << "\n";
+}
+
+int main()
+{
+  myclass ob(4);
+
+  ob.show();
+
+  return 0;
+}
+
+●リスト2.2：例【1】
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int a, b;
+public:
+  myclass(int x, int y); // コンストラクタ
+  void show();
+};
+
+myclass::myclass(int x, int y)
+{
+  cout << "コンストラクタ呼び出し\n";
+  a = x;
+  b = y;
+}
+
+void myclass::show()
+{
+  cout << a << ' ' << b << "\n";
+}
+
+int main()
+{
+  myclass ob(4, 7);
+  ob.show();
+  return 0;
+}
+
+●リスト2.2：例【2】
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 文字を保存するstackクラスを宣言する
+class stack { 
+  char stck[SIZE];    // スタック領域を確保する
+  int tos;            // スタック先頭の索引
+  char who;           // スタックを識別する
+public:
+  stack(char c);      // コンストラクタ
+  void push(char ch); // スタックに文字をプッシュする
+  char pop();         // スタックから文字をポップする
+};
+
+// スタックを初期化する
+stack::stack(char c)
+{
+  tos = 0;
+  who = c;
+  cout << "生成 スタック" << who << "\n";
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==SIZE) {
+    cout << "スタック" << who << "は一杯です\n";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字をポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタック" << who << "は空です\n";
+    return 0; // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+int main()
+{
+  // 自動的に初期化される2つのスタックを作成する
+  stack s1('A'), s2('B'); 
+  int i;
+
+  s1.push('a');
+  s2.push('x');
+  s1.push('b');
+  s2.push('y');
+  s1.push('c');
+  s2.push('z');
+
+  // これによってエラーメッセージが出力される
+  for(i=0; i<5; i++) cout << "s1をポップする: " << s1.pop() << "\n";
+  for(i=0; i<5; i++) cout << "s2をポップする: " << s2.pop() << "\n";
+
+  return 0;
+}
+
+●リスト2.2：例【3】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype(char *ptr);
+  ~strtype();
+  void show();
+};
+
+strtype::strtype(char *ptr)
+{
+  len = strlen(ptr);
+  p = (char *) malloc(len+1);
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(p, ptr);
+}
+
+strtype::~strtype()
+{
+  cout << "pを解放する\n";
+  free(p);
+}
+
+void strtype::show()
+{
+  cout << p << " - 長さ: " << len;
+  cout << "\n";
+}
+
+int main()
+{
+  strtype s1("This is a test."), s2("I like C++.");
+  s1.show();
+  s2.show();
+
+  return 0;
+}
+
+●リスト2.2：例【4】
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int i, j;
+public:
+  myclass(int a, int b);
+  void show();
+};
+
+myclass::myclass(int a, int b)
+{
+  i = a;
+  j = b;
+}
+
+void myclass::show()
+{
+  cout << i << ' ' << j << "\n";
+}
+
+int main()
+{
+  int x, y;
+
+  cout << "2つの整数を入力: ";
+  cin >> x >> y;
+
+  // 変数を使用してobを作成する
+  myclass ob(x, y);
+  ob.show();
+
+  return 0;
+}
+
+●リスト2.3
+// 単純な継承の例
+#include <iostream>
+using namespace std;
+
+// 基本クラスを定義する
+class B {
+  int i;
+public:
+  void set_i(int n);
+  int get_i();
+};
+
+// 派生クラスを定義する
+class D : public B {
+  int j;
+public:
+  void set_j(int n);
+  int mul();
+};
+
+// 基本クラス中の変数iを設定する
+void B::set_i(int n)
+{
+  i = n;
+}
+
+// 基本クラス中の変数iの値を返す
+int B::get_i()
+{
+  return i;
+}
+
+// 派生クラス中の変数jを設定する
+void D::set_j(int n)
+{
+  j = n;
+}
+
+// 基本クラス中の変数iの値に派生クラスの変数jの値を乗じた結果を返す
+int D::mul()
+{
+  // 派生クラスは、基本クラスの公開メンバ関数を呼び出すことができる
+  return j * get_i();
+}
+
+int main()
+{
+  D ob;
+
+  ob.set_i(10); // 基本クラス中のiを設定する
+  ob.set_j(4);  // 派生クラス中のjを設定する
+
+  cout << ob.mul() << "\n";  // 40を表示する
+
+  return 0;
+}
+
+●リスト2.3：例【1】
+// クラス継承の例
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+enum yn {no, yes};
+enum color {red, yellow, green, orange};
+void out(enum yn x);
+char *c[] = {
+  "赤", "黄", "緑", "オレンジ"};
+
+// 汎用fruitクラス
+class fruit {
+
+// この基本クラスでは、すべての要素が公開
+public: 
+  enum yn annual;  
+  enum yn perennial;
+  enum yn tree;
+  enum yn tropical;
+  enum color clr;
+  char name[40];
+};
+
+// Appleクラスを派生する
+class Apple : public fruit {
+  enum yn cooking;
+  enum yn crunchy;
+  enum yn eating;
+public:
+  void seta(char *n, enum color c, enum yn ck, enum yn crchy,
+            enum yn e);
+  void show();
+};
+
+// Orangeクラスを派生する
+class Orange : public fruit {
+  enum yn juice;
+  enum yn sour;
+  enum yn eating;
+public:
+  void seto(char *n, enum color c, enum yn j, enum yn sr, 
+            enum yn e);
+  void show();
+};
+
+void Apple::seta(char *n, enum color c, enum yn ck,
+                 enum yn crchy, enum yn e)
+{
+  strcpy(name, n);
+  annual = no;
+  perennial = yes;
+  tree = yes;
+  tropical = no;
+  clr = c;
+  cooking = ck;
+  crunchy = crchy;
+  eating = e;
+}
+
+void Orange::seto(char *n, enum color c, enum yn j,
+                  enum yn sr, enum yn e)
+{
+  strcpy(name, n);
+  annual = no;
+  perennial = yes;
+  tree = yes;
+  tropical = yes;
+  clr = c;
+  juice = j;
+  sour = sr;
+  eating = e;
+}
+
+void Apple::show()
+{
+  cout << name << " りんご: " << "\n";
+  cout << "一年生植物: ";  out(annual);
+  cout << "多年生植物: ";  out(perennial);
+  cout << "木: "; out(tree);
+  cout << "熱帯性: "; out(tropical);
+  cout << "色: " << c[clr] << "\n";
+  cout << "料理用: "; out(cooking);
+  cout << "かたい: ";  out(crunchy);
+  cout << "食用: ";  out(eating);
+  cout << "\n";
+}
+
+void Orange::show()
+{
+  cout << name << " オレンジ: " << "\n";
+  cout << "一年生植物: ";  out(annual);
+  cout << "多年生植物: ";  out(perennial);
+  cout << "木: ";  out(tree);
+  cout << "熱帯性: ";  out(tropical);
+  cout << "色: " << c[clr] << "\n";
+  cout << "ジュース用: ";  out(juice);
+  cout << "酸っぱい: ";  out(sour);
+  cout << "食用: ";  out(eating);
+  cout << "\n";
+}
+
+void out(enum yn x)
+{
+  if(x==no) cout << "no\n";
+  else cout << "yes\n";
+}
+
+int main()
+{
+  Apple a1, a2;
+  Orange o1, o2;
+
+  a1.seta("レッドデリシャス", red, no, yes, yes);
+  a2.seta("ジョナサン", red, yes, no, yes);
+
+  o1.seto("ネーブル", orange, no, no, yes);
+  o2.seto("バレンシア", orange, yes, yes, no);
+
+  a1.show();
+  a2.show();
+
+  o1.show();
+  o2.show();
+
+  return 0;
+}
+
+●リスト2.4：例【1】
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int a;
+public:
+  myclass(int x); // コンストラクタ
+  int get();
+};
+
+myclass::myclass(int x)
+{
+  a = x;
+}
+
+int myclass::get()
+{
+  return a;
+}
+
+int main()
+{
+  myclass ob(120);  // オブジェクトを作成する
+  myclass *p;       // オブジェクトへのポインタを作成する
+
+  p = &ob;          // obのアドレスをpに格納する
+
+  cout << "オブジェクトを使った値: " << ob.get();
+  cout << "\n";
+  cout << "ポインタを使った値: " << p->get();
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト2.5
+union { // 無名共用体
+  int i;
+  char ch[4];
+} ;
+
+i = 10; // 変数iにアクセスし、ディレクトリを変更する
+ch[0] = 'X';
+
+●リスト2.5：例【1】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+// structを使用してクラス型を定義する
+struct st_type {
+  st_type(double b, char *n);
+  void show();
+private:
+  double balance;
+  char name[40];
+} ;
+
+st_type::st_type(double b, char *n)
+{
+  balance = b;
+  strcpy(name, n);
+}
+
+void st_type::show()
+{
+  cout << "名前: " << name;
+  cout << ": $" << balance;
+  if(balance<0.0) cout << "***";
+  cout << "\n";
+}
+
+int main()
+{
+  st_type acc1(100.12, "Johnson");
+  st_type acc2(-12.34, "Hedricks");
+
+  acc1.show();
+  acc2.show();
+
+  return 0;
+}
+
+●リスト2.5：例【1】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class cl_type {
+  double balance;
+  char name[40];
+public:
+  cl_type(double b, char *n);
+  void show();
+} ;
+
+cl_type::cl_type(double b, char *n)
+{
+  balance = b;
+  strcpy(name, n);
+}
+
+void cl_type::show()
+{
+  cout << "名前: " << name;
+  cout << ": $" << balance;
+  if(balance<0.0) cout << "***";
+  cout << "\n";
+}
+
+int main()
+{
+  cl_type acc1(100.12, "Johnson");
+  cl_type acc2(-12.34, "Hedricks");
+
+  acc1.show();
+  acc2.show();
+
+  return 0;
+}
+
+●リスト2.5：例【2】
+#include <iostream>
+using namespace std;
+
+union bits {
+  bits(double n);
+  void show_bits();
+  double d;
+  unsigned char c[sizeof(double)];
+};
+
+bits::bits(double n)
+{
+  d = n;
+}
+
+void bits::show_bits()
+{
+  int i, j;
+  for(j = sizeof(double)-1; j>=0; j--) {
+    cout << "バイト単位のビットパターン " << j << ": ";
+    for(i = 128; i; i >>= 1) 
+      if(i & c[j]) cout << "1";
+      else cout << "0";
+    cout << "\n";
+  }
+}
+
+int main()
+{
+  bits ob(1991.829);
+  ob.show_bits();
+  return 0;
+}
+
+●リスト2.5：例【3】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+struct strtype {
+  strtype(char *ptr);
+  ~strtype();
+  void show();
+private:
+  char *p;
+  int len;
+};
+
+strtype::strtype(char *ptr)
+{
+  len = strlen(ptr);
+  p = (char *) malloc(len+1);
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(p, ptr);
+}
+
+strtype::~strtype()
+{
+  cout << "pを解放する\n";
+  free(p);
+}
+
+void strtype::show()
+{
+  cout << p << " - 長さ: " << len;
+  cout << "\n";
+}
+
+int main()
+{
+  strtype s1("This is a test."), s2("I like C++.");
+
+  s1.show();
+  s2.show();
+
+  return 0;
+}
+
+●リスト2.5：例【4】
+// 無名共用体を使用する
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  union {
+    unsigned char bytes[8];
+    double value;
+  };
+  int i;
+  value = 859345.324;
+
+  // double値内のバイトを表示する
+  for(i=0; i<8; i++)
+    cout << (int) bytes[i] << " ";
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト2.6
+// インライン関数の例
+#include <iostream>
+using namespace std;
+
+inline int even(int x) 
+{
+  return !(x%2);
+}
+
+int main()
+{
+  if(even(10)) cout << "10は偶数です\n";
+  if(even(11)) cout << "11は偶数です\n";
+
+  return 0;
+}
+
+●リスト2.6：例【1】
+// インラインメンバ関数の例
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i, j;
+public:
+  samp(int a, int b);
+  int divisible(); // 定義でインライン化する
+};
+
+samp::samp(int a, int b)
+{
+  i = a;
+  j = b;
+}
+
+/* iがjによって割り切れる場合に1を返す
+   このメンバ関数はインラインで展開される
+*/
+inline int samp::divisible()
+{
+  return !(i%j);
+}
+
+int main()
+{
+  samp ob1(10, 2), ob2(10, 3);
+
+  // これは真
+  if(ob1.divisible()) cout << "10は2で割り切れる\n";
+
+  // これは偽
+  if(ob2.divisible()) cout << "10は3で割り切れる\n";
+
+  return 0;
+}
+
+●リスト2.6：例【2】
+#include <iostream>
+using namespace std;
+
+// min()関数を3とおりにオーバーロードする
+// 整数
+inline int min(int a, int b)
+{
+  return a<b ? a : b;
+}
+
+// 長整数
+inline long min(long a, long b)
+{
+  return a<b ? a : b;
+}
+
+// 倍精度浮動小数点数
+inline double min(double a, double b)
+{
+  return a<b ? a : b;
+}
+
+int main()
+{
+  cout << min(-10, 10) << "\n";
+  cout << min(-10.01, 100.002) << "\n";
+  cout << min(-10L, 12L) << "\n";
+
+  return 0;
+}
+
+●リスト2.7
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i, j;
+public:
+  samp(int a, int b);
+
+  /* divisible()をここで定義すると、
+     自動的にインライン化される */
+  int divisible() { return !(i%j); }
+};
+
+samp::samp(int a, int b)
+{
+  i = a;
+  j = b;
+}
+
+int main()
+{
+  samp ob1(10, 2), ob2(10, 3);
+
+  // これは真
+  if(ob1.divisible()) cout << "10は2で割り切れる\n";
+
+  // これは偽
+  if(ob2.divisible()) cout << "10は3で割り切れる\n";
+
+  return 0;
+}
+
+●リスト2.7
+class samp {
+  int i, j;
+public:
+  samp(int a, int b);
+
+  /* divisible()をここで定義すると、
+     自動的にインライン化される */
+  int divisible()
+  { 
+    return !(i%j);
+  }
+};
+
+●リスト2.7：例【1】
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i, j;
+public:
+  // インラインコンストラクタ
+  samp(int a, int b) { i = a; j = b; }
+  int divisible() { return !(i%j); }
+};
+
+●リスト2.7：例【2】
+class myclass {
+  int i;
+public:
+  myclass(int n) { i = n; }
+  void show() { cout << i; }
+};
+
+●リスト第2章の理解度チェック【3】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int i = 10;
+  long l = 1000000;
+  double d = -0.0009;
+
+  cout << i << ' ' << l << ' ' << d;
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト第2章の理解度チェック【6】
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int i, j;
+public:
+  myclass(int x, int y);
+  void show();
+};
+
+myclass::myclass(int x, int y)
+{
+  i = x;
+  j = y;
+}
+
+void myclass::show()
+{
+  cout << i << " " << j << "\n";
+}
+
+int main()
+{
+  myclass count(2, 3);
+
+  count.show();
+
+  return 0;
+}
+
+●リスト第2章の理解度チェック【8】
+union {
+  float f;
+  unsigned int bits;
+} ;

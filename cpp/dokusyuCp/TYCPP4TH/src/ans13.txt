@@ -1,0 +1,445 @@
+■第13章の解答：目次■
+･････････････････････
+第13章：前章の理解度チェック
+13.1：練習問題
+13.2：練習問題
+13.3：練習問題
+13.4：練習問題
+13.5：練習問題
+13.6：練習問題
+13.7：練習問題
+第13章の理解度チェック
+第13章：総合理解度チェック
+･････････････････････
+
+第13章：前章の理解度チェック
+
+【1】C++形式の型変換に加えて、次の型変換演算子を使用できます。
+演算子	目的
+dynamic_cast	ポリモーフィック型変換を行う
+reinterpret_cast	ある型のポインタをほかの型に変換する
+static_cast	「通常の」型変換を行う
+const_cast	const指定を取り除く
+
+【2】type_infoはデータ型に関する情報をカプセル化したクラスです。typeid演算子からはtype_infoオブジェクトへの参照が返されます。
+
+【3】オブジェクトの型を判別する演算子はtypeidです。
+
+【4】
+if(typeid(Derived) == typeid(*p))
+  cout << "pはderivedオブジェクトを指す\n";
+else
+  cout << "pはBaseオブジェクトを指す\n";
+
+【5】空欄に当てはまる語は「派生」です。
+
+【6】できません。
+
+13.1：練習問題
+
+【1】
+/* 「using namespace std」文を使わずに
+    スペースを|に変換する */
+#include <iostream>
+#include <fstream>
+
+int main(int argc, char *argv[])
+{
+  if(argc!=3) {
+    std::cout << "使い方: CONVERT <入力ファイル> <出力ファイル>\n";
+    return 1;
+  }
+
+  std::ifstream fin(argv[1]);    // 入力ファイルを開く
+  std::ofstream fout(argv[2]);   // 出力ファイルを開く
+
+  if(!fout) {
+    std::cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+  if(!fin) {
+    std::cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  char ch;
+
+  fin.unsetf(std::ios::skipws);  // スペースをスキップしない
+  while(!fin.eof()) {
+    fin >> ch;
+    if(ch==' ') ch = '|';
+    if(!fin.eof()) fout << ch;
+  }
+
+  fin.close();
+  fout.close();
+
+  return 0;
+}
+
+【2】無名名前空間を使うと、宣言された識別子のスコープをそのファイル内に限定することができます。
+
+【3】次の形式のusingでは、指定したメンバだけを現在の名前空間に取り込みます。
+
+using name::member ;
+
+	これに対し、次の形式のusingでは、名前空間全体を取り込みます。
+
+using namespace name;
+
+【4】ストリームcinやcoutを含むC++標準ライブラリは、std名前空間内で定義されているので、ほとんどのプログラムでは便宜上std名前空間を取り込みます。これによって、std::という修飾子を付けることなく、標準ライブラリ名を直接使用できるようになります。ほとんどのプログラムでは、標準ライブラリへのすべての参照にstd::を付けるという代替法を利用できます。また、std::cinまたはstd::coutだけのusing文を作成するという代替法もあります。
+
+【5】ライブラリコードを独自の名前空間に含めることにより、名前が競合する可能性を減らすことができます。
+
+13.2：練習問題
+
+【1】
+// 文字列型を整数型に変換する
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class strtype {
+  char str[80];
+  int len;
+public:
+  strtype(char *s) { strcpy(str, s); len = strlen(s); }
+  operator char *() { return str; }
+  operator int() { return len; }
+};
+
+int main()
+{
+  strtype s("Conversion functions are convenient.");
+  char *p;
+  int l;
+
+  l = s; // sを整数（文字列の長さ）に変換する
+  p = s; // sをchar *（文字列を指すポインタ）に変換する
+
+  cout << "文字列:\n";
+  cout << p << "\nの長さは" << l << "です\n";
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+int p(int base, int exp);
+
+class pwr {
+  int base;
+  int exp;
+public:
+  pwr(int b, int e) { base = b; exp = e; }
+  operator int() { return p(base, exp); }
+};
+
+// 基数のexp乗を返す
+int p(int base, int exp)
+{
+  int temp;
+
+  for(temp=1; exp; exp--) temp = temp * base;
+
+  return temp;
+}
+
+ int main()
+{
+  pwr o1(2, 3), o2(3, 3);
+  int result;
+
+  result = o1;
+  cout << result << "\n";
+
+  result = o2;
+  cout << result << "\n";
+
+  // 次のようにして、cout文内で直接使用できる
+  cout << o1+100 << "\n";
+
+  return 0;
+}
+
+13.3：練習問題
+
+【1】
+// 出力を追跡するリソース共有の例
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class output {
+  static char outbuf[255]; // これは共有リソース
+  static int inuse;        // 0の場合はバッファを利用できる。
+                           // それ以外の場合は使用中
+  static int oindex;       // outbufの索引
+  char str[80];
+  int i;     // str内の次のcharの索引
+  int who;   // オブジェクトを識別する。0より大きくなければならない
+public:
+  output(int w, char *s) { strcpy(str, s); i = 0; who = w; }
+
+  /* この関数は、バッファを待機している場合は-1を返す
+     出力を完了した場合は0、
+     バッファを使用中の場合はwhoを返す
+  */
+  int putbuf() 
+  {
+    if(!str[i]) {          // 出力完了
+      inuse = 0;           // バッファを解放する
+      return 0;            // 終了を通知する
+    }
+    if(!inuse) inuse = who; // バッファを取得する
+    if(inuse != who) {
+      cout << "プロセス" << who << "は現在ブロックされています\n";
+      return -1;           // ほかのオブジェクトが使用中
+    }
+    if(str[i]) { // まだ出力する文字がある
+      outbuf[oindex] = str[i];
+      cout << "プロセス" << who << "は文字を送っています\n";
+      i++; oindex++;
+      outbuf[oindex] = '\0'; // 常にヌルで終了する
+      return 1;
+    }
+    return 0;
+  }
+  void show() { cout << outbuf << "\n"; }
+};
+
+char output::outbuf[255];  // これは共有リソース
+int output::inuse = 0;     // 0の場合はバッファを利用できる。それ以外の場合は使用中
+int output::oindex = 0;    // outbufの索引
+
+int main()
+{
+  output o1(1, "This is a test"), o2(2, " of statics");
+
+  while(o1.putbuf() | o2.putbuf()) ; // 文字を出力する
+
+  o1.show();
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+#include <new>
+using namespace std;
+
+class test {
+  static int count;
+public:
+  test() { count++; }
+  ~test() { count--; }
+  int getcount() { return count; }
+};
+
+int test::count = 0; 
+
+int main()
+{
+  test o1, o2, o3;
+
+  cout << o1.getcount() << "つのオブジェクトが存在する\n";
+
+  test *p;
+
+  /* 古い形式と新しい形式の両方のエラー処理を使用して、
+     割り当てエラーを監視する */
+  try {
+    p = new test;         // オブジェクトを割り当てる
+    if(!p) {              // 古い形式
+      cout << "メモリ割り当てエラー\n";
+      return 1;
+    }
+  } catch(bad_alloc ba) { // 新しい形式
+      cout << "メモリ割り当てエラー\n";
+      return 1;
+  }
+
+  cout << o1.getcount();
+  cout << "つのオブジェクトが存在する（メモリ割り当て後）\n";
+
+  // オブジェクトを削除する
+  delete p;
+
+  cout << o1.getcount();
+  cout << "つのオブジェクトが存在する（削除後）\n";
+
+  return 0;
+}
+
+13.4：練習問題
+
+【1】このプログラムを修正するには、currentをmutableにして、constメンバ関数であるcounting()関数内からcurrentを修正できるようにするだけです。修正済みのプログラムを次に示します。
+
+// 修正後のプログラム
+#include <iostream>
+using namespace std;
+
+class CountDown {
+  int incr;
+  int target;
+  mutable int current;    // currentをmutableにする
+public:
+  CountDown(int delay, int i=1) {
+    target = delay;
+    incr = i;
+    current = 0;
+  }
+
+  bool counting() const {
+    current += incr;
+    if(current >= target) {
+      cout << "\a";
+      return false;
+    }
+    cout << current << " ";
+    return true;
+  }
+};
+
+int main()
+{
+  CountDown ob(100, 2);
+  while(ob.counting());
+  cout << "\n";
+  return 0;
+}
+
+【2】できません。constメンバから非constメンバ関数を呼び出すことができるとしたら、非const関数を使って呼び出し元オブジェクトを修正できてしまいます。
+
+13.5：練習問題
+
+【1】暗黙的な変換が行われます。
+
+【2】このプログラムコードは有効です。これは、C++によってintからdoubleへの自動変換が定義されるからです。
+
+【3】暗黙的なコンストラクタ変換に伴う1つの問題として、そのような変換が発生していることを忘れてしまう可能性があります。たとえば、代入文によって発生する暗黙的な変換は、外見上はオーバーロード代入演算子とよく似ています。ただし、その動作は同じであるとは限りません。他人が使用するクラスを作成する場合には、そのクラスを使う側の誤用を防ぐために、暗黙的なコンストラクタ変換を禁止した方がよいでしょう。
+
+13.6：練習問題
+
+【1】（省略）
+
+13.7：練習問題
+
+【1】
+/* bufに書き込まれた文字数
+   を表示する
+*/
+#include <iostream>
+#include <strstream>
+using namespace std;
+
+int main()
+{
+  char buf[255];
+
+  ostrstream ostr(buf, sizeof buf);
+
+  ostr << "配列ベースの入出力は「普通の」入出力";
+  ostr << "のようにストリームを使える\n" << 100;
+  ostr << ' ' << 123.23 << "\n";
+  
+  // マニピュレータを使うこともできる
+  ostr << hex << 100 << ' ';
+  // 書式フラグも使用できる
+  ostr.setf(ios::scientific);
+
+  ostr << dec << 123.23;
+  ostr << endl << ends;  // バッファを確実に
+                         // ヌル終了にする
+
+  // 結果の文字列を表示する
+  cout << buf;
+
+  cout << ostr.pcount();
+  cout << "\n";
+
+  return 0;
+}
+
+【2】
+/* 配列ベースの入出力を使用して、
+   1つの配列の内容をもう1つの配列にコピーする
+*/
+#include <iostream>
+#include <strstream>
+using namespace std;
+
+char inbuf[] = "This is a test of C++ array-based I/O";
+char outbuf[255];
+
+int main()
+{
+  istrstream istr(inbuf);
+  ostrstream ostr(outbuf, sizeof outbuf);
+
+  char ch;
+
+  while(!istr.eof()) {
+    istr.get(ch);
+    if(!istr.eof()) ostr.put(ch);
+  }
+  ostr.put('\0');        // ヌルで終了する
+  cout << "入力: " << inbuf << "\n";
+  cout << "出力: " << outbuf << "\n";
+
+  return 0;
+}
+
+【3】
+// 文字列を浮動小数点数に変換する
+#include <iostream>
+#include <strstream>
+using namespace std;
+
+int main()
+{
+  float f;
+  char s[] = "1234.564"; // 文字列として表現された浮動小数点数
+
+  istrstream istr(s);
+
+  // 内部表現に変換する単純な方法
+  istr >> f;  
+
+  cout << "変換後: " << f << "\n";
+
+  return 0;
+}
+
+第13章の理解度チェック
+
+【1】通常のメンバ変数の場合は各オブジェクトがそれぞれ独自のコピーを持ちますが、staticメンバ変数のコピーは1つしか存在しません。このコピーはそのクラスのすべてのオブジェクトによって共有されます。
+
+【2】配列ベースの入出力を使用するには、<strstream>ヘッダをインクルードします。
+
+【3】ありません。
+
+【4】
+extern "C" int counter();
+
+【5】変換関数は、オブジェクトを単にほかの型と互換性のある値に変換します。変換関数は、オブジェクトを組み込みデータ型と互換性のある値に変換する場合に使用するのが一般的です。
+
+【6】explicitキーワードはコンストラクタにしか使用できません。explicitキーワードを使うと、暗黙的なコンストラクタ変換を防ぐことができます。
+
+【7】constメンバ関数からは、呼び出し元のオブジェクトを修正することができません。
+
+【8】名前空間はnamespaceキーワードを使って宣言し、宣言領域を定義します。
+
+【9】mutableキーワードを使うと、constメンバ関数からそのクラスのデータメンバを修正できるようになります。
+
+第13章：総合理解度チェック
+
+【1】あります。暗黙的な変換によって実行する操作が、コンストラクタの仮引数の型に対するオーバーロード代入演算子によって実行される操作と同じである場合は、代入演算子をオーバーロードする必要はありません。
+
+【2】できます。
+
+【3】新しいライブラリを独自の名前空間に含め、ほかのプログラムコードとの名前の競合を防ぐことができます。この利点は、新しいライブラリを使用して古いプログラムコードを更新した場合にも当てはまります。
+
+【4】（省略）

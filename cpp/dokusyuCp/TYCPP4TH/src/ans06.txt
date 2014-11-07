@@ -1,0 +1,1066 @@
+■第6章の解答：目次■
+･････････････････････
+第6章：前章の理解度チェック
+6.2 練習問題
+6.3 練習問題
+6.4 練習問題
+6.5 練習問題
+6.6 練習問題
+6.7 練習問題
+第6章の理解度チェック
+第6章：総合理解度チェック
+･････････････････････
+
+第6章：前章の理解度チェック
+
+【1】
+class myclass {
+  int x, y;
+public:
+  myclass(int i, int j) { x=i; y=j; }
+  myclass() { x=0; y=0; }
+};
+
+【2】
+class myclass {
+  int x, y;
+public:
+  myclass(int i=0, int j=0) { x=i; y=j; }
+};
+
+【3】デフォルト値を持つ引数の後ろに、デフォルト値を持たないパラメータがあってはなりません。
+
+【4】一方が値パラメータを取り、他方が参照パラメータを取るのが唯一の違いであるようなオーバーロードはできません（コンパイラが両者を区別できません）。
+
+【5】頻繁に使われる値が1つ以上あるときは、デフォルト引数を使用するとよいでしょう。使われる可能性が他より大きい値が特にないときは、デフォルト引数を定めてもしかたがありません。
+
+【6】いいえ。動的配列を初期化する方法がありません。このクラスにはコンストラクタが1つしかなく、イニシャライザが必要です。
+
+【7】コピーコンストラクタは、あるオブジェクトが別のオブジェクトを初期化するときに呼ばれる特殊なコンストラクタです。そのような状況が発生するのは、あるオブジェクトが別のオブジェクトの初期化に明示的に使用されるときか、オブジェクトが関数に引き渡されるときか、関数戻り値として一時オブジェクトが作成されるとき、のいずれかです。
+
+6.2 練習問題
+
+【1】
+// *と/をcoordクラスに関してオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  coord operator*(coord ob2);
+  coord operator/(coord ob2);
+};
+
+// *をcoordクラスに関してオーバーロードする
+coord coord::operator*(coord ob2)
+{
+  coord temp;
+
+  temp.x = x * ob2.x;
+  temp.y = y * ob2.y;
+
+  return temp;
+}
+
+// /をcoordクラスに関してオーバーロードする
+coord coord::operator/(coord ob2)
+{
+  coord temp;
+
+  temp.x = x / ob2.x;
+  temp.y = y / ob2.y;
+
+  return temp;
+}
+
+int main()
+{
+  coord o1(10, 10), o2(5, 3), o3;
+  int x, y;
+ 
+  o3 = o1 * o2;
+  o3.get_xy(x, y);
+  cout << "(o1*o2) X: " << x << ", Y: " << y << "\n";
+
+  o3 = o1 / o2;
+  o3.get_xy(x, y);
+  cout << "(o1/o2) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+【2】%演算子のオーバーロードが不適切です。その動作は本来の使い方と関連していません。
+
+【3】（省略）
+
+6.3 練習問題
+
+【1】
+// <と>をcoordクラスに関してオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  int operator<(coord ob2);
+  int operator>(coord ob2);
+};
+
+// <演算子をcoordに関してオーバーロードする
+int coord::operator<(coord ob2)
+{
+  return x<ob2.x && y<ob2.y; 
+}
+
+// >演算子をcoordに関してオーバーロードする
+int coord::operator>(coord ob2)
+{
+  return x>ob2.x && y>ob2.y;
+}
+ 
+int main()
+{
+  coord o1(10, 10), o2(5, 3);
+
+  if(o1>o2) cout << "o1 > o2\n";
+  else cout << "o1 <= o2 \n";
+
+  if(o1<o2) cout << "o1 < o2\n";
+  else cout << "o1 >= o2\n";
+
+  return 0;
+}
+
+6.4 練習問題
+
+【1】
+// --をcoordクラスに関してオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  coord operator--();            // 前置
+  coord operator--(int notused); // 後置
+};
+
+// 前置--をcoordクラスに関してオーバーロードする
+coord coord::operator--()
+{
+  x--; 
+  y--;
+  return *this;
+}
+
+// 後置--をcoordクラスに関してオーバーロードする
+coord coord::operator--(int notused)
+{
+  x--; 
+  y--;
+  return *this;
+}
+
+int main()
+{
+  coord o1(10, 10);
+  int x, y;
+
+  o1--; // オブジェクトのデクリメント
+  o1.get_xy(x, y);
+  cout << "(o1--) X: " << x << ", Y: " << y << "\n";
+
+  --o1; // オブジェクトのデクリメント
+  o1.get_xy(x, y);
+  cout << "(--o1) X: " << x << ", Y: " << y << "\n";
+  return 0;
+}
+
+【2】
+// +をcoordクラスに関してオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  coord operator+(coord ob2); // 2項+
+  coord operator+();          // 単項+
+};
+
+// +をcoordクラスに関してオーバーロードする
+coord coord::operator+(coord ob2)
+{
+  coord temp;
+
+  temp.x = x + ob2.x;
+  temp.y = y + ob2.y;
+
+  return temp;
+}
+
+// 単項+をcoordクラスに関してオーバーロードする
+coord coord::operator+()
+{
+  if(x<0) x = -x;
+  if(y<0) y = -y;
+  return *this;
+}
+
+int main()
+{
+  coord o1(10, 10), o2(-2, -2);
+  int x, y;
+  o1 = o1 + o2; // 加算
+  o1.get_xy(x, y);
+  cout << "(o1+o2) X: " << x << ", Y: " << y << "\n";
+
+  o2 = +o2;     // 絶対値
+  o2.get_xy(x, y);
+  cout << "(+o2) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+6.5 練習問題
+
+【1】
+/* フレンド関数を使用し、
+-と/をcoordクラスに関してオーバーロードする。*/
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y;     // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  friend coord operator-(coord ob1, coord ob2);
+  friend coord operator/(coord ob1, coord ob2);
+};
+
+// フレンドを使用し、-をcoordクラスに関してオーバーロードする
+coord operator-(coord ob1, coord ob2)
+{
+  coord temp;
+
+  temp.x = ob1.x - ob2.x;
+  temp.y = ob1.y - ob2.y;
+
+  return temp;
+}
+
+// フレンドを使用し、/をcoordクラスに関してオーバーロードする
+coord operator/(coord ob1, coord ob2)
+{
+  coord temp;
+
+  temp.x = ob1.x / ob2.x;
+  temp.y = ob1.y / ob2.y;
+
+  return temp;
+}
+
+int main()
+{
+  coord o1(10, 10), o2(5, 3), o3;
+  int x, y;
+ 
+  o3 = o1 - o2;
+  o3.get_xy(x, y);
+  cout << "(o1-o2) X: " << x << ", Y: " << y << "\n";
+
+  o3 = o1 / o2;
+  o3.get_xy(x, y);
+  cout << "(o1/o2) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+【2】
+// ob*intでもint*obでも扱えるように*をオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  friend coord operator*(coord ob1, int i);
+  friend coord operator*(int i, coord ob2);
+};
+
+// *のオーバーロードの1つ目
+coord operator*(coord ob1, int i)
+{
+  coord temp;
+
+  temp.x = ob1.x * i;
+  temp.y = ob1.y * i;
+
+  return temp;
+}
+
+// *のオーバーロードの2つ目
+coord operator*(int i, coord ob2)
+{
+  coord temp;
+
+  temp.x = ob2.x * i;
+  temp.y = ob2.y * i;
+
+  return temp;
+}
+
+int main()
+{
+  coord o1(10, 10), o2;
+  int x, y;
+ 
+  o2 = o1 * 2;  // ob * int
+  o2.get_xy(x, y);
+  cout << "(o1*2) X: " << x << ", Y: " << y << "\n";
+
+  o2 = 3 * o1; // int * ob
+  o2.get_xy(x, y);
+  cout << "(3*o1) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+【3】フレンド関数を使用すれば、組み込み型を左オペランドにすることができます。メンバ関数を使用するときは、演算子の定義対象になっているクラスのオブジェクトを左オペランドにしなければなりません。
+
+【4】
+// フレンドを使用し、coordクラスに関して--をオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  friend coord operator--(coord &ob); // 前置
+  friend coord operator--(coord &ob, int notused); // 後置
+};
+
+// フレンドを使用し、coordクラスに関して--（前置）をオーバーロードする
+coord operator--(coord &ob)
+{
+  ob.x--;
+  ob.y--;
+  return ob;
+}
+
+// フレンドを使用し、coordクラスに関して--（後置）をオーバーロードする
+coord operator--(coord &ob, int notused)
+{
+  ob.x--;
+  ob.y--;
+  return ob;
+}
+
+int main()
+{
+  coord o1(10, 10);
+  int x, y;
+
+  --o1; // オブジェクトのデクリメント
+  o1.get_xy(x, y);
+  cout << "(--o1) X: " << x << ", Y: " << y << "\n";
+
+  o1--; // オブジェクトのデクリメント
+  o1.get_xy(x, y);
+  cout << "(o1--) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+6.6 練習問題
+
+【1】
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class dynarray {
+  int *p;
+  int size;
+public:
+  dynarray(int s);
+  int &put(int i);
+  int get(int i);
+  dynarray &operator=(dynarray &ob);
+};
+
+// コンストラクタ
+dynarray::dynarray(int s)
+{
+  p = new int [s];
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+
+  size = s;
+}
+
+// 要素の格納
+int &dynarray::put(int i)
+{
+  if(i<0 || i>size-1) {
+    cout << "境界エラー!\n";
+    exit(1);
+  }
+
+  return p[i];
+}
+
+// 要素の取得
+int dynarray::get(int i)
+{
+  if(i<0 || i>size-1) {
+    cout << "境界エラー!\n";
+    exit(1);
+  }
+
+  return p[i];
+}
+
+// =をdynarrayに関してオーバーロードする
+dynarray &dynarray::operator=(dynarray &ob)
+{
+  int i;
+
+  if(size!=ob.size) {
+    cout << "異なるサイズの配列をコピーできない!\n";
+    exit(1);
+  }
+
+  for(i = 0; i<size; i++) p[i] = ob.p[i];
+  return *this;
+}
+
+int main()
+{
+  int i;
+
+  dynarray ob1(10), ob2(10), ob3(100);
+
+  ob1.put(3) = 10;
+  i = ob1.get(3);
+  cout << i << "\n";
+
+  ob2 = ob1;
+
+  i = ob2.get(3);
+  cout << i << "\n";
+
+  // エラーを生成
+  ob1 = ob3; //  !!!
+  return 0;
+}
+
+6.7 練習問題
+
+【1】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype(char *s);
+  ~strtype() { 
+     cout << "解放" << (unsigned) p << "\n";
+     delete [] p;
+   }
+  char *get() { return p; }
+  strtype &operator=(strtype &ob);
+  char &operator[](int i);
+};
+
+strtype::strtype(char *s)
+{
+  int l;
+
+  l = strlen(s)+1;
+
+  p = new char [l];
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+
+  len = l;
+  strcpy(p, s);
+}
+
+// オブジェクトを代入する
+strtype &strtype::operator=(strtype &ob)
+{
+ // さらにメモリが必要かどうかを調べる
+  if(len < ob.len) { // さらにメモリを割り当てることが必要
+    delete [] p;
+    p = new char [ob.len];
+    if(!p) {
+      cout << "メモリ割り当てエラー\n";
+      exit(1);
+    }
+  }
+  len = ob.len;
+  strcpy(p, ob.p);
+  return *this;
+}  
+
+// 文字の添字付け
+char &strtype::operator[](int i)
+{
+  if(i<0 || i>len-1) {
+    cout << "\n";
+    cout << i << "は境界エラー\n";
+    exit(1);
+  }
+
+  return p[i];
+}
+
+int main()
+{
+  strtype a("Hello"), b("There");
+
+  cout << a.get() << "\n";
+  cout << b.get() << "\n";
+
+  a = b; // これで、pは上書きされない
+
+  cout << a.get() << "\n";
+  cout << b.get() << "\n";
+
+  // 配列の添字付けにより、文字にアクセス
+  cout << a[0] << a[1] << a[2] << "\n";
+
+  // 配列の添字付けにより、文字を代入
+  a[0] = 'X';
+  a[1] = 'Y';
+  a[2] = 'Z';
+
+  cout << a.get() << "\n";
+  return 0;
+}
+
+【2】
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class dynarray {
+  int *p;
+  int size;
+public:
+  dynarray(int s);
+  dynarray &operator=(dynarray &ob);
+  int &operator[](int i);
+};
+
+// コンストラクタ
+dynarray::dynarray(int s)
+{
+  p = new int [s];
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+
+  size = s;
+}
+
+// =をdynarrayに関してオーバーロードする
+dynarray &dynarray::operator=(dynarray &ob)
+{
+  int i;
+
+  if(size!=ob.size) {
+    cout << "異なるサイズの配列をコピーできない!\n";
+    exit(1);
+  }
+
+  for(i = 0; i<size; i++) p[i] = ob.p[i];
+  return *this;
+}
+
+// []をオーバーロードする
+int &dynarray::operator[](int i)
+{
+  if(i<0 || i>size-1) {
+    cout << "\n";
+    cout << i << "は境界エラー\n";
+    exit(1);
+  }
+  return p[i];
+}
+
+int main()
+{
+  int i;
+
+  dynarray ob1(10), ob2(10), ob3(100);
+
+  ob1[3] = 10;
+  i = ob1[3];
+  cout << i << "\n";
+
+  ob2 = ob1;
+
+  i = ob2[3];
+  cout << i << "\n";
+
+  // エラーを生成
+  ob1 = ob3; // 配列のサイズが違う
+  return 0;
+}
+
+第6章の理解度チェック
+
+【1】
+// <<と>>をオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  coord operator<<(int i);
+  coord operator>>(int i);
+};
+
+// <<をオーバーロードする
+coord coord::operator<<(int i)
+{
+  coord temp;
+
+  temp.x = x << i;
+  temp.y = y << i;
+
+  return temp;
+}
+
+// >>をオーバーロードする
+coord coord::operator>>(int i)
+{
+  coord temp;
+
+  temp.x = x >> i;
+  temp.y = y >> i;
+
+  return temp;
+}
+
+int main()
+{
+  coord o1(4, 4), o2;
+  int x, y;
+ 
+  o2 = o1 << 2;  // ob << int
+  o2.get_xy(x, y);
+  cout << "(o1<<2) X: " << x << ", Y: " << y << "\n";
+
+  o2 = o1 >> 2; // ob >> int
+  o2.get_xy(x, y);
+  cout << "(o1>>2) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+class three_d {
+  int x, y, z;
+public:
+  three_d(int i, int j, int k)
+  {
+    x = i; y = j; z = k;
+  }
+  three_d() { x=0; y=0; z=0; }
+  void get(int &i, int &j, int &k)
+  {
+     i = x; j = y; k = z;
+  }
+  three_d operator+(three_d ob2);
+  three_d operator-(three_d ob2); 
+  three_d operator++();
+  three_d operator--();
+ };
+
+three_d three_d::operator+(three_d ob2)
+{
+  three_d temp;
+
+  temp.x = x + ob2.x;
+  temp.y = y + ob2.y;
+  temp.z = z + ob2.z;
+
+  return temp;
+}
+
+three_d three_d::operator-(three_d ob2)
+{
+  three_d temp;
+
+  temp.x = x - ob2.x;
+  temp.y = y - ob2.y;
+  temp.z = z - ob2.z;
+
+  return temp;
+}
+
+three_d three_d::operator++()
+{
+  x++;
+  y++;
+  z++;
+
+  return *this;
+}
+
+three_d three_d::operator--()
+{
+  x--;
+  y--;
+  z--;
+  
+  return *this;
+}
+
+int main()
+{
+  three_d o1(10, 10, 10), o2(2, 3, 4), o3;
+  int x, y, z;
+
+  o3 = o1 + o2;
+  o3.get(x, y, z);
+  cout << "X: " << x << ", Y: " << y;
+  cout << ", Z: " << z << "\n";
+
+  o3 = o1 - o2;
+  o3.get(x, y, z);
+  cout << "X: " << x << ", Y: " << y;
+  cout << ", Z: " << z << "\n";
+
+  ++o1;
+  o1.get(x, y, z);
+  cout << "X: " << x << ", Y: " << y;
+  cout << ", Z: " << z << "\n";
+
+  --o1;
+  o1.get(x, y, z);
+  cout << "X: " << x << ", Y: " << y;
+  cout << ", Z: " << z << "\n";
+
+  return 0;
+}
+
+【3】
+#include <iostream>
+using namespace std;
+
+class three_d {
+  int x, y, z;
+public:
+  three_d(int i, int j, int k)
+  {
+    x = i; y = j; z = k;
+  }
+  three_d() { x=0; y=0; z=0; }
+  void get(int &i, int &j, int &k)
+  {
+     i = x; j = y; k = z;
+  }
+  three_d operator+(three_d &ob2);
+  three_d operator-(three_d &ob2); 
+  friend three_d operator++(three_d &ob);
+  friend three_d operator--(three_d &ob);
+ };
+
+three_d three_d::operator+(three_d &ob2)
+{
+  three_d temp;
+
+  temp.x = x + ob2.x;
+  temp.y = y + ob2.y;
+  temp.z = z + ob2.z;
+
+  return temp;
+}
+
+three_d three_d::operator-(three_d &ob2)
+{
+  three_d temp;
+
+  temp.x = x - ob2.x;
+  temp.y = y - ob2.y;
+  temp.z = z - ob2.z;
+
+  return temp;
+}
+
+three_d operator++(three_d &ob)
+{
+  ob.x++;
+  ob.y++;
+  ob.z++;
+
+  return ob;
+}
+
+three_d operator--(three_d &ob)
+{
+  ob.x--;
+  ob.y--;
+  ob.z--;
+  
+  return ob;
+}
+
+int main()
+{
+  three_d o1(10, 10, 10), o2(2, 3, 4), o3;
+  int x, y, z;
+
+  o3 = o1 + o2;
+  o3.get(x, y, z);
+  cout << "X: " << x << ", Y: " << y;
+  cout << ", Z: " << z << "\n";
+
+  o3 = o1 - o2;
+  o3.get(x, y, z);
+  cout << "X: " << x << ", Y: " << y;
+  cout << ", Z: " << z << "\n";
+
+  ++o1;
+  o1.get(x, y, z);
+  cout << "X: " << x << ", Y: " << y;
+  cout << ", Z: " << z << "\n";
+
+  --o1;
+  o1.get(x, y, z);
+  cout << "X: " << x << ", Y: " << y;
+  cout << ", Z: " << z << "\n";
+
+  return 0;
+}
+
+【4】2項メンバ演算子関数には、thisポインタ経由で暗黙的に左オペランドが渡されます。2項フレンド演算子関数には、両方のオペランドが明示的に渡されます。単項メンバ演算子関数には、明示的なパラメータがありません。フレンド単項演算子関数は、パラメータを1つ取ります。
+
+【5】デフォルトのビット単位コピーでは不十分なときは、=演算子をオーバーロードする必要があります。たとえば、あるオブジェクトのデータの一部だけを別のオブジェクトに代入したいといったことが考えられます。
+
+【6】いいえ
+
+【7】
+#include <iostream>
+using namespace std;
+
+class three_d {
+  int x, y, z;
+public:
+  three_d(int i, int j, int k)
+  {
+    x = i; y = j; z = k;
+  }
+  three_d() { x=0; y=0; z=0; }
+  void get(int &i, int &j, int &k)
+  {
+     i = x; j = y; k = z;
+  }
+  friend three_d operator+(three_d ob, int i);
+  friend three_d operator+(int i, three_d ob);
+ };
+
+three_d operator+(three_d ob, int i)
+{
+  three_d temp;
+
+  temp.x = ob.x + i;
+  temp.y = ob.y + i;
+  temp.z = ob.z + i;
+
+  return temp;
+}
+
+three_d operator+(int i, three_d ob)
+{
+  three_d temp;
+
+  temp.x = ob.x + i;
+  temp.y = ob.y + i;
+  temp.z = ob.z + i;
+
+  return temp;
+}
+
+int main()
+{
+  three_d o1(10, 10, 10);
+  int x, y, z;
+
+  o1 = o1 + 10;
+  o1.get(x, y, z);
+  cout << "X: " << x << ", Y: " << y;
+  cout << ", Z: " << z << "\n";
+
+  o1 = -20 + o1;
+  o1.get(x, y, z);
+  cout << "X: " << x << ", Y: " << y;
+  cout << ", Z: " << z << "\n";
+
+  return 0;
+}
+
+【8】
+#include <iostream>
+using namespace std;
+
+class three_d {
+  int x, y, z;
+public:
+  three_d(int i, int j, int k)
+  {
+    x = i; y = j; z = k;
+  }
+  three_d() { x=0; y=0; z=0; }
+  void get(int &i, int &j, int &k)
+  {
+     i = x; j = y; k = z;
+  }
+  int operator==(three_d ob2);
+  int operator!=(three_d ob2); 
+  int operator||(three_d ob2); 
+ };
+
+int three_d::operator==(three_d ob2)
+{
+  return x==ob2.x && y==ob2.y && z==ob2.z;
+}
+
+int three_d::operator!=(three_d ob2)
+{
+  return x!=ob2.x && y!=ob2.y && z!=ob2.z;
+}
+
+int three_d::operator||(three_d ob2)
+{
+  return x||ob2.x && y||ob2.y && z||ob2.z;
+}
+
+int main()
+{
+  three_d o1(10, 10, 10), o2(2, 3, 4), o3(0, 0, 0);
+
+  if(o1==o1) cout << "o1 == o1\n";
+
+  if(o1!=o2) cout << "o1 != o2\n";
+
+  if(o3 || o1) cout << "o1 or o3は真\n";
+
+  return 0;
+}
+
+【9】［］のオーバーロードは、通常、クラス内にカプセル化されている配列を、通常の配列添字構文で添字付けできるようにする目的で行われます。
+
+第6章：総合理解度チェック
+
+【1】
+/* 複雑さを避けるため、エラー検査をしていません。
+ただし、実際のアプリケーションでこのプログラムコードを使用するときは、
+何らかのエラー検査を付け加えなければなりません。*/
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class strtype {
+  char s[80];
+public:
+  strtype() { *s = '\0'; }
+  strtype(char *p) { strcpy(s, p); }
+  char *get() { return s; }
+  strtype operator+(strtype s2);
+  strtype operator=(strtype s2);
+  int operator<(strtype s2);
+  int operator>(strtype s2);
+  int operator==(strtype s2);
+};
+
+strtype strtype::operator+(strtype s2)
+{
+  strtype temp;
+
+  strcpy(temp.s, s);
+  strcat(temp.s, s2.s);
+
+  return temp;
+}
+
+strtype strtype::operator=(strtype s2)
+{
+  strcpy(s, s2.s);
+
+  return *this;
+}
+
+int strtype::operator<(strtype s2)
+{
+  return strcmp(s, s2.s) < 0;
+}
+
+int strtype::operator>(strtype s2)
+{
+  return strcmp(s, s2.s) > 0;
+}
+
+int strtype::operator==(strtype s2)
+{
+  return strcmp(s, s2.s) == 0;
+}
+
+int main()
+{
+  strtype o1("Hello"), o2(" There"), o3;
+
+  o3 = o1 + o2;
+  cout << o3.get() << "\n";
+
+  o3 = o1;
+  if(o1==o3) cout << "o1とo3は等しい\n";
+
+  if(o1>o2) cout << "o1 > o2\n";
+
+  if(o1<o2) cout << "o1 < o2\n";
+
+  return 0;
+}

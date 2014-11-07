@@ -1,0 +1,876 @@
+■第2章の解答：目次■
+･････････････････････
+第2章：前章の理解度チェック
+2.1：練習問題
+2.2：練習問題
+2.3：練習問題
+2.5：練習問題
+2.6：練習問題
+2.7：練習問題
+第2章の理解度チェック
+第2章：総合理解度チェック
+･････････････････････
+
+第2章：前章の理解度チェック
+
+【1】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main()
+{
+  char s[80];
+  
+  cout << "文字列を入力する: ";
+  cin >> s;
+
+  cout << "長さ: " << strlen(s) << "\n";
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class addr {
+  char name[40];
+  char street[40];
+  char city[30];
+  char state[3];
+  char zip[10];
+public:
+  void store(char *n, char *s, char *c, char *t,
+             char *z);
+  void display();
+};
+void addr::store(char *n, char *s, char *c, char *t,
+                 char *z)
+{
+  strcpy(name, n);
+  strcpy(street, s);
+  strcpy(city, c);
+  strcpy(state, t);
+  strcpy(zip, z);
+}
+
+void addr::display()
+{
+  cout << name << "\n";
+  cout << street << "\n";
+  cout << city << "\n";
+  cout << state << "\n";
+  cout << zip << "\n\n";
+}
+
+int main()
+{
+  addr a;
+
+  a.store("C. B. Turkle", "11 Pinetree Lane", "Wausau", "In", "46576");
+
+  a.display();
+
+  return 0;
+}
+
+【3】
+#include <iostream>
+using namespace std;
+
+int rotate(int i);
+long rotate(long i);
+
+int main()
+{
+  int a;
+  long b;
+
+  a = 0x8000;
+  b = 8;
+  cout  << rotate(a);
+  cout << "\n";
+  cout << rotate(b);
+  cout << "\n";
+  
+  return 0;
+}
+
+int rotate(int i)
+{
+  int x;
+ 
+  if(i & 0x8000) x = 1;
+  else x = 0;
+
+  i = i << 1;
+  i += x;
+
+  return i;
+}
+
+long rotate(long i)
+{
+  int x;
+ 
+  if(i & 0x80000000) x = 1;
+  else x = 0;
+
+  i = i << 1;
+  i += x;
+
+  return i;
+}
+
+【4】整数iはmyclassクラスの非公開メンバなので、main()関数からアクセスすることはできません。
+
+2.1：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+
+#define SIZE 100
+
+class q_type {
+  int queue[SIZE]; // キューを保持する
+  int head, tail;  // 先頭と末尾の索引
+public:
+  q_type();        // コンストラクタ
+  void q(int num); // 設定
+  int deq();       // 取得
+};
+
+// コンストラクタ
+q_type::q_type()
+{
+  head = tail = 0;
+}
+
+// キューに値を格納する
+void q_type::q(int num)
+{
+  if(tail+1==head || (tail+1==SIZE && !head)) {
+    cout << "キューは一杯です\n";
+    return;
+  }
+  tail++;
+  if(tail==SIZE) tail = 0; // 循環する
+  queue[tail] = num;
+}
+
+// キューから値を削除する
+int q_type::deq()
+{
+  if(head == tail) {
+    cout << "キューは空です\n";
+    return 0;  // またはその他のエラーインジケータ
+  }
+  head++;
+  if(head==SIZE) head = 0; // 循環する
+  return queue[head];
+}
+
+int main()
+{
+  q_type q1, q2;
+  int i;
+
+  for(i=1; i<=10; i++) {
+    q1.q(i);
+    q2.q(i*i);
+  }
+
+  for(i=1; i<=10; i++) {
+    cout << "キューから値を削除する（q1）: " << q1.deq() << "\n";
+    cout << "キューから値を削除する（q2）: " << q2.deq() << "\n";
+  }
+
+  return 0;
+}
+
+【2】
+// ストップウォッチエミュレータ
+#include <iostream>
+#include <ctime>
+using namespace std;
+
+class stopwatch {
+  double begin, end;
+public:
+  stopwatch();
+  ~stopwatch();
+  void start();
+  void stop();
+  void show();
+};
+
+stopwatch::stopwatch()
+{ 
+  begin = end = 0.0;
+}
+
+stopwatch::~stopwatch()
+{
+  cout << "Stopwatchオブジェクトは破壊された";
+}
+
+void stopwatch::start()
+{
+  begin = (double) clock() / CLOCKS_PER_SEC;
+}
+
+void stopwatch::stop()
+{
+  end = (double) clock() / CLOCKS_PER_SEC;
+}
+ 
+void stopwatch::show()
+{
+  cout << "経過時間: " << end - begin;
+  cout << "\n";
+}
+
+int main()
+{
+  stopwatch watch;
+  long i;
+
+  watch.start();
+  for(i=0; i<320000000; i++) ; // forループの時間を計測する
+  watch.stop();
+
+  watch.show();
+
+  return 0;
+}
+
+【3】コンストラクタに戻り値型を指定することはできません。
+
+2.2：練習問題
+
+【1】
+// 動的にスタックを割り当てる
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+// 文字用のstackクラスを宣言する
+class stack { 
+  char *stck;         // スタック領域を確保する
+  int tos;            // スタック先頭の索引
+  int size;           // スタックのサイズ
+public:
+  stack(int s);       // コンストラクタ
+  ~stack();           // デストラクタ
+  void push(char ch); // スタックに文字をプッシュする
+  char pop();         // スタックから文字をポップする
+};
+
+// スタックを初期化する
+stack::stack(int s)
+{
+  cout << "スタックを生成する\n";
+  tos = 0;
+  stck = (char *) malloc(s);
+  if(!stck) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  size = s;
+}
+
+stack::~stack()
+{
+  free(stck);
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==size) {
+    cout << "スタックは一杯です\n";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字をポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です\n";
+    return 0;         // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+int main()
+{
+  // 自動的に初期化される2つのスタックを作成する
+  stack s1(10), s2(10); 
+  int i;
+  s1.push('a');
+  s2.push('x');
+  s1.push('b');
+  s2.push('y');
+  s1.push('c');
+  s2.push('z');
+
+  for(i=0; i<3; i++) cout << "s1をポップする: " << s1.pop() << "\n";
+  for(i=0; i<3; i++) cout << "s2をポップする: " << s2.pop() << "\n";
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+#include <ctime>
+using namespace std;
+
+class t_and_d {
+  time_t systime;
+public:
+  t_and_d(time_t t); // コンストラクタ
+  void show();
+};
+
+t_and_d::t_and_d(time_t t)
+{
+  systime = t;
+}
+
+void t_and_d::show()
+{
+  cout << ctime(&systime);
+}
+
+int main()
+{
+  time_t x;
+
+  x = time(NULL);
+
+  t_and_d ob(x);
+
+  ob.show();
+
+  return 0;
+}
+
+【3】
+#include <iostream>
+using namespace std;
+
+class box {
+  double l, w, h;
+  double volume;
+public:
+  box(double a, double b, double c);
+  void vol();
+};
+
+box::box(double a, double b, double c)
+{
+  l = a;
+  w = b;
+  h = c;
+
+  volume = l * w * h;
+}
+
+void box::vol()
+{
+  cout << "体積: " << volume << "\n";
+}
+
+int main()
+{
+  box x(2.2, 3.97, 8.09), y(1.0, 2.0, 3.0);
+
+  x.vol();
+  y.vol();
+  return 0;
+}
+
+2.3：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+
+class area_cl {
+public:
+  double height;
+  double width;
+};
+
+class rectangle : public area_cl {
+public:
+  rectangle(double h, double w);
+  double area();
+};
+
+class isosceles : public area_cl {
+public:
+  isosceles(double h, double w);
+  double area();
+};
+
+rectangle::rectangle(double h, double w)
+{
+  height = h;
+  width = w;
+}
+
+isosceles::isosceles(double h, double w)
+{
+  height = h;
+  width = w;
+}
+
+double rectangle::area()
+{
+  return width * height;
+}
+ 
+double isosceles::area()
+{
+  return 0.5 * width * height;
+}
+
+int main()
+{
+  rectangle b(10.0, 5.0);
+  isosceles i(4.0, 6.0);
+
+  cout << "長方形: " << b.area() << "\n";
+  cout << "三角形: " << i.area() << "\n";
+
+  return 0;
+}
+
+2.5：練習問題
+
+【1】
+// 構造体を使用したstackクラス
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 構造体を使用して、文字用のstackクラスを宣言する
+struct stack { 
+  stack();            // コンストラクタ
+  void push(char ch); // スタックに文字をプッシュする
+  char pop();         // スタックから文字をポップする
+private:
+  char stck[SIZE];    // スタック領域を確保する
+  int tos;            // スタック先頭の索引
+};
+
+// スタックを初期化する
+stack::stack()
+{
+  cout << "スタックを生成する\n";
+  tos = 0;
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==SIZE) {
+    cout << "スタックは一杯です\n";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字をポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です\n";
+    return 0;         // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+int main()
+{
+  // 自動的に初期化される2つのスタックを作成する
+  stack s1, s2; 
+  int i;
+
+  s1.push('a');
+  s2.push('x');
+  s1.push('b');
+  s2.push('y');
+  s1.push('c');
+  s2.push('z');
+
+  for(i=0; i<3; i++) cout << "s1をポップする: " << s1.pop() << "\n";
+  for(i=0; i<3; i++) cout << "s2をポップする: " << s2.pop() << "\n";
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+union swapbytes {
+  unsigned char c[2];
+  unsigned i;
+  swapbytes(unsigned x);
+  void swp();
+};
+
+swapbytes::swapbytes(unsigned x)
+{
+  i = x;
+}
+void swapbytes::swp()
+{
+  unsigned char temp;
+
+  temp = c[0];
+  c[0] = c[1];
+  c[1] = temp;
+}
+
+int main()
+{
+  swapbytes ob(1);
+
+  ob.swp();
+  cout << ob.i << "\n";
+
+  return 0;
+}
+
+【3】無名共用体とは、2つの変数が同じメモリ領域を共有するためのしくみのことです。無名共用体のメンバは、オブジェクトを参照することなく直接アクセスできます。無名共用体のメンバは、共用体自身と同じスコープレベルを持ちます。
+
+2.6：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+
+// myabs()関数を3とおりにオーバーロードする
+
+// 整数用のmyabs()
+inline int myabs(int n)
+{
+  cout << "整数用のmyabs()\n";
+  return n<0 ? -n : n;
+}
+
+// 長整数用のmyabs()
+inline long myabs(long n)
+{
+  cout << "長整数用のmyabs()\n";
+  return n<0 ? -n : n;
+}
+
+// 倍精度浮動小数点数用のmyabs()
+inline double myabs(double n)
+{
+  cout << "倍精度浮動小数点数用のmyabs()\n";
+  return n<0 ? -n : n;
+}
+
+int main()
+{
+  cout << "-10の絶対値: " << myabs(-10) << "\n";
+  cout << "-10Lの絶対値: " << myabs(-10L) << "\n";
+  cout << "-10.01の絶対値: " << myabs(-10.01) << "\n";
+
+  return 0;
+}
+
+【2】この関数にはforループが含まれているため、インライン化できない可能性があります。ループを含む関数は、コンパイラによってはインライン化できません。
+
+2.7：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 文字用のstackクラスを宣言する
+class stack { 
+  char stck[SIZE]; // スタック領域を確保する
+  int tos;         // スタック先頭の索引
+public:
+  stack() { tos = 0; }
+  void push(char ch)
+  {
+    if(tos==SIZE) {
+      cout << "スタックは一杯です\n";
+      return;
+    }
+    stck[tos] = ch;
+    tos++;
+  }
+  char pop()
+  {
+    if(tos==0) {
+      cout << "スタックは空です\n";
+      return 0;    // スタックが空の場合はヌルを返す
+    }
+    tos--;
+    return stck[tos];
+  }
+};
+
+int main()
+{
+  // 自動的に初期化される2つのスタックを作成する
+  stack s1, s2;
+  int i;
+
+  s1.push('a');
+  s2.push('x');
+  s1.push('b');
+  s2.push('y');
+  s1.push('c');
+  s2.push('z');
+
+  for(i=0; i<3; i++) cout << "s1をポップする: " << s1.pop() << "\n";
+  for(i=0; i<3; i++) cout << "s2をポップする: " << s2.pop() << "\n";
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype(char *ptr)
+  {
+    len = strlen(ptr);
+    p = (char *) malloc(len+1);
+    if(!p) {
+      cout << "メモリ割り当てエラー\n";
+      exit(1);
+    }
+    strcpy(p, ptr);
+  }
+  ~strtype() { cout << "pを解放する\n"; free(p); }
+
+  void show() 
+  {
+    cout << p << " - 長さ: " << len;
+    cout << "\n";
+  }
+};
+
+int main()
+{
+  strtype s1("This is a test."), s2("I like C++.");
+
+  s1.show();
+  s2.show();
+
+  return 0;
+}
+
+第2章の理解度チェック
+
+【1】コンストラクタとは、オブジェクトの作成時に呼び出される関数のことです。デストラクタとは、オブジェクトを破棄するときに呼び出される関数のことです。
+
+【2】
+#include <iostream>
+using namespace std;
+
+class line {
+  int len;
+public:
+  line(int l);
+};
+
+line::line(int l)
+{
+  len = l;
+
+  int i;
+  for(i=0; i<len; i++) cout  << '*';
+  cout << "\n";
+}
+
+int main()
+{
+  line l(10);
+
+  return 0;
+}
+
+【3】
+10 1000000 -0.0009
+
+【4】
+#include <iostream>
+using namespace std;
+
+class area_cl {
+public:
+  double height;
+  double width;
+};
+
+class rectangle : public area_cl {
+public:
+  rectangle(double h, double w) { height = h; width = w; }
+  double area() { return height * width; }
+};
+
+class isosceles : public area_cl {
+public:
+  isosceles(double h, double w) { height = h; width = w; }
+  double area() { return 0.5 * width * height; }};
+
+class cylinder : public area_cl {
+public:
+  cylinder(double h, double w) { height = h; width = w; }
+  double area()
+  { 
+    return (2 * 3.1416 * (width/2) * (width/2)) + 
+            (3.1416 * width * height); 
+  }
+};
+
+int main()
+{
+  rectangle b(10.0, 5.0);
+  isosceles i(4.0, 6.0);
+  cylinder c(3.0, 4.0);
+
+  cout << "長方形: " << b.area() << "\n";
+  cout << "三角形: " << i.area() << "\n";
+  cout << "シリンダ: " << c.area() << "\n";
+
+  return 0;
+}
+
+【5】インライン関数のプログラムコードは、インラインで展開されます。つまり、関数を実際に呼び出すことはありません。これによって、関数の呼び出しと終了に伴うオーバーヘッドを避けることができます。インライン関数の利点は、実行速度が速まることです。インライン関数の欠点は、プログラムのサイズが増える可能性があることです。
+
+【6】
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int i, j;
+public:
+  myclass(int x, int y) { i = x; j = y; }
+  void show() { cout << i << " " << j << "\n"; }
+};
+
+int main()
+{
+  myclass count(2, 3);
+
+  count.show();
+
+  return 0;
+}
+
+【7】クラスのメンバは、デフォルトでは非公開です。構造体のメンバは、デフォルトでは公開されます。
+
+【8】有効です。これは無名共用体を定義するプログラムコードです。
+
+第2章：総合理解度チェック
+
+【1】
+#include <iostream>
+using namespace std;
+class prompt {
+  int count;
+public:
+  prompt(char *s) { cout << s; cin >> count; };
+  ~prompt();
+};
+
+prompt::~prompt() {
+  int i, j;
+     
+  for(i=0; i<count; i++) {
+    cout << '\a';
+    for(j=0; j<32000; j++) ; // 遅延
+  }
+}
+
+int main()
+{
+  prompt ob("数字を入力: ");
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+class ftoi {
+  double feet;
+  double inches;
+public:
+  ftoi(double f);
+};
+
+ftoi::ftoi(double f)
+{
+  feet = f;
+  inches = feet * 12;
+  cout << feet << "フィートは" << inches << "インチです\n";
+}
+
+int main()
+{
+  ftoi a(12.0), b(99.0);
+  return 0;
+}
+
+【3】
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class dice {
+  int val;
+public:
+  void roll();
+};
+
+void dice::roll()
+{
+  val = (rand() % 6) + 1; // 1から6までを生成する
+  cout << val << "\n";
+}
+
+int main()
+{
+  dice one, two;
+
+  one.roll(); 
+  two.roll();
+  one.roll(); 
+  two.roll();
+  one.roll(); 
+  two.roll();
+
+  return 0;
+}

@@ -1,0 +1,680 @@
+■第6章：目次■
+･････････････････････
+●リスト第6章：前章の理解度チェック【1】
+●リスト第6章：前章の理解度チェック【6】
+●リスト6.2：例【1】
+●リスト6.2：例【2】
+●リスト6.2：例【3】
+●リスト6.2：例【4】
+●リスト6.2：練習問題【2】
+●リスト6.3：例【1】
+●リスト6.4：例【1】
+●リスト6.4：例【3】
+●リスト6.5：例【1】
+●リスト6.5：例【2】
+●リスト6.5：例【3】
+●リスト6.6：例【1】
+●リスト6.6：練習問題【1】
+●リスト6.7：例【1】
+●リスト6.7：例【2】
+●リスト6.7：例【3】
+●リスト第6章の理解度チェック【2】
+･････････････････････
+
+●リスト第6章：前章の理解度チェック【1】
+class myclass {
+  int x, y;
+public:
+  myclass(int i, int j) { x=i; y=j; }
+  //  ...
+};
+
+●リスト第6章：前章の理解度チェック【6】
+class test {
+  char *p;
+  int *q;
+  int count;
+public:
+  test(char *x, int *y, int c) {
+    p = x;
+    q = y;
+    count = c;
+  }
+  //  ...
+};
+
+●リスト6.2：例【1】
+// +をcoordクラスに対してオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  coord operator+(coord ob2);
+};
+
+// +をcoordクラスに対してオーバーロードする
+coord coord::operator+(coord ob2)
+{
+  coord temp;
+  temp.x = x + ob2.x;
+  temp.y = y + ob2.y;
+  return temp;
+}
+
+int main()
+{
+  coord o1(10, 10), o2(5, 3), o3;
+  int x, y;
+
+  o3 = o1 + o2; // 2つのオブジェクトを加算する。これはoperator+()を呼ぶ
+
+  o3.get_xy(x, y);
+  cout << "(o1+o2) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+●リスト6.2：例【2】
+// coordクラスの+、-、=をオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  coord operator+(coord ob2);
+  coord operator-(coord ob2);
+  coord operator=(coord ob2);
+};
+
+// +をcoordクラスに対してオーバーロードする
+coord coord::operator+(coord ob2)
+{
+  coord temp;
+
+  temp.x = x + ob2.x;
+  temp.y = y + ob2.y;
+
+  return temp;
+}
+
+// -をcoordクラスに対してオーバーロードする
+coord coord::operator-(coord ob2)
+{
+  coord temp;
+
+  temp.x = x - ob2.x;
+  temp.y = y - ob2.y;
+
+  return temp;
+}
+
+// =をcoordクラスに対してオーバーロードする
+coord coord::operator=(coord ob2)
+{
+  x = ob2.x;
+  y = ob2.y;
+
+  return *this; // 代入されたオブジェクトを返す
+}
+
+int main()
+{
+  coord o1(10, 10), o2(5, 3), o3;
+  int x, y;
+
+  o3 = o1 + o2; // 2つのオブジェクトの加算。operator+()を呼ぶ
+  o3.get_xy(x, y);
+  cout << "(o1+o2) X: " << x << ", Y: " << y << "\n";
+
+  o3 = o1 - o2; // 2つのオブジェクトの減算
+  o3.get_xy(x, y);
+  cout << "(o1-o2) X: " << x << ", Y: " << y << "\n";
+
+  o3 = o1; // オブジェクトの代入
+  o3.get_xy(x, y);
+  cout << "(o3=o1) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+●リスト6.2：例【3】
+// ob+obだけでなくob+intも行えるよう、+をオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  coord operator+(coord ob2); // ob + ob
+  coord operator+(int i); // ob+int
+};
+
+// +をcoordクラスに対してオーバーロードする
+coord coord::operator+(coord ob2)
+{
+  coord temp;
+
+  temp.x = x + ob2.x;
+  temp.y = y + ob2.y;
+
+  return temp;
+}
+
+// ob+intを行えるよう、+をオーバーロードする
+coord coord::operator+(int i)
+{
+  coord temp;
+
+  temp.x = x + i;
+  temp.y = y + i;
+
+  return temp;
+}
+
+int main()
+{
+  coord o1(10, 10), o2(5, 3), o3;
+  int x, y;
+
+  o3 = o1 + o2; // 2つのオブジェクトの加算。operator+(coord)を呼ぶ
+  o3.get_xy(x, y);
+  cout << "(o1+o2) X: " << x << ", Y: " << y << "\n";
+
+  o3 = o1 + 100; // オブジェクト+整数の加算。operator+(int)を呼ぶ
+  o3.get_xy(x, y);
+  cout << "(o1+100) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+●リスト6.2：例【4】
+// 参照により、+をcoordクラスに対してオーバーロードする
+coord coord::operator+(coord &ob2)
+{
+  coord temp;
+
+  temp.x = x + ob2.x;
+  temp.y = y + ob2.y;
+
+  return temp;
+}
+
+●リスト6.2：練習問題【2】
+coord coord::operator%(coord ob)
+{
+  double i;
+
+  cout << "数字を入力: ";
+  cin >> i;
+  cout << i << " の平方根は ";
+  cout << sqr(i);
+}
+
+●リスト6.3：例【1】
+// ==と&&をcoordクラスに対してオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  int operator==(coord ob2);
+  int operator&&(coord ob2);
+};
+
+// ==演算子をcoordに対してオーバーロードする
+int coord::operator==(coord ob2)
+{
+  return x==ob2.x && y==ob2.y; 
+}
+
+// &&演算子をcoordに対してオーバーロードする
+int coord::operator&&(coord ob2)
+{
+  return (x && ob2.x) && (y && ob2.y);
+}
+ 
+int main()
+{
+  coord o1(10, 10), o2(5, 3), o3(10, 10), o4(0, 0);
+
+  if(o1==o2) cout << "o1とo2は同じ\n";
+  else cout << "o1とo2は異なる\n";
+
+  if(o1==o3) cout << "o1とo3は同じ\n";
+  else cout << "o1とo3は異なる\n";
+
+  if(o1&&o2) cout << "o1 && o2は真\n";
+  else cout << "o1 && o2は偽\n";
+
+  if(o1&&o4) cout << "o1 && o4は真\n";
+  else cout << "o1 && o4は偽\n";
+
+  return 0;
+}
+
+●リスト6.4：例【1】
+// ++をcoordクラスに対してオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  coord operator++();
+};
+
+// ++をcoordクラスに対してオーバーロードする
+coord coord::operator++()
+{
+  x++;
+  y++;
+
+  return *this;
+}
+
+int main()
+{
+  coord o1(10, 10);
+  int x, y;
+
+  ++o1; // オブジェクトのインクリメント
+  o1.get_xy(x, y);
+  cout << "(++o1) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+●リスト6.4：例【3】
+// -をcoordクラスに対してオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  coord operator-(coord ob2); // 2項負符号
+  coord operator-(); // 単項負符号
+};
+
+// -をcoordクラスに対してオーバーロードする
+coord coord::operator-(coord ob2)
+{
+  coord temp;
+
+  temp.x = x - ob2.x;
+  temp.y = y - ob2.y;
+
+  return temp;
+}
+
+// 単項-をcoordクラスに対してオーバーロードする
+coord coord::operator-()
+{
+  x = -x;
+  y = -y;
+
+  return *this;
+}
+
+int main()
+{
+  coord o1(10, 10), o2(5, 7);
+  int x, y;
+
+  o1 = o1 - o2; // 減算
+  o1.get_xy(x, y);
+  cout << "(o1-o2) X: " << x << ", Y: " << y << "\n";
+
+  o1 = -o1; // 負にする
+  o1.get_xy(x, y);
+  cout << "(-o1) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+●リスト6.5：例【1】
+// フレンド関数を使用し、+をcoordクラスに対してオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  friend coord operator+(coord ob1, coord ob2);
+};
+
+// フレンド関数を使用して+をオーバーロードする
+coord operator+(coord ob1, coord ob2)
+{
+  coord temp;
+
+  temp.x = ob1.x + ob2.x;
+  temp.y = ob1.y + ob2.y;
+
+  return temp;
+}
+
+int main()
+{
+  coord o1(10, 10), o2(5, 3), o3;
+  int x, y;
+
+  o3 = o1 + o2; // 2つのオブジェクトの加算。operator+()を呼ぶ
+  o3.get_xy(x, y);
+  cout << "(o1+o2) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+●リスト6.5：例【2】
+// フレンド演算子関数を使用して、多少融通をきかせる
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  friend coord operator+(coord ob1, int i);
+  friend coord operator+(int i, coord ob1);
+};
+
+// ob+intのオーバーロード
+coord operator+(coord ob1, int i)
+{
+  coord temp;
+
+  temp.x = ob1.x + i;
+  temp.y = ob1.y + i;
+
+  return temp;
+}
+// int+obのオーバーロード
+coord operator+(int i, coord ob1)
+{
+  coord temp;
+
+  temp.x = ob1.x + i;
+  temp.y = ob1.y + i;
+
+  return temp;
+}
+
+int main()
+{
+  coord o1(10, 10);
+  int x, y;
+
+  o1 = o1 + 10; // オブジェクト+整数
+  o1.get_xy(x, y);
+  cout << "(o1+10) X: " << x << ", Y: " << y << "\n";
+
+  o1 = 99 + o1; // 整数+オブジェクト
+  o1.get_xy(x, y);
+  cout << "(99+o1) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+●リスト6.5：例【3】
+// フレンド関数を使って++をオーバーロードする
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y; // 座標値
+public:
+  coord() { x=0; y=0; }
+  coord(int i, int j) { x=i; y=j; }
+  void get_xy(int &i, int &j) { i=x; j=y; }
+  friend coord operator++(coord &ob);
+};
+
+// フレンド関数を使って++をオーバーロードする
+coord operator++(coord &ob) // 参照仮引数を使用
+{
+  ob.x++;
+  ob.y++;
+
+  return ob; // 呼び出しを生成するオブジェクトを返す
+}
+
+int main()
+{
+  coord o1(10, 10);
+  int x, y;
+
+  ++o1;  // o1は、参照によって引き渡される
+  o1.get_xy(x, y);
+  cout << "(++o1) X: " << x << ", Y: " << y << "\n";
+
+  return 0;
+}
+
+●リスト6.6：例【1】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype(char *s);
+  ~strtype() { 
+     cout << (unsigned) p << "を解放する" << "\n";
+     delete [] p;
+   }
+  char *get() { return p; }
+  strtype &operator=(strtype &ob);
+};
+
+strtype::strtype(char *s)
+{
+  int l;
+
+  l = strlen(s)+1;
+
+  p = new char [l];
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+
+  len = l;
+  strcpy(p, s);
+}
+
+// オブジェクトを代入する
+strtype &strtype::operator=(strtype &ob)
+{
+  // さらにメモリが必要か調べる
+  if(len < ob.len) { // さらにメモリの割り当てが必要
+    delete [] p;
+    p = new char [ob.len];
+    if(!p) {
+      cout << "メモリ割り当てエラー\n";
+      exit(1);
+    }
+  }
+  len = ob.len;
+  strcpy(p, ob.p);
+  return *this;
+}  
+
+int main()
+{
+  strtype a("Hello"), b("There");
+
+  cout << a.get() << "\n";
+  cout << b.get() << "\n";
+
+  a = b; // これで、pは上書きされない
+
+  cout << a.get() << "\n";
+  cout << b.get() << "\n";
+
+  return 0;
+}
+
+●リスト6.6：練習問題【1】
+class dynarray {
+  int *p;
+  int size;
+public:
+  dynarray(int s); // 配列のサイズをsに渡す
+  int &put(int i); // 要素iへの参照を返す
+  int get(int i);  // 要素iの値を返す
+  // operator=()関数を作成する
+};
+
+●リスト6.7：例【1】
+#include <iostream>
+using namespace std;
+
+const int SIZE = 5;
+
+class arraytype {
+  int a[SIZE];
+public:
+  arraytype() {
+    int i;
+    for(i=0; i<SIZE; i++) a[i] = i;
+  }
+  int operator[](int i) { return a[i]; }
+};
+
+int main()
+{
+  arraytype ob;
+  int i;
+
+  for(i=0; i<SIZE; i++)
+    cout << ob[i] << " ";
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト6.7：例【2】
+#include <iostream>
+using namespace std;
+
+const int SIZE = 5;
+
+class arraytype {
+  int a[SIZE];
+public:
+  arraytype() {
+    int i;
+    for(i=0; i<SIZE; i++) a[i] = i;
+  }
+  int &operator[](int i) { return a[i]; }
+};
+
+int main()
+{
+  arraytype ob;
+  int i;
+
+  for(i=0; i<SIZE; i++)
+    cout << ob[i] << " "; 
+  cout << "\n";
+
+  // 配列の各要素に10を加算する
+  for(i=0; i<SIZE; i++) 
+    ob[i] = ob[i]+10;  // =の左辺に[]
+
+  for(i=0; i<SIZE; i++) 
+    cout << ob[i] << " ";
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト6.7：例【3】
+// 安全な配列の例
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+const int SIZE = 5;
+
+class arraytype {
+  int a[SIZE];
+public:
+  arraytype() {
+    int i;
+    for(i=0; i<SIZE; i++) a[i] = i;
+  }
+  int &operator[](int i);
+};
+
+// arraytypeの範囲チェック
+int &arraytype::operator[](int i)
+{
+  if(i<0 || i> SIZE-1) {
+    cout << "\n";
+    cout << i << " は境界エラー\n";
+    exit(1);
+  }
+  return a[i];
+}
+
+int main()
+{
+  arraytype ob;
+  int i;
+
+  // これはOK
+  for(i=0; i<SIZE; i++) 
+    cout << ob[i] << " ";
+  /* SIZE+100は範囲外
+     実行時エラーになる */
+  ob[SIZE+100] = 99; // エラー!
+
+  return 0;
+}
+
+●リスト第6章の理解度チェック【2】
+class three_d {
+  int x, y, z;
+public:
+  three_d(int i, int j, int k) 
+  {
+     x = i; y = j; z = k;
+  }
+  three_d() { x=0; y=0; z=0; }
+  void get(int &i, int &j, int &k)
+  {
+     i = x; j = y; k = z;
+  }
+};

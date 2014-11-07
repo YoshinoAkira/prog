@@ -1,0 +1,410 @@
+■第1章の解答：目次■
+・・・・・・・・・・・・・・・・・・・・・
+1.1：練習問題
+1.3：練習問題
+1.4：練習問題
+1.5：練習問題
+1.6：練習問題
+1.7：練習問題
+第1章の理解度チェック
+・・・・・・・・・・・・・・・・・・・・・
+
+1.1：練習問題
+
+【1】（省略）
+
+1.3：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  double hours, wage;
+
+  cout << "労働時間を入力する: ";
+  cin >> hours;
+
+  cout << "時給を入力する: ";
+  cin >> wage;
+
+  cout << "合計賃金は" << wage * hours << "円\n";
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  double feet;
+
+  do {
+     cout << "フィート数を入力する（0で終了）: ";
+     cin >> feet;
+     
+     cout << feet * 12 << "インチ\n";
+  } while (feet != 0.0);
+
+  return 0;
+}
+
+【3】
+/* このCプログラムをC++スタイルに書き直す
+   このプログラムは、最大公約数を計算する
+*/
+#include <iostream>
+using namespace std;
+
+int gcd(int a, int b)
+{
+  if(!b) return a;
+  return gcd(b, a%b);
+}
+
+int main()
+{
+  int a, b, c;
+
+  cout << "2つの整数を入力: ";
+  cin >> a >> b;
+  c = gcd(a, b);
+  cout << "最大公約数は" << c << "\n";
+  return 0;
+}
+
+1.4：練習問題
+
+【1】このコメントは、変わってはいますが有効です。
+
+【2】（省略）
+
+1.5：練習問題
+
+【1】（省略）
+
+【2】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class card {
+  char title[80];  // 本のタイトル
+  char author[40]; // 著者
+  int number;      // 冊数
+public:
+  void store(char *t, char *name, int num);
+  void show();
+};
+
+void card::store(char *t, char *name, int num)
+{
+  strcpy(title, t);
+  strcpy(author, name);
+  number = num;
+}
+
+void card::show()
+{
+  cout << "本のタイトル: " << title << "\n";
+  cout << "著者: " << author << "\n";
+  cout << "冊数: " << number << "\n";
+}
+
+int main()
+{
+  card book1, book2, book3;
+
+  book1.store("Dune", "Frank Herbert", 2);
+  book2.store("The Foundation Trilogy", "Isaac Asimov", 2);
+  book3.store("The Rainbow", "D. H. Lawrence", 1);
+
+  book1.show();
+  book2.show();
+  book3.show();
+
+  return 0;
+}
+
+【監修者注：解答（例）のプログラムでは、仮引数の型をchar *として定義して文字列リテラルを実引数として渡しています。旧来のC++処理系ではまったく正しい表現ですが、添付のコンパイラGCC 4.4では、文字列はtypedef basic_string<char> stringのようにテンプレートを使って定義されているので、コンパイル時に“deprecated conversion from string constant to char *”という警告が出ます。これは推奨されない型変換を実行したということで、誤りではありませんから、プログラムの実行には何ら支障はありません。】
+
+【3】
+#include <iostream>
+using namespace std;
+
+#define SIZE 100
+
+class q_type {
+  int queue[SIZE]; // キューを保存する
+  int head, tail;  // 先頭と末尾の索引
+public:
+  void init();     // 初期化
+  void q(int num); // 設定
+  int deq();       // 取得
+};
+
+// 初期化
+void q_type::init()
+{
+  head = tail = 0;
+}
+
+// キューに値を格納する
+void q_type::q(int num)
+{
+  if(tail+1==head || (tail+1==SIZE && !head)) {
+    cout << "キューは一杯です\n";
+    return;
+  }
+  tail++;
+  if(tail==SIZE) tail = 0; // 循環する
+  queue[tail] = num;
+}
+
+// キューから値を削除する
+int q_type::deq()
+{
+  if(head == tail) {
+    cout << "キューは空です\n";
+    return 0;  // またはその他のエラーインジケータ
+  }
+  head++;
+  if(head==SIZE) head = 0; // 循環する
+  return queue[head];
+}
+
+int main()
+{
+  q_type q1, q2;
+  int i;
+
+  q1.init();
+  q2.init();
+
+  for(i=1; i<=10; i++) {
+    q1.q(i);
+    q2.q(i*i);
+  }
+
+  for(i=1; i<=10; i++) {
+    cout << "キューから値を削除する（q1）: " << q1.deq() << "\n";
+    cout << "キューから値を削除する（q2）: " << q2.deq() << "\n";
+  }
+
+  return 0;
+}
+
+1.6：練習問題
+
+【1】f()関数にプロトタイプがありません。
+
+【2】（省略）
+
+1.7：練習問題
+
+【1】
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// 整数、長整数、倍精度浮動小数点数用にsroot()関数をオーバーロードする
+int sroot(int i);
+long sroot(long i);
+double sroot(double i);
+
+int main()
+{
+  cout << "90.34の平方根は: " << sroot(90.34);
+  cout << "\n";
+  cout << "90Lの平方根は: " << sroot(90L);
+  cout << "\n";
+  cout << "90の平方根は: " << sroot(90);
+  cout << "\n";
+ 
+  return 0;
+}
+
+// 整数の平方根を返す
+int sroot(int i)
+{
+  cout << "整数の平方根を計算する\n";
+  return (int) sqrt((double) i);
+}
+
+// 長整数の平方根を返す
+long sroot(long i)
+{
+  cout << "長整数の平方根を計算する\n";
+  return (long) sqrt((double) i);
+}
+
+// 倍精度浮動小数点数の平方根を返す
+double sroot(double i)
+{
+  cout << "倍精度浮動小数点数の平方根を計算する\n";
+  return sqrt(i);
+}
+
+【2】atof()、atoi()、atol()の各関数は、オーバーロードできません。これらの関数の違いは、戻り値のデータ型だけだからです。関数をオーバーロードするためには、引数の型または数が違っていなければなりません。
+
+【3】
+// min()関数をオーバーロードする
+
+#include <iostream>
+#include <cctype>
+using namespace std;
+
+char min(char a, char b);
+int min(int a, int b);
+double min(double a, double b);
+
+int main()
+{
+  cout << "最小値は: " << min('x', 'a') << "\n";
+  cout << "最小値は: " << min(10, 20) << "\n";
+  cout << "最小値は: " << min(0.2234, 99.2) << "\n";
+
+  return 0;
+}
+
+// 文字用のmin()
+char min(char a, char b)
+{
+  return tolower(a)<tolower(b) ? a : b;
+}
+
+// 整数用のmin()
+int min(int a, int b)
+{
+  return a<b ? a : b;
+}
+
+// 倍精度浮動小数点数用のmin()
+double min(double a, double b)
+{
+  return a<b ? a : b;
+}
+
+【4】
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+// sleepをオーバーロードし、整数またはchar *を引数として受け取る
+void sleep(int n);
+void sleep(char *n);
+
+// プロセッサの速度に合わせてこの値を変更する
+#define DELAY 100000000
+
+int main()
+{
+  cout << '.';
+  sleep(3);
+  cout << '.';
+  sleep("2");
+  cout << ".\n";
+
+  return 0;
+}
+
+// 整数を受け取るsleep()
+void sleep(int n)
+{
+  long i;
+
+  for( ; n; n--)
+    for(i=0; i<DELAY; i++) ;
+}
+
+// char *引数を受け取るsleep()
+void sleep(char *n)
+{
+  long i;
+  int j;
+
+  j = atoi(n);
+
+  for( ; j; j--)
+    for(i=0; i<DELAY; i++) ;
+}
+
+第1章の理解度チェック
+
+【1】ポリモーフィズムとは、1つの汎用インターフェイスを使用して、複数の異なる機能にアクセスするためのしくみです。カプセル化は、プログラムコードとそれに関するデータの間のつながりを保護します。カプセル化されたルーチンへのアクセスは厳密に制御されており、これによって不要な干渉を防ぐことができます。継承とは、1つのオブジェクトがほかのオブジェクトの特性を受け継ぐプロセスのことです。継承を使うと、階層的分類システムを実現することができます。 
+
+【2】C++プログラムにコメントを含めるには、通常のC形式のスタイル（/* */）を使うか、C++独自の形式の単一行コメント（//）を使用します。
+
+【3】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int b, e, r;
+  cout << "基数を入力: ";
+  cin >> b;
+  cout << "ベキ指数を入力: ";
+  cin >> e;
+
+  r = 1;
+  for( ; e; e--) r = r * b;
+  
+  cout << "結果: " << r << "\n";
+
+  return 0;
+}
+
+【4】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+// 文字列取得関数をオーバーロードする
+void rev_str(char *s);         // 文字列をその場で逆順にする
+void rev_str(char *in, char *out); // 逆順にした文字列を
+                                   // outに格納する
+
+int main()
+{
+  char s1[80], s2[80];
+  strcpy(s1, "This is a test");
+
+  rev_str(s1, s2);
+  cout << s2 << "\n";
+
+  rev_str(s1);
+  cout << s1 << "\n";
+
+  return 0;
+}
+
+// 文字列を逆順にし、結果をsに格納する
+void rev_str(char *s)
+{
+  char temp[80];
+  int i, j;
+
+  for(i=strlen(s)-1, j=0; i>=0; i--, j++)
+    temp[j] = s[i];
+
+  temp[j] = '\0'; // ヌルで終了する結果
+
+  strcpy(s, temp);
+}
+
+// 文字列を逆順にし、結果をoutに格納する
+void rev_str(char *in, char *out)
+{
+  int i, j;
+
+  for(i=strlen(in)-1, j=0; i>=0; i--, j++)
+    out[j] = in[i];
+
+  out[j] = '\0';  // ヌルで終了する結果
+}
+
+【5】boolデータ型にはブール型の値を格納できます。bool型のオブジェクトは、真または偽のどちらかの値しか持ちません。

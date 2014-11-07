@@ -1,0 +1,542 @@
+■第5章の解答：目次■
+･････････････････････
+第5章：前章の理解度チェック
+5.1：練習問題
+5.2：練習問題
+5.3：練習問題
+5.4：練習問題
+5.5：練習問題
+第5章の理解度チェック
+第5章：総合理解度チェック
+･････････････････････
+
+第5章：前章の理解度チェック
+
+【1】参照とは特殊なポインタのことで、自動的に間接参照され、参照先のオブジェクトと同義で使うことができます。参照には仮引数参照、独立参照、関数から返される参照の3種類があります。
+
+【2】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  float *f;
+  int *i;
+
+  f = new float;
+  i = new int;
+
+  if(!f || !i) {
+    cout << "メモリ割り当てエラー\n";
+    return 1;
+  }
+
+  *f = 10.101;
+  *i = 100;
+
+  cout << *f << ' ' << *i << "\n";
+
+  delete f;
+  delete i;
+
+  return 0;
+}
+
+【3】初期値を持つnew演算子の一般形式は次のとおりです。
+
+p-var = new type (initializer);
+
+	たとえば、1つの整数を割り当て、値として10を設定するには次のようにします。
+
+int *p;
+
+p = new int (10);
+
+【4】
+#include <iostream>
+using namespace std;
+
+class samp {
+  int x;
+public:
+  samp(int n) { x = n; }
+  int getx() { return x; }
+};
+
+int main()
+{
+  samp A[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+  int i;
+
+  for(i=0; i<10; i++) cout << A[i].getx() << ' ';
+
+  cout << "\n";
+
+  return 0;
+}
+
+【5】利点：参照仮引数を使用すると、関数を呼び出す際に使用したオブジェクトのコピーが作成されません。参照呼び出しは、一般に値呼び出しよりも高速です。参照仮引数を使うと参照による呼び出しの構文と手続きが効率化されるので、エラーが起こる可能性が減ります。
+	欠点：参照仮引数に変更を加えると、呼び出し時に使用した変数に変更が及びます。参照仮引数を使うと、呼び出し元ルーチンに副作用が及ぶ可能性が生じます。
+
+【6】できません。
+
+【7】
+#include <iostream>
+using namespace std;
+
+void mag(long &num, long order);
+
+int main()
+{
+  long n = 4;
+  long o = 2;
+
+  cout << "4を2桁あげると";
+  mag(n, o);
+  cout << n << "\n";
+
+  return 0;
+}
+
+void mag(long &num, long order)
+{
+  for( ; order; order--) num = num * 10;
+}
+
+5.1：練習問題
+
+【1】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype();
+  strtype(char *s, int l);
+  char *getstring() { return p; }
+  int getlength() { return len; }
+};
+
+strtype::strtype()
+{
+  p = new char [255];
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  *p = '\0'; // ヌル文字列
+  len = 255;
+}
+
+strtype::strtype(char *s, int l)
+{
+  if(strlen(s) >= l) {
+    cout << "少ないメモリの割り当て\n";
+    exit(1);
+  }
+
+  p = new char [l];
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(p, s);
+  len = l;
+}
+
+int main()
+{
+  strtype s1;
+  strtype s2("This is a test", 100);
+
+  cout << "s1: " << s1.getstring() << " - 長さ: ";
+  cout << s1.getlength() << "\n";
+
+  cout << "s2: " << s2.getstring() << " - 長さ: ";
+  cout << s2.getlength() << "\n";
+
+  return 0;
+}
+
+【2】
+// ストップウォッチエミュレータ
+#include <iostream>
+#include <ctime>
+using namespace std;
+
+class stopwatch {
+  double begin, end;
+public:
+  stopwatch();
+  stopwatch(clock_t t);
+  ~stopwatch();
+  void start();
+  void stop();
+  void show();
+};
+
+stopwatch::stopwatch()
+{ 
+  begin = end = 0.0;
+}
+
+stopwatch::stopwatch(clock_t t)
+{
+  begin = (double) t / CLOCKS_PER_SEC;
+  end = 0.0;
+} 
+
+stopwatch::~stopwatch()
+{
+  cout << "Stopwatchオブジェクトは破壊された\n";
+}
+
+void stopwatch::start()
+{
+  begin = (double) clock() / CLOCKS_PER_SEC;
+}
+
+void stopwatch::stop()
+{
+  end = (double) clock() / CLOCKS_PER_SEC;
+}
+ 
+void stopwatch::show()
+{
+  cout << "経過時間: " << end - begin;
+  cout << "\n";
+}
+
+int main()
+{
+  stopwatch watch;
+  long i;
+  watch.start();
+  for(i=0; i<320000000; i++) ; // forループの時間を測定する
+  watch.stop();
+  watch.show();
+
+  // 初期値を使用してオブジェクトを作成する
+  stopwatch s2(clock());
+  for(i=0; i<250000000; i++) ; // forループの時間を測定する
+  s2.stop();
+  s2.show();
+
+  return 0;
+}
+
+【3】（省略）
+
+5.2：練習問題
+
+【1】objオブジェクトとtempオブジェクトは通常どおり作成されています。ただし、f()関数によってtempオブジェクトが返されるときに一時オブジェクトが作成され、この一時オブジェクトによってコピーコンストラクタが呼び出されています。
+
+【2】このプログラムでは、getval()関数にオブジェクトを渡すときに、厳密なコピーが作成されます。getval()関数が終了し、コピーオブジェクトが破棄されると、そのオブジェクトに割り当てられていたメモリ（pが指すメモリ）が解放されます。ただし、getval()関数の呼び出し時に使用したオブジェクトでは、これと同じメモリをまだ必要としています。これを修正したプログラムを次に示します。次のプログラムでは、コピーコンストラクタを使用してこの問題を防いでいます。
+
+// 修正したプログラム
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class myclass {
+  int *p;
+public:
+  myclass(int i);
+  myclass(const myclass &o); // コピーコンストラクタ
+  ~myclass() { delete p; }
+  friend int getval(myclass o);
+};
+myclass::myclass(int i)
+{
+  p = new int;
+
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  *p = i;
+}
+
+// コピーコンストラクタ
+myclass::myclass(const myclass &o)
+{
+  p = new int; // コピーオブジェクトに専用のメモリを割り当てる
+
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  *p = *o.p;
+}
+
+int getval(myclass o)
+{
+  return *o.p; // 値を取得する
+}
+
+int main()
+{
+  myclass a(1), b(2);
+
+  cout << getval(a) << " " << getval(b);
+  cout << "\n";
+  cout << getval(a) << " " << getval(b);
+  cout << "\n";
+
+  return 0;
+}
+
+【3】あるオブジェクトを使用して別のオブジェクトを初期化すると、コピーコンストラクタが呼び出されます。通常のコンストラクタは、オブジェクトを作成したときに呼び出されます。
+
+5.3：練習問題
+
+【1】
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+long mystrtol(const char *s, char **end, int base = 10)
+{
+  return strtol(s, end, base);
+}
+
+int main()
+{
+  long x;
+  char *s1 = "100234";
+  char *p;
+
+  x = mystrtol(s1, &p, 16);
+  cout << "基数16: " << x << "\n";
+
+  x = mystrtol(s1, &p, 10);
+  cout << "基数10: " << x << "\n";
+
+  x = mystrtol(s1, &p); // デフォルトの基数10を使用する
+  cout << "デフォルトの基数10: " << x << "\n";
+
+  return 0;
+}
+
+【2】デフォルト引数を受け取るすべての仮引数は、デフォルト引数を受け取らない仮引数よりも右側に書かなければなりません。つまり、デフォルト値を持つ仮引数を書き始めたら、以降の仮引数はすべてデフォルト値を持っていなければなりません。この問題では、qにデフォルト値がありません。
+
+【3】ほかの仮引数またはローカル変数をデフォルト引数として使うことはできません。
+
+5.4：練習問題
+
+【1】（省略）
+
+5.5：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+
+int dif(int a, int b)
+{
+  return a-b;
+}
+
+float dif(float a, float b)
+{
+  return a-b;
+}
+
+int main()
+{
+  int (*p1)(int, int);
+  float (*p2)(float, float);
+
+  p1 = dif; // dif(int, int)のアドレス
+  p2 = dif; // dif(float, float);のアドレス
+
+  cout << p1(10, 5) << ' ';
+  cout << p2(10.5, 8.9) << "\n";
+
+  return 0;
+}
+
+第5章の理解度チェック
+
+【1】
+// time_t型の仮引数を受け取るようにdate()関数をオーバーロードする
+#include <iostream>
+#include <cstdio> // sscanf()関数用にインクルードする
+#include <ctime>
+using namespace std;
+
+class date {
+  int day, month, year;
+public:
+  date(char *str);
+  date(int m, int d, int y) {
+    day = d;
+    month = m;
+    year = y;
+  }
+  // time_t型の仮引数をオーバーロードする
+  date(time_t t);
+  void show() {
+    cout << month << '/' << day << '/';
+    cout << year << "\n";
+  }
+};
+ 
+date::date(char *str)
+{
+  sscanf(str, "%d%*c%d%*c%d", &month, &day, &year);
+}
+
+date::date(time_t t)
+{
+  struct tm *p;
+
+  p = localtime(&t); // 時刻を各要素に変換する
+  day = p->tm_mday;
+  month = p->tm_mon;
+  year = p->tm_year;
+}
+
+int main()
+{
+  // 文字列を使用してdateオブジェクトを作成する
+  date sdate("12/31/99");
+
+  // 整数を使用してdateオブジェクトを作成する
+  date idate(12, 31, 99);
+
+  /* time_t型を使用してdateオブジェクトを作成する
+     これによって、システム日付を使用したオブジェクトが作成される */
+  date tdate(time(NULL));
+
+  sdate.show();
+  idate.show();
+  tdate.show();
+  
+  return 0;
+}
+
+【2】sampクラスではコンストラクタが1つしか定義されておらず、このコンストラクタでは初期値を必要とします。したがって、初期値を指定せずにsamp方のオブジェクトを宣言するのは正しくありません（つまりsamp xは無効な宣言です）。
+
+【3】コンストラクタをオーバーロードする理由の1つは、それぞれの状況に合わせて最適なコンストラクタを選択できるように、柔軟性なプログラムを作成することです。また、コンストラクタをオーバーロードすることによって、初期値を持つオブジェクトと初期値を持たないオブジェクトの両方を宣言することもできます。さらに、コンストラクタをオーバーロードして、動的配列を割り当てることもできます。
+
+【4】コピーコンストラクタの最も広く使われている一般形式は次のとおりです。
+
+classname (const classname &obj ) {
+    // コンストラクタの本文
+}
+
+【5】コピーコンストラクタは、初期化が発生するときに呼び出されます。具体的には、あるオブジェクトを使って明示的にほかのオブジェクトを初期化したとき、関数に仮引数としてオブジェクトを渡したとき、関数からオブジェクトを返し、一時オブジェクトが作成されたときです。
+
+【6】デフォルト引数とは、関数を呼び出すときに引数を指定しなかった場合に、対応する関数仮引数として使われる値のことです。
+
+【7】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+void reverse(char *str, int count = 0);
+
+int main()
+{
+  char s1[] = "This is a test.";
+  char s2[] = "I like C++.";
+
+  reverse(s1);     // 文字列全体を逆順にする
+  reverse(s2, 7);  // 最初の7文字を逆順にする
+
+  cout << s1 << "\n";
+  cout << s2 << "\n";
+
+  return 0;
+}
+
+void reverse(char *str, int count)
+{
+  int i, j;
+  char temp;
+  
+  if(!count) count = strlen(str)-1;
+
+  for(i=0, j=count; i<j; i++, j--) {
+    temp = str[i];
+    str[i] = str[j];
+    str[j] = temp;
+  }
+}
+
+【8】デフォルト引数を受け取るすべての仮引数は、デフォルト引数を受け取らない仮引数よりも右側に記述しなければなりません。
+
+【9】あいまいさは、デフォルトの型変換、参照仮引数、デフォルト引数によって発生することがあります。
+
+【10】どちらのcompute()関数を呼び出すべきかをコンパイラが判別できないので、このプログラムコードはあいまいです。divisor値としてデフォルト値を使用する最初のcompute()関数を呼び出すべきか、引数を1つだけ受け取る2つ目のcompute()関数を呼び出すべきかを判断できません。
+
+【11】オーバーロード関数のアドレスを取得する際には、ポインタの型指定によって、使用する関数が決まります。
+
+第5章：総合理解度チェック
+
+【1】
+#include <iostream>
+using namespace std;
+
+void order(int &a, int &b)
+{
+  int t;
+
+  if(a<b) return;
+  else { // aとbを入れ替える
+    t = a;
+    a = b;
+    b = t;
+  }
+}
+
+int main()
+{
+  int x=10, y=5;
+
+  cout << "x: " << x << ", y: " << y << "\n";
+
+  order(x, y);
+  cout << "x: " << x << ", y: " << y << "\n";
+
+  return 0;
+}
+
+【2】参照仮引数を受け取る関数の呼び出し構文は、値仮引数を受け取る関数の構文と同じです。
+
+【3】デフォルト引数は、関数オーバーロードの省略形として使うことができます。これは結果が同じだからです。
+	たとえば次の関数があるとします。
+
+int f(int a, int b = 0);
+
+	これは、次の2つのオーバーロード関数を使用するのと機能的に同等です。
+
+int f(int a);
+
+int f(int a, int b);
+
+【4】
+#include <iostream>
+using namespace std;
+
+class samp {
+  int a;
+public:
+  samp() { a = 0; }
+  samp(int n) { a = n; }
+  int get_a() { return a; }
+};
+
+int main()
+{
+  samp ob(88);
+  samp obarray[10];
+  // ...
+}
+
+【5】コピーコンストラクタは、オブジェクトのコピーの作成方法をプログラマが正確に制御したいときに使用します。これは、厳密なコピーを作成すると望ましくない副作用が発生するという場合にのみ重要です。

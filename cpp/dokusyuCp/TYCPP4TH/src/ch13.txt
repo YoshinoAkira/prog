@@ -1,0 +1,776 @@
+■第13章：目次■
+･････････････････････
+●リスト第13章：前章の理解度チェック【4】
+●リスト13.1：例【1】
+●リスト13.1：例【2】
+●リスト13.1：例【3】
+●リスト13.1：例【4】
+●リスト13.1：例【6】
+●リスト13.1：練習問題【1】
+●リスト13.2：例【1】
+●リスト13.2：例【2】
+●リスト13.2：練習問題【2】
+●リスト13.3：例【1】
+●リスト13.3：例【2】
+●リスト13.3：例【3】
+●リスト13.3：例【4】
+●リスト13.4：例【1】
+●リスト13.4：例【2】
+●リスト13.4：練習問題【1】
+●リスト13.5
+●リスト13.5
+●リスト13.5：例【1】
+●リスト13.5：例【2】
+●リスト13.5：例【3】
+●リスト13.5：練習問題【2】
+●リスト13.6：例【1】
+●リスト13.6：例【2】
+●リスト13.6：例【3】
+●リスト13.7：例【1】
+●リスト13.7：例【2】
+●リスト13.7：例【3】
+●リスト13.7：例【4】
+･････････････････････
+
+●リスト第13章：前章の理解度チェック【4】
+class Base {
+  virtual void f() {}
+};
+
+class Derived : public Base {
+};
+
+int main()
+{
+  Base *p, b_ob;
+  Derived d_ob;
+
+  // ...
+
+●リスト13.1：例【1】
+// 名前空間の例
+#include <iostream>
+using namespace std;
+
+// 名前空間を定義する
+namespace firstNS {
+  class demo {
+    int i;
+  public:
+    demo(int x) { i = x; }
+    void seti(int x) { i = x; }
+    int geti() { return i; }
+  };
+  char str[] = "名前空間を説明する\n";
+  int counter;
+}
+
+// ほかの名前空間を定義する
+namespace secondNS {
+  int x, y;
+}
+
+int main()
+{
+  // スコープ解決演算子を使用する
+  firstNS::demo ob(10);
+
+  /* obを宣言した後は、名前空間修飾子を使用せずに
+     そのメンバ関数を使用することができる。 */
+  cout << "obの値は : " << ob.geti();
+  cout << endl;
+
+  ob.seti(99);
+
+  cout << "obの値は今 : " << ob.geti();
+  cout << endl;
+
+  // strを現在のスコープに取り込む
+  using firstNS::str;
+  cout << str;
+
+  // firstNSのすべてのメンバを現在のスコープに取り込む
+  using namespace firstNS;
+  for(counter = 10; counter; counter--)
+    cout << counter << " ";
+  cout << endl;
+
+  // secondNS名前空間を使用する
+  secondNS::x = 10;
+  secondNS::y = 20;
+
+  cout << "x, y: " << secondNS:: x;
+  cout << ", " << secondNS::y << endl;
+
+  // 2つ目の名前空間を可視状態にする
+  using namespace secondNS;
+  demo xob(x), yob(y);
+
+  cout << "xob, yob: " << xob.geti() << ", ";
+  cout << yob.geti() << endl;
+
+  return 0;
+}
+
+●リスト13.1：例【2】
+// 名前空間は累積される
+#include <iostream>
+using namespace std;
+
+namespace Demo {
+  int a; // Demo名前空間内
+}
+
+int x;   // グローバルな名前空間内
+
+namespace Demo {
+  int b; // これもDemo名前空間内
+}
+
+int main()
+{
+  using namespace Demo;
+
+  a = b = x = 100;
+
+  cout << a << " " << b << " " << x << endl;
+
+  return 0;
+}
+
+●リスト13.1：例【3】
+// 明示的なstd::修飾子を使用する
+#include <iostream>
+
+int main()
+{
+  double val;
+
+  std::cout << "数字を入力: ";
+  std::cin >> val;
+  std::cout << "入力した数字は: ";
+  std::cout << val;
+  std::cout << "\n";
+
+  return 0;
+}
+
+●リスト13.1：例【4】
+// 少しの名前だけをグローバルな名前空間に取り込む
+#include <iostream>
+
+// coutとcinへのアクセスを可能にする
+using std::cout;
+using std::cin;
+
+int main()
+{
+  double val;
+  cout << "数字を入力: ";
+
+  cin >> val;
+  cout << "入力した数字は: ";
+  cout << val;
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト13.1：例【6】
+◇ファイル1
+static int counter;
+void f1() {
+  counter = 99; // 有効
+}
+
+◇ファイル2
+extern int counter;
+void f2() {
+  counter = 10; // エラー
+}
+
+◇ファイル1
+namespace {
+  int counter;
+}
+void f1() {
+  counter = 99; // OK
+}
+
+◇ファイル2
+extern int counter;
+void f2() {
+  counter = 10; // エラー
+}
+
+●リスト13.1：練習問題【1】
+// スペースを|に変換する
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  if(argc!=3) {
+    cout << "使い方: CONVERT <入力ファイル> <出力ファイル>\n";
+    return 1;
+ }
+  ifstream fin(argv[1]); // 入力ファイルを開く
+  ofstream fout(argv[2]);  // 出力ファイルを作成する
+
+  if(!fout) {
+    cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+
+  if(!fin) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  char ch;
+
+  fin.unsetf(ios::skipws);  // スペースをスキップしない
+  while(!fin.eof()) {
+    fin >> ch;
+    if(ch==' ') ch = '|';
+    if(!fin.eof()) fout << ch;
+  }
+
+  fin.close();
+  fout.close();
+
+
+  return 0;
+}
+
+●リスト13.2：例【1】
+// 単純な変換関数の例
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y;
+public:
+  coord(int i, int j) { x = i; y = j; }
+  operator int() { return x*y; } // 変換関数
+};
+
+int main()
+{
+  coord o1(2, 3), o2(4, 3);
+  int i;
+
+  i = o1;  // 自動的に整数に変換する
+  cout << i << "\n";
+
+  i = 100 + o2;  // o2を整数に変換する
+  cout << i << "\n";
+
+  return 0;
+}
+
+●リスト13.2：例【2】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class strtype {
+  char str[80];
+  int len;
+public:
+  strtype(char *s) { strcpy(str, s); len = strlen(s); }
+  operator char *() { return str; } // char*に変換する
+};
+
+int main()
+{
+  strtype s("This is a test\n");
+  char *p, s2[80];
+
+  p = s; // char *に変換する
+  cout << "ここに文字列が入る: " << p << "\n";
+
+  // 関数呼び出しの中でchar *に変換する
+  strcpy(s2, s);
+  cout << "ここに文字列のコピーが入る: " << s2 << "\n";
+
+  return 0;
+}
+
+●リスト13.2：練習問題【2】
+class pwr {
+  int base;
+  int exp;
+public:
+  pwr(int b, int e) { base = b; exp = e; }
+  // ここに整数への変換関数を作成する
+};
+
+●リスト13.3：例【1】
+// staticメンバ変数の例
+#include <iostream>
+using namespace std;
+
+class myclass {
+  static int i;
+public:
+  void seti(int n) { i = n; }
+  int geti() { return i; }
+};
+
+// myclass::iの定義。iはまだmyclassクラスに対して非公開
+int myclass::i;
+
+int main()
+{
+  myclass o1, o2;
+
+  o1.seti(10); 
+  cout << "o1.i: " << o1.geti() << "\n"; // 10を表示する
+  cout << "o2.i: " << o2.geti() << "\n"; // これも10を表示する
+
+  return 0;
+}
+
+●リスト13.3：例【2】
+// どのオブジェクトにも依存せずにstaticメンバ変数を使用する
+#include <iostream>
+using namespace std;
+
+class myclass {
+public:
+  static int i;
+  void seti(int n) { i = n; }
+  int geti() { return i; }
+};
+
+int myclass::i;
+
+int main()
+{
+  myclass o1, o2;
+
+  // iを直接設定する
+  myclass::i = 100; // オブジェクトを参照していない
+
+  cout << "o1.i: " << o1.geti() << "\n"; // 100を表示する
+  cout << "o2.i: " << o2.geti() << "\n"; // これも100を表示する
+
+  return 0;
+}
+
+●リスト13.3：例【3】
+// リソース共有の例
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class output {
+  static char outbuf[255]; // これは共有リソース
+  static int inuse;        // 0の場合はバッファを利用できる
+  static int oindex;       // outbufの索引
+  char str[80];
+  int i;   // str内の次のcharの索引
+  int who; // オブジェクトを識別する。0より大きくなければならない
+public:
+  output(int w, char *s) { strcpy(str, s); i = 0; who = w; }
+
+  /* この関数は、バッファを待機している場合は-1を返す
+     出力を完了した場合は0、
+     バッファを使用中の場合はwhoを返す
+  */
+  int putbuf()
+  {
+    if(!str[i]) { // 出力完了
+      inuse = 0;  // バッファを解放する
+      return 0;   // 終了を通知する
+    }
+    if(!inuse) inuse = who;     // バッファを取得する
+    if(inuse != who) return -1; // ほかのオブジェクトが出力中
+    if(str[i]) { // まだ出力する文字がある
+      outbuf[oindex] = str[i];
+      i++; oindex++;
+      outbuf[oindex] = '\0';  // 常にヌルで終了する
+      return 1;
+    }
+    return 0;
+  }
+  void show() { cout << outbuf << "\n"; }
+};
+
+char output::outbuf[255]; // これは共有リソース
+int output::inuse = 0;    // 0の場合はバッファを利用できる
+int output::oindex = 0;   // outbufの索引
+
+int main()
+{
+  output o1(1, "This is a test"), o2(2, " of statics");
+  while(o1.putbuf() | o2.putbuf()) ; // 文字を出力する
+  o1.show();
+
+  return 0;
+}
+
+●リスト13.3：例【4】
+#include <iostream>
+using namespace std;
+
+class static_func_demo {
+  static int i;
+public:
+  static void init(int x) { i = x; }
+  void show() { cout << i << "\n"; }
+};
+
+int static_func_demo::i; // iを定義する
+
+int main()
+{
+  // オブジェクトを作成する前にstaticデータを初期化する
+  static_func_demo::init(100);
+  static_func_demo x;
+  x.show(); // 100を表示する
+
+  return 0;
+}
+
+●リスト13.4：例【1】
+/*
+   constメンバ関数の使用例
+   このプログラムはコンパイルできない
+*/
+#include <iostream>
+using namespace std;
+
+class Demo {
+  int i;
+public:
+  int geti() const {
+    return i; // 有効
+  }
+
+  void seti(int x) const {
+    i = x; // エラー
+  }
+};
+
+int main()
+{
+  Demo ob;
+
+  ob.seti(1900); 
+  cout << ob.geti();
+  cout << "\n";
+
+  return 0;
+}
+
+
+●リスト13.4：例【2】
+// mutableの使用例
+#include <iostream>
+using namespace std;
+
+class Demo {
+  mutable int i;
+  int j;
+public:
+  int geti() const {
+    return i; // 有効
+  }
+
+  void seti(int x) const {
+    i = x; // 今度は有効
+  }
+
+/* 次の関数はコンパイルできない
+  void setj(int x) const {
+    j = x; // まだエラー
+  }
+*/
+};
+
+int main()
+{
+  Demo ob;
+  ob.seti(1900); 
+  cout << ob.geti();
+  cout << "\n";
+  return 0;
+}
+
+●リスト13.4：練習問題【1】
+// このプログラムにはエラーがある
+#include <iostream>
+using namespace std;
+
+class CountDown {
+  int incr;
+  int target;
+  int current;
+public:
+  CountDown(int delay, int i=1) {
+    target = delay;
+    incr = i;
+    current = 0;
+  }
+
+  bool counting() const {
+    current += incr;
+
+    if(current >= target) {
+      cout << "\a";
+      return false;
+    }
+    cout << current << " ";
+
+    return true;
+  }
+};
+
+int main()
+{
+  CountDown ob(100, 2);
+  while(ob.counting());
+  cout << "\n";
+  return 0;
+}
+
+●リスト13.5
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int a;
+public:
+  myclass(int x) { a = x; } 
+  int geta() { return a; }
+};
+ 
+int main()
+{
+  myclass ob(4);
+
+  cout << ob.geta();
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト13.5
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int a;
+public:
+  explicit myclass(int x) { a = x; } 
+  int geta() { return a; }
+};
+
+●リスト13.5：例【1】
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class myclass {
+  int a;
+public:
+  myclass(int x) { a = x; } 
+  myclass(char *str) { a = atoi(str); }
+  int geta() { return a; }
+};
+ 
+int main()
+{
+  myclass ob1 = 4;     // myclass(4)に変換する
+  myclass ob2 = "123"; // myclass("123")に変換する
+
+  cout << "ob1: " << ob1.geta() << endl;
+  cout << "ob2: " << ob2.geta() << endl;
+
+  return 0;
+}
+
+●リスト13.5：例【2】
+int main()
+{
+  myclass ob1 = 4;     // myclass(4)に変換する
+  myclass ob2 = "123"; // myclass("123")に変換する
+
+  cout << "ob1: " << ob1.geta() << endl;
+  cout << "ob2: " << ob2.geta() << endl;
+
+  // 自動変換を使用して新しい値を代入する
+  ob1 = "1776"; // ob1 = myclass("1776")に変換する
+  ob2 = 2001;   // ob2 = myclass(2001)に変換する
+
+  cout << "ob1: " << ob1.geta() << endl;
+  cout << "ob2: " << ob2.geta() << endl;
+
+  return 0;
+}
+
+●リスト13.5：例【3】
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class myclass {
+  int a;
+public:
+  explicit myclass(int x) { a = x; } 
+  explicit myclass(char *str) { a = atoi(str); }
+  int geta() { return a; }
+};
+
+●リスト13.5：練習問題【2】
+class Demo {
+  double x
+public:
+  Demo(double i) { x = i; }
+  // ...
+
+};
+
+// ...
+Demo counter = 10;
+
+●リスト13.6：例【1】
+// リンケージ指定子の使用例
+#include <iostream>
+using namespace std;
+
+extern "C" int func(int x); // C関数としてリンクする
+
+// この関数はC関数としてリンクされる
+int func(int x)
+{
+  return x/3;
+}
+
+●リスト13.6：例【2】
+extern "C" {
+  void f1();
+  int f2(int x);
+  double f3(double x, int *p);
+}
+
+●リスト13.6：例【3】
+// この関数を実行しないこと！
+void func()
+{
+  asm("mov bp, sp");
+  asm("push ax");
+  asm("mov cl, 4");
+  // ...
+}
+
+●リスト13.7：例【1】
+// 配列ベースの出力を使用した短いサンプルプログラム
+#include <iostream>
+#include <strstream>
+using namespace std;
+
+int main()
+{
+  char buf[255]; // 出力用バッファ
+
+  ostrstream ostr(buf, sizeof buf); // 出力配列を開く
+
+  ostr << "配列ベースの入出力は「普通の」入出力";
+  ostr << "のようにストリームを使える\n" << 100;
+  ostr << ' ' << 123.23 << "\n";
+  
+  // マニピュレータを使うこともできる
+  ostr << hex << 100 << ' ';
+
+  // 書式フラグも使用できる
+  ostr.setf(ios::scientific);
+  ostr << dec << 123.23;
+  ostr << endl << ends;
+
+  // 結果の文字列を表示する
+  cout << buf;
+
+  return 0;
+}
+
+●リスト13.7：例【2】
+// 配列ベースの入力の使用例
+#include <iostream>
+#include <strstream>
+using namespace std;
+
+int main()
+{
+  char buf[] = "Hello 100 123.125 a";
+
+  istrstream istr(buf); // 入力配列を開く
+
+  int i;
+  char str[80];
+  float f;
+  char c;
+
+  istr >> str >> i >> f >> c;
+
+  cout << str << ' ' << i << ' ' << f;
+  cout << ' ' << c << "\n";
+
+  return 0;
+}
+
+●リスト13.7：例【3】
+// 配列ベース入出力に対するget()関数とeof()関数の使用例
+#include <iostream>
+#include <strstream>
+using namespace std;
+
+int main()
+{
+  char buf[] = "Hello 100 123.125 a";
+
+  istrstream istr(buf);
+  char c;
+
+  while(!istr.eof()) {
+    istr.get(c);
+    if(!istr.eof()) cout << c;
+  }
+  cout << "\n";
+
+  return 0;
+}
+
+
+●リスト13.7：例【4】
+// 入出力配列の使用例
+#include <iostream>
+#include <strstream>
+using namespace std;
+
+int main()
+{
+  char iobuf[255];
+
+  strstream iostr(iobuf, sizeof iobuf);
+
+  iostr << "This is a test\n";
+  iostr << 100 << hex << ' ' << 100 << ends;
+
+  char str[80];
+  int i;
+
+  iostr.getline(str, 79); // \nまでの文字列を読み取る
+  iostr >> dec >> i; // 100を読み取る
+
+  cout << str << ' ' << i << ' ';
+
+  iostr >> hex >> i;
+  cout <<  hex << i;
+  cout << "\n";
+
+  return 0;
+}

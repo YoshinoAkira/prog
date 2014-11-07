@@ -1,0 +1,479 @@
+■第14章の解答：目次■
+･････････････････････
+第14章：前章の理解度チェック
+14.1：練習問題
+14.3：練習問題
+14.4：練習問題
+14.5：練習問題
+14.6：練習問題
+14.7：練習問題
+第14章の理解度チェック
+第14章：総合理解度チェック
+･････････････････････
+
+第14章：前章の理解度チェック
+
+【1】名前空間は、識別子名を局所化し、名前の競合を避けるためにC++に追加されました。サードパーティ製クラスライブラリが増加したため、名前の競合の問題が深刻化しました。
+
+【2】メンバ関数をconstとして指定するには、関数の仮引数リストの後にconstキーワードを続けます。次に例を示します。
+
+int f(int a) const;
+
+【3】正しくない。mutableを使うと、constメンバ関数からメンバ変数を変更できるようになります。
+
+【4】
+class X {
+  int a, b;
+public:
+  X(int i, int j) { a = i, b = j; }
+  operator int() { return a+b; }
+};
+
+【5】正しい。
+
+【6】有効ではありません。explicit指定子を使用すると、int型からDemo型への自動変換が行われません。
+
+14.1：練習問題
+
+【1】コンテナとは、ほかのオブジェクトを含むオブジェクトのことです。アルゴリズムとは、コンテナの内容を操作するルーチンのことです。反復子はポインタと似ています。
+
+【2】2項と単項。
+
+【3】5種類の反復子とは、ランダムアクセス、双方向、前方、入力、出力です。
+
+14.3：練習問題
+
+【1】（省略）
+
+【2】ベクトルに含まれているオブジェクトはすべてデフォルトコンストラクタを持っていなければなりません。
+
+【3】
+// Coordオブジェクトをベクトルに保存する
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Coord {
+public:
+  int x, y;
+  Coord() { x = y = 0; }
+  Coord(int a, int b) { x = a; y = b; }
+};
+
+bool operator<(Coord a, Coord b)
+{
+  return (a.x+a.y) < (b.x+b.y);
+}
+
+bool operator==(Coord a, Coord b)
+{
+  return (a.x+a.y) == (b.x+b.y);
+}
+
+int main()
+{
+  vector<Coord> v;
+  int i;
+
+  for(i=0; i<10; i++)
+    v.push_back(Coord(i, i));
+
+  for(i=0; i<v.size(); i++)
+    cout << v[i].x << "," << v[i].y << " ";
+
+  cout << endl;
+
+  for(i=0; i<v.size(); i++)
+    v[i].x = v[i].x * 2;
+
+  for(i=0; i<v.size(); i++)
+    cout << v[i].x << "," << v[i].y << " ";
+
+  return 0;
+}
+
+14.4：練習問題
+
+【1】（省略）
+
+【2】
+// リストの基本操作
+#include <iostream>
+#include <list>
+using namespace std;
+
+int main()
+{
+  list<char> lst;      // 空のリストを作成する
+  int i;
+
+  for(i=0; i<10; i++) lst.push_back('A'+i);
+
+  cout << "大きさ = " << lst.size() << endl;
+  list<char>::iterator p;
+  cout << "内容: ";
+  for(i=0; i<lst.size(); i++) {
+    p = lst.begin();
+    cout << *p;
+    lst.pop_front();
+    lst.push_back(*p); // リストの最後に要素を追加する
+  }
+  
+  cout << endl;
+
+  if(!lst.empty())
+    cout << "リストは空ではない\n";
+  
+  return 0;
+}
+
+このプログラムからの出力を次に示します。
+
+大きさ = 10
+内容: ABCDEFGHIJ
+リストは空ではない
+
+このプログラムでは、要素を前方から削除し、後方に追加しています。したがって、リストは空になりません。リストを表示するループは、size()を使用してリストのサイズを取得することによって制御しています。
+
+【3】
+// 2つのプロジェクトリストを結合する
+#include <iostream>
+#include <list>
+#include <cstring>
+using namespace std;
+
+class Project {
+public:
+  char name[40];
+  int days_to_completion;
+  Project() { 
+    strcpy(name, "");
+    days_to_completion = 0;
+  }
+  Project(char *n, int d) {
+    strcpy(name, n);
+    days_to_completion = d;
+  }
+
+  void add_days(int i) {
+    days_to_completion += i;
+  }
+
+  void sub_days(int i) {
+    days_to_completion -= i;
+  }
+
+  bool completed() { return !days_to_completion; }
+ 
+  void report() {
+    cout << name << ": ";
+    cout << days_to_completion;
+    cout << "日（残り）\n";
+  }
+};
+
+bool operator<(const Project &a, const Project &b)
+{
+  return a.days_to_completion < b.days_to_completion;
+}
+
+bool operator>(const Project &a, const Project &b)
+{
+  return a.days_to_completion > b.days_to_completion;
+}
+
+bool operator==(const Project &a, const Project &b)
+{
+  return a.days_to_completion == b.days_to_completion;
+}
+
+bool operator!=(const Project &a, const Project &b)
+{
+  return a.days_to_completion != b.days_to_completion;
+}
+
+int main()
+{
+  list<Project> proj;
+  list<Project> proj2;
+
+  proj.push_back(Project("コンパイラ", 35));
+  proj.push_back(Project("スプレッドシート", 190));
+  proj.push_back(Project("STL実装", 1000));
+
+  proj2.push_back(Project("データベース", 780));
+  proj2.push_back(Project("メールマージ", 50));
+  proj2.push_back(Project("COMオブジェクト", 300));
+
+  proj.sort();
+  proj2.sort();
+
+  proj.merge(proj2); // プロジェクトを結合する
+
+  list<Project>::iterator p = proj.begin();
+  /* プロジェクトを表示する */
+  while(p != proj.end()) {
+    p->report();
+    p++;
+  }
+
+  return 0;
+}
+
+14.5：練習問題
+
+【1】（省略）
+
+【2】
+// 名前と電話番号のマップ
+#include <iostream>
+#include <map>
+#include <cstring>
+using namespace std;
+
+class name {
+  char str[20];
+public:
+  name() { strcpy(str, ""); }
+  name(char *s) { strcpy(str, s); }
+  char *get() { return str; }
+};
+
+// nameオブジェクトに対する「より小」を定義しなければならない
+bool operator<(name a, name b)
+{
+   return strcmp(a.get(), b.get()) < 0;
+}
+
+class phonenum {
+  char str[20];
+public:
+  phonenum() { strcmp(str, ""); }
+  phonenum(char *s) { strcpy(str, s); }
+  char *get() { return str; }
+};
+
+
+int main()
+{
+  map<name, phonenum> m;
+  // 名前と電話番号をマップに格納する
+  m.insert(pair<name,
+    phonenum>(name("Joe"), phonenum("555-4323")));
+  m.insert(pair<name,
+    phonenum>(name("Tom"), phonenum("555-9784")));
+  m.insert(pair<name,
+    phonenum>(name("Larry"), phonenum("212 555-9372")));
+  m.insert(pair<name,
+    phonenum>(name("Tod"), phonenum("01 11 232-4232")));
+
+  // 名前をもとに電話番号を検索する
+  char str[80];
+  cout << "名前を入力する: ";
+  cin >> str;
+
+  map<name, phonenum>::iterator p;
+  
+  p = m.find(name(str));
+  if(p != m.end()) 
+    cout << "電話番号: " <<  p->second.get() << endl;
+  else
+    cout << "名前がマップにありません\n";
+
+  return 0;
+}
+
+【3】<演算子を定義する必要があります。
+
+14.6：練習問題
+
+【1】
+// sort()アルゴリズムを使用してベクトルをソートする
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+  vector<char> v;
+  int i;
+
+  // 無作為の文字のベクトルを作成する
+  for(i=0; i<10; i++)
+    v.push_back('A'+ (rand()%26));
+
+  cout << "もとの内容: ";
+  for(i=0; i<v.size(); i++)
+    cout << v[i] << " ";
+
+  cout << endl << endl;
+
+  // ベクトルをソートする
+  sort(v.begin(), v.end());
+
+  cout << "処理後の内容: ";
+  for(i=0; i<v.size(); i++)
+    cout << v[i] << " ";
+  cout << endl;
+  
+  return 0;
+}
+
+【2】
+// merge()アルゴリズムを使用して、2つのリストを結合する
+#include <iostream>
+#include <list>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+  list<char> lst1, lst2, lst3(20);
+  int i;
+
+  for(i=0; i<10; i+=2) lst1.push_back('A'+i);
+  for(i=1; i<11; i+=2) lst2.push_back('A'+i);
+
+  cout << "lst1の内容: ";
+  list<char>::iterator p = lst1.begin();
+  while(p != lst1.end()) {
+    cout << *p;
+    p++;
+  }
+  cout << endl << endl;
+
+  cout << "lst2の内容: ";
+  p = lst2.begin();
+  while(p != lst2.end()) {
+    cout << *p;
+    p++;
+  }
+  cout << endl << endl;
+
+  // 2つのリストを結合する
+  merge(lst1.begin(), lst1.end(),
+        lst2.begin(), lst2.end(),
+        lst3.begin());
+
+  cout << "結合したリスト:\n";
+  p = lst3.begin();
+  while(p != lst3.end()) {
+    cout << *p;
+    p++;
+  }
+  cout << endl;
+
+  return 0;
+}
+
+14.7：練習問題
+
+【1】
+#include <iostream>
+#include <string>
+#include <list>
+using namespace std;
+
+int main()
+{
+  list<string> str;
+
+  str.push_back(string("one"));
+  str.push_back(string("two"));
+  str.push_back(string("three"));
+  str.push_back(string("four"));
+  str.push_back(string("five"));
+  str.push_back(string("six"));
+  str.push_back(string("seven"));
+  str.push_back(string("eight"));
+  str.push_back(string("nine"));
+  str.push_back(string("ten"));
+
+  str.sort(); // ベクトルをソートする
+
+  list<string>::iterator p = str.begin();
+  while(p != str.end()) {
+    cout << *p << " ";
+    p++;
+  }
+  cout << endl;
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+  string str;
+
+  cout << "文字列を入力: ";
+  cin >> str;
+
+  int i = count(str.begin(), str.end(), 'e');
+
+  cout << i << "つ、eがあります\n";
+
+  return 0;
+}
+
+【3】stringはbasic_stringテンプレートクラスを特化したオブジェクトです。
+
+第14章の理解度チェック
+
+【1】STLを使うと、デバッグ済みの数多くの共通データ構造体とアルゴリズムを手軽に利用することができます。STLクラスはテンプレート化されているので、どのデータ型にも使用できます。
+
+【2】コンテナとは、ほかのオブジェクトを格納するオブジェクトのことです。反復子は、ポインタのようなものです。アルゴリズムはコンテナの内容を操作するものです。
+
+【3】
+#include <iostream>
+#include <vector>
+#include <list>
+using namespace std;
+
+int main()
+{
+  vector<int> v(10);
+  list<int> lst;
+  int i;
+
+  for(i=0; i<10; i++) v[i] = i;
+
+  for(i=0; i<10; i++)
+    if(!(v[i]%2)) lst.push_back(v[i]);
+
+  list<int>::iterator p = lst.begin();
+  while(p != lst.end()) {
+    cout << *p << " ";
+    p++;
+  }
+  cout << endl;
+
+  return 0;
+}
+
+【4】string型を使うと、演算子を使って文字列を操作することができます。ただし、stringオブジェクトの操作は、ヌル終端文字配列の操作と比べて効率がよくありません。
+
+【5】条件式とは、真または偽を返す関数のことです。
+
+【6】（省略）
+
+【7】（省略）
+
+【8】（省略）
+
+第14章：総合理解度チェック
+
+【1】（省略）
+
+【2】（省略）
+
+【3】（省略）
+
+【4】（省略）

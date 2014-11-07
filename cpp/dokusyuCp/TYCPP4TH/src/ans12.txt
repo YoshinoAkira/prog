@@ -1,0 +1,292 @@
+■第12章の解答：目次■
+･････････････････････
+第12章：前章の理解度チェック
+12.1：練習問題
+12.2：練習問題
+12.3：練習問題
+第12章の理解度チェック
+第12章：総合理解度チェック
+･････････････････････
+
+第12章：前章の理解度チェック
+
+【1】C++の汎用関数とは、さまざまなデータ型に適用できる汎用的な一連の動作のことです。汎用関数を作成するにはtemplateキーワードを使用します。汎用関数の一般形式は次のとおりです。
+
+template <class Ttype> ret-type func-name(param-list)
+{
+    // ...
+}
+
+【2】C++の汎用クラスとは、そのクラスに関するすべての動作を定義するものです。ただし、実際のオブジェクトはそのクラスのオブジェクトを作成する際に、仮引数として指定します。汎用クラスの一般形式は次のとおりです。
+
+template <class Ttype> class class-name
+{
+    // ...
+}
+
+【3】
+#include <iostream>
+using namespace std;
+
+// aをbに返す
+template <class X> X gexp(X a, X b)
+{
+   X i, result=1;
+
+  for(i=0; i<b; i++) result *= a;
+
+  return result;
+}
+
+int main()
+{
+  cout << gexp(2, 3) << endl;
+  cout << gexp(10.0, 2.0) << endl;
+
+  return 0;
+}
+
+【4】
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+template <class CoordType> class coord {
+  CoordType x, y;
+public:
+  coord(CoordType i, CoordType j) { x = i; y = j; }
+  void show() { cout << x << ", " << y << endl; }
+};
+
+int main()
+{
+  coord<int> o1(1, 2), o2(3, 4);
+ 
+  o1.show();
+  o2.show();
+
+  coord<double> o3(0.0, 0.23), o4(10.19, 3.098);
+
+  o3.show();
+  o4.show();
+
+  return 0;
+}
+
+【5】例外を監視したいすべての文をtryブロックに含めます。例外が発生したら、throw文を使用してその例外を投げ、対応するcatch文でそれを処理します。
+
+【6】できません。
+
+【7】terminate()関数は、対応するcatch文のない例外が投げられたときに呼び出されます。unexpected()関数は、関数のthrow句内で指定されていない例外を投げようとしたときに投げられます。
+
+【8】すべての型の例外を処理できるcatch文の構文は、catch(...)です。
+
+12.1：練習問題
+
+【1】C++では、基本クラスポインタが指すオブジェクトの型、または基本クラス参照が参照するオブジェクトの型がコンパイル時にはわからないことがあるので、RTTIが必要となります。
+
+【2】BaseClassクラスをポリモーフィッククラスではないようにした場合、出力は次のようになります。
+
+iのtypeidは int
+pが指しているのはオブジェクトタイプ 9BaseClass
+pが指しているのはオブジェクトタイプ 9BaseClass
+pが指しているのはオブジェクトタイプ 9BaseClass
+
+【3】正しい。
+
+【4】
+if(typeid(*p) == typeid(D2)) ...
+
+【5】（省略）
+
+12.2：練習問題
+
+【1】dynamic_cast演算子は、ポリモーフィック型変換の有効性を判別します。
+
+【2】
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+
+class B {
+  virtual void f() {}
+};
+ 
+class D1: public B {
+  void f() {}
+};
+
+class D2: public B {
+  void f() {}
+};
+
+int main()
+{
+  B *p;
+  D2 ob;
+
+  p = dynamic_cast<D2 *> (&ob);
+
+  if(p) cout << "型変換成功\n";
+  else cout << "型変換失敗\n";
+
+  return 0;
+}
+
+【3】
+int main()
+{
+  int i;
+  Shape *p;
+
+  for(i=0; i<10; i++) {
+    p = generator(); // 次のオブジェクトを取得する
+
+    cout << typeid(*p).name() << endl;
+
+    // NullShapeではない場合にだけオブジェクトを描画する
+    if(!dynamic_cast<NullShape *> (p))
+      p->example();
+  }
+
+  return 0;
+}
+
+12.3：練習問題
+
+【1】
+新しいキャスト演算子を使うと、より安全で明示的な方法で型変換を行うことができます。
+
+【2】
+#include <iostream>
+using namespace std;
+
+void f(const double &i)
+{
+  double &v = const_cast<double &> (i);
+
+  v = 100.0;
+}
+
+int main()
+{
+  double x = 98.6;
+
+  cout << x << endl;
+  f(x);
+  cout << x << endl;
+
+  return 0;
+}
+
+【3】const_castはconst指定子を上書きするので、オブジェクトに対して予想外の修正を加える可能性が生じます。
+
+第12章の理解度チェック
+
+【1】typeid演算子は、type_info型クラスのオブジェクトへの参照を返します。このオブジェクトには型情報が含まれています。
+
+【2】typeidを使うには、<typeinfo>をインクルードする必要があります。
+
+【3】新しい型変換演算子を次に示します。
+演算子	目的
+dynamic_cast	ポリモーフィック型変換を行う
+reinterpret_cast	ある型のポインタをほかの型に変換する
+static_cast	「通常の」型変換を行う
+const_cast	const指定を取り除く
+
+【4】
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+
+class A {
+  virtual void f() {}
+};
+
+class B : public A {
+};
+
+class C: public B {
+};
+
+int main()
+{
+  A *p, a_ob;
+  B b_ob;
+  C c_ob;
+  int i;
+
+  cout << "0を入力するとAオブジェクト、";
+  cout << "1でBオブジェクト、";
+  cout << "2でCオブジェクト\n";
+
+  cin >> i;
+
+  if(i==1) p = &b_ob;
+  else if(i==2) p = &c_ob;
+  else p = &a_ob;
+
+  if(typeid(*p) == typeid(A))
+    cout << "Aオブジェクト\n";
+  if(typeid(*p) == typeid(B))
+    cout << "Bオブジェクト\n";
+  if(typeid(*p) == typeid(C))
+    cout << "Cオブジェクト\n";
+
+  return 0;
+}
+
+【5】typeidを使ってポリモーフィック型変換の有効性を判別する際には、dynamic_cast演算子をtypeidの代わりとして使うことができます。
+
+【6】typeid演算子は、type_info型オブジェクトへの参照を返します。
+
+第12章：総合理解度チェック
+
+【1】次に、例外処理を使用して、割り当てエラーを監視するgenerator()関数を示します。
+
+// 例外処理を使用して割り当てエラーをチェックする
+Shape *generator()
+{
+  try {
+    switch(rand() % 4) {
+      case 0: 
+        return new Line;
+      case 1: 
+        return new Rectangle;
+      case 2: 
+        return new Triangle;
+      case 3: 
+        return new NullShape;
+    }
+  } catch (bad_alloc ba) {
+    return NULL;
+  }
+  return NULL;
+}
+
+【2】 次に、new(nothrow)を使うように修正したgenerator()関数を示します。
+
+// new(nothrow)を使用する
+Shape *generator()
+{
+  Shape *temp;
+
+  switch(rand() % 4) {
+    case 0:
+      temp = new(nothrow) Line;
+      break;
+    case 1:
+      temp = new(nothrow) Rectangle;
+      break;
+    case 2:
+      temp = new(nothrow) Triangle;
+      break;
+    case 3:
+      temp = new(nothrow) NullShape;
+  }
+
+  if(temp) return temp;
+  else return NULL;
+}
+
+【3】（省略）

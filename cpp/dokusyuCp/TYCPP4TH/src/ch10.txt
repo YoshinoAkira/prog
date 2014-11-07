@@ -1,0 +1,571 @@
+■第10章：目次■
+･････････････････････
+●リスト10.1：例【1】
+●リスト10.2：例【1】
+●リスト10.2：例【2】
+●リスト10.2：例【3】
+●リスト10.2：例【4】
+●リスト10.3：例【1】
+●リスト10.3：例【2】
+●リスト10.4：例【1】
+●リスト10.4：例【2】
+●リスト第10章の理解度チェック【6】
+･････････････････････
+
+●リスト10.1：例【1】
+// 派生クラスを指すポインタの実例
+#include <iostream>
+using namespace std;
+
+class base {
+  int x;
+public:
+  void setx(int i) { x = i; }
+  int getx() { return x; }
+};
+
+class derived : public base {
+  int y;
+public:
+  void sety(int i) { y = i; }
+  int gety() { return y; }
+};
+
+int main()
+{
+  base *p;      // base型へのポインタ
+  base b_ob;    // baseクラスのオブジェクト
+  derived d_ob; // derivedクラスのオブジェクト
+
+  // pを使用して、baseクラスのオブジェクトにアクセスする
+  p = &b_ob;
+  p->setx(10);  // baseクラスのオブジェクトにアクセス
+  cout << "baseクラスのオブジェクト x: " << p->getx() << "\n";
+
+  // pを使用して、derivedクラスのオブジェクトにアクセスする
+  p = &d_ob;    // derivedクラスのオブジェクトを指す
+  p->setx(99);  // derivedクラスのオブジェクトにアクセス
+
+  // pによるyの設定はできないので、直接行う
+  d_ob.sety(88);
+  cout << "derivedクラスのオブジェクト x: " << p->getx() << "\n";
+  cout << "derivedクラスのオブジェクト y: " << d_ob.gety() << "\n";
+
+  return 0;
+}
+
+●リスト10.2：例【1】
+// 仮想関数を使用する簡単な例
+#include <iostream>
+using namespace std;
+
+class base {
+public:
+  int i;
+  base(int x) { i = x; }
+  virtual void func()
+  {
+    cout << "baseのfunc()を使う: ";
+    cout << i << "\n";
+  }
+};
+
+class derived1 : public base {
+public:
+  derived1(int x) : base(x) {}
+  void func() 
+  {
+    cout << "derived1のfunc()を使う: ";
+    cout << i*i << "\n";
+  }
+};
+
+class derived2 : public base {
+public:
+  derived2(int x) : base(x) {}
+  void func() 
+  {
+    cout << "derived2のfunc()を使う: ";
+    cout << i+i << "\n";
+  }
+};
+
+int main()
+{
+  base *p;
+  base ob(10);  
+
+  derived1 d_ob1(10);   
+  derived2 d_ob2(10); 
+
+  p = &ob;
+  p->func(); // baseのfunc()を使用する
+  p = &d_ob1;
+  p->func(); // derived1のfunc()を使用する
+  p = &d_ob2;
+  p->func(); // derived2のfunc()を使用する
+
+  return 0;
+}
+
+●リスト10.2：例【2】
+// 仮想関数は階層構造を成す
+#include <iostream>
+using namespace std;
+
+class base {
+public:
+  int i;
+  base(int x) { i = x; }
+  virtual void func()
+  {
+    cout << "baseのfunc()を使う: ";
+    cout << i << "\n";
+  }
+};
+
+class derived1 : public base {
+public:
+  derived1(int x) : base(x) {}
+  void func() 
+  {
+    cout << "derived1のfunc()を使う: ";
+    cout << i*i << "\n";
+  }
+};
+
+class derived2 : public base {
+public:
+  derived2(int x) : base(x) {}
+  // derived2はfunc()をオーバーライドしていない
+};
+
+int main()
+{
+  base *p;
+  base ob(10);  
+  derived1 d_ob1(10);   
+  derived2 d_ob2(10); 
+
+  p = &ob;
+  p->func(); // baseのfunc()を使用する
+  p = &d_ob1;
+  p->func(); // derived1のfunc()を使用する
+  p = &d_ob2;
+  p->func(); // baseのfunc()を使用する
+
+  return 0;
+}
+
+●リスト10.2：例【3】
+/* 実行時に起こるランダムなイベントに、
+   仮想関数を使って対応する例 */
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class base {
+public:
+  int i;
+  base(int x) { i = x; }
+  virtual void func()
+  {
+    cout << "baseのfunc()を使う: ";
+    cout << i << "\n";
+  }
+};
+
+class derived1 : public base {
+public:
+  derived1(int x) : base(x) {}
+  void func() 
+  {
+    cout << "derived1のfunc()を使う: ";
+    cout << i*i << "\n";
+  }
+};
+
+class derived2 : public base {
+public:
+  derived2(int x) : base(x) {}
+  void func() 
+  {
+    cout << "derived2のfunc()を使う: ";
+    cout << i+i << "\n";
+  }
+};
+
+int main()
+{
+  base *p;
+  derived1 d_ob1(10);   
+  derived2 d_ob2(10); 
+  int i, j;
+
+  for(i=0; i<10; i++) {
+    j = rand();
+    if((j%2)) p = &d_ob1; // 奇数のときはd_ob1を使用
+    else p = &d_ob2;      // 偶数のときはd_ob2を使用
+    p->func();            // 適切な関数を呼び出す
+  }
+
+  return 0;
+}
+
+●リスト10.2：例【4】
+// 仮想関数を使用して、インターフェイスを定義する
+#include <iostream>
+using namespace std;
+
+class area {
+  double dim1, dim2; // 図形の寸法
+public:
+  void setarea(double d1, double d2)
+  {
+    dim1 = d1;
+    dim2 = d2;
+  }
+  void getdim(double &d1, double &d2)
+  {
+    d1 = dim1;
+    d2 = dim2;
+  }
+  virtual double getarea()
+  { 
+    cout << "この関数をオーバーライドする\n";
+    return 0.0;
+  }
+};
+
+class rectangle : public area {
+public:
+  double getarea() 
+  {
+    double d1, d2;
+    getdim(d1, d2);
+    return d1 * d2;
+  }
+};
+
+class triangle : public area {
+public:
+  double getarea()
+  {
+    double d1, d2;
+  
+    getdim(d1, d2);
+    return 0.5 * d1 * d2;
+  }
+};
+
+int main()
+{
+  area *p;
+  rectangle r;
+  triangle t;
+
+  r.setarea(3.3, 4.5);
+  t.setarea(4.0, 5.0);
+
+  p = &r;
+  cout << "長方形の面積: " << p->getarea() << "\n";
+
+  p = &t;
+  cout << "三角形の面積: " << p->getarea() << "\n";
+
+  return 0;
+}
+
+●リスト10.3：例【1】
+// 抽象クラスを作成する
+#include <iostream>
+using namespace std;
+
+class area {
+  double dim1, dim2; // 図形の寸法
+public:
+  void setarea(double d1, double d2)
+  {
+    dim1 = d1;
+    dim2 = d2;
+  }
+  void getdim(double &d1, double &d2)
+  {
+    d1 = dim1;
+    d2 = dim2;
+  }
+  virtual double getarea() = 0; // 純粋仮想関数
+};
+
+class rectangle : public area {
+public:
+  double getarea() 
+  {
+    double d1, d2;
+  
+    getdim(d1, d2);
+    return d1 * d2;
+  }
+};
+
+class triangle : public area {
+public:
+  double getarea()
+  {
+    double d1, d2;
+  
+    getdim(d1, d2);
+    return 0.5 * d1 * d2;
+  }
+};
+
+int main()
+{
+  area *p;
+  rectangle r;
+  triangle t;
+  r.setarea(3.3, 4.5);
+  t.setarea(4.0, 5.0);
+  p = &r;
+  cout << "長方形の面積: " << p->getarea() << "\n";
+
+  p = &t;
+  cout << "三角形の面積: " << p->getarea() << "\n";
+  return 0;
+}
+
+●リスト10.3：例【2】
+// 仮想関数は、継承されても仮想性を保つ
+#include <iostream>
+using namespace std;
+
+class base {
+public:
+  virtual void func()
+  {
+    cout << "baseのfunc()を使う\n";
+  }
+};
+
+class derived1 : public base {
+public:
+  void func() 
+  {
+    cout << "derived1のfunc()を使う\n";
+  }
+};
+
+// derived2がderived1を継承
+class derived2 : public derived1 {
+public:
+  void func() 
+  {
+    cout << "derived2のfunc()を使う\n";
+  }
+};
+
+int main()
+{
+  base *p;
+  base ob;
+  derived1 d_ob1;
+  derived2 d_ob2;
+
+  p = &ob;
+  p->func(); // baseのfunc()を使用する
+
+  p = &d_ob1;
+  p->func(); // derived1のfunc()を使用する
+
+  p = &d_ob2;
+  p->func(); // derived2のfunc()を使用する
+
+  return 0;
+}
+
+●リスト10.4：例【1】
+// 仮想関数の実例
+#include <iostream>
+#include <cstdlib>
+#include <cctype>
+using namespace std;
+
+class list {
+public:
+  list *head; // リスト先頭へのポインタ
+  list *tail; // リスト末尾へのポインタ
+  list *next; // 次項目へのポインタ
+  int num;    // 格納される値
+  list() { head = tail = next = NULL; }
+  virtual void store(int i) = 0;
+  virtual int retrieve() = 0;
+};
+
+// キュー型リストの作成
+class queue : public list {
+public:
+  void store(int i);
+  int retrieve();
+};
+
+void queue::store(int i)
+{
+  list *item;
+  item = new queue;
+
+  if(!item) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  item->num = i;
+
+  // リスト末尾に置く
+  if(tail) tail->next = item;
+  tail = item;
+  item->next = NULL;
+  if(!head) head = tail;
+}
+
+int queue::retrieve()
+{
+  int i;
+  list *p;
+
+  if(!head) {
+    cout << "リストは空です\n";
+    return 0;
+  }
+
+  // リスト先頭から取り除く
+  i = head->num;
+  p = head;
+  head = head->next;
+  delete p;
+  return i;
+}
+
+// スタック型リストの作成
+class stack : public list {
+public:
+  void store(int i);
+  int retrieve();
+};
+
+void stack::store(int i)
+{
+  list *item;
+  item = new stack;
+
+  if(!item) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  item->num = i;
+
+  // スタックのような操作になるよう、リスト最前部に置く
+  if(head) item->next = head;
+  head = item;
+  if(!tail) tail = head;
+}
+
+int stack::retrieve()
+{
+  int i;
+  list *p;
+
+  if(!head) {
+    cout << "リストは空です\n";
+    return 0;
+  }
+
+  // リスト先頭から取り除く
+  i = head->num;
+  p = head;
+  head = head->next;
+  delete p;
+  return i;
+}
+
+int main()
+{
+  list *p;
+
+  // キューのデモ
+  queue q_ob;
+  p = &q_ob; // キューを指す
+
+  p->store(1);
+  p->store(2);
+  p->store(3);
+
+  cout << "キュー: ";
+  cout << p->retrieve();
+  cout << p->retrieve();
+  cout << p->retrieve();
+
+  cout << "\n";
+
+  // スタックのデモ
+  stack s_ob;
+  p = &s_ob; // スタックを指す
+
+  p->store(1);
+  p->store(2);
+  p->store(3);
+
+  cout << "スタック: ";
+  cout << p->retrieve();
+  cout << p->retrieve();
+  cout << p->retrieve();
+
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト10.4：例【2】
+int main()
+{
+  list *p;
+  stack s_ob;
+  queue q_ob;
+  char ch;
+  int i;
+
+  for(i=0; i<10; i++) {
+    cout << "スタックかキューを選択してください (S/Q): ";
+    cin >> ch;
+    ch = tolower(ch);
+    if(ch=='q') p = &q_ob;
+    else p = &s_ob;
+    p->store(i);
+  }
+
+  cout << "Tを入力すると終了します\n";
+  for(;;) {
+    cout << "スタックとキューのどちらから取り除きますか (S/Q): ";
+    cin >> ch;
+    ch = tolower(ch);
+    if(ch=='t') break;
+    if(ch=='q') p = &q_ob;
+    else p = &s_ob;
+    cout << p->retrieve() << "\n";
+  }
+
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト第10章の理解度チェック【6】
+class base {
+public:
+  virtual int f(int a) = 0;
+  //  ...
+};
+
+class derived : public base {
+public:
+  int f(int a, int b) { return a*b; }
+  //  ...
+};

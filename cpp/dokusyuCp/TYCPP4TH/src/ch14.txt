@@ -1,0 +1,803 @@
+■第14章：目次■
+･････････････････････
+●リスト第14章：前章の理解度チェック【4】
+●リスト第14章：前章の理解度チェック【6】
+●リスト14.3：例【1】
+●リスト14.3：例【2】
+●リスト14.3：例【3】
+●リスト14.3：例【4】
+●リスト14.3：練習問題【3】
+●リスト14.4：例【1】
+●リスト14.4：例【2】
+●リスト14.4：例【3】
+●リスト14.4：例【4】
+●リスト14.4：例【5】
+●リスト14.4：例【6】
+●リスト14.5：例【1】
+●リスト14.5：例【3】
+●リスト14.6：例【1】
+●リスト14.6：例【2】
+●リスト14.6：例【3】
+●リスト14.6：例【4】
+●リスト14.7：例【1】
+●リスト14.7：例【2】
+●リスト14.7：例【3】
+･････････････････････
+
+●リスト第14章：前章の理解度チェック【4】
+class X {
+  int a, b;
+public:
+  X(int i, int j) { a = i, b = j; }
+  // ここにint型への変換関数を作成する
+};
+
+●リスト第14章：前章の理解度チェック【6】
+class Demo {
+  int a;
+public:
+  explicit Demo(int i) { a = i; }
+  int geta() { return a; }
+};
+
+
+●リスト14.3：例【1】
+// ベクトルの基本操作
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main()
+{
+  vector<int> v; // 長さゼロのベクトルを作成する
+  int i;
+
+  // vの最初のサイズを表示する
+  cout << "サイズ = " << v.size() << endl;
+
+  /* ベクトルの末尾に値を追加する
+     必要に応じてベクトルのサイズが増える */
+  for(i=0; i<10; i++) v.push_back(i);
+
+  // vの現在のサイズを表示する
+  cout << "現在のサイズ = " << v.size() << endl;
+
+  // ベクトルの内容を表示する
+  cout << "現在の内容:\n";
+  for(i=0; i<v.size(); i++) cout << v[i] << " ";
+  cout << endl;
+
+  /* ベクトルの末尾にさらに値を追加する
+     この場合も、必要に応じてベクトルのサイズが増える */
+  for(i=0; i<10; i++) v.push_back(i+10);
+
+  // vの現在のサイズを表示する
+  cout << "現在のサイズ = " << v.size() << endl;
+
+  // ベクトルの内容を表示する
+  cout << "現在の内容:\n";
+  for(i=0; i<v.size(); i++) cout << v[i] << " ";
+  cout << endl;
+
+  // ベクトルの内容を変更する
+  for(i=0; i<v.size(); i++) v[i] = v[i] + v[i];
+
+  // ベクトルの内容を表示する
+  cout << "2倍の内容:\n";
+  for(i=0; i<v.size(); i++) cout << v[i] << " ";
+  cout << endl;
+
+  return 0;
+}
+
+●リスト14.3：例【2】
+// 反復子を使用してベクトルにアクセスする
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main()
+{
+  vector<int> v; // 長さゼロのベクトルを作成する
+  int i;
+
+  // ベクトルに値を追加する
+  for(i=0; i<10; i++) v.push_back(i);
+
+  // 添え字を使用してベクトルの内容にアクセスできる
+  for(i=0; i<10; i++) cout << v[i] << " ";
+  cout << endl;
+
+  // 反復子を使用してアクセスする
+  vector<int>::iterator p = v.begin();
+  while(p != v.end()) {
+    cout << *p << " ";
+    p++;
+  }
+  cout << endl;
+
+  return 0;
+}
+
+
+●リスト14.3：例【3】
+// insert()関数とerase()関数の使用例
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main()
+{
+  vector<int> v(5, 1); // 値1を含む5要素のベクトルを作成する
+  int i;
+
+  // ベクトルの最初の内容を表示する
+  cout << "サイズ = " << v.size() << endl;
+  cout << "最初の内容:\n";
+  for(i=0; i<v.size(); i++) cout << v[i] << " ";
+  cout << endl << endl;
+
+  vector<int>::iterator p = v.begin();
+  p += 2; // 3つ目の要素を指す
+
+  // 値9を持つ10個の要素を挿入する
+  v.insert(p, 10, 9);
+
+  // 挿入後のベクトルの内容を表示する
+  cout << "挿入後のサイズ = " << v.size() << endl;
+  cout << "挿入後の内容:\n";
+  for(i=0; i<v.size(); i++) cout << v[i] << " ";
+  cout << endl << endl;
+
+  // これらの要素を削除する
+  p = v.begin();
+  p += 2; // 3つ目の要素を指す
+  v.erase(p, p+10); // 次の10個の要素を削除する
+
+  // 削除後のベクトルの内容を表示する
+  cout << "削除後のサイズ = " << v.size() << endl;
+  cout << "削除後の内容:\n";
+  for(i=0; i<v.size(); i++) cout << v[i] << " ";
+  cout << endl;
+
+  return 0;
+}
+
+●リスト14.3：例【4】
+// ベクトルにクラスオブジェクトを保存する
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Demo {
+  double d;
+public:
+  Demo() { d = 0.0; }
+  Demo(double x) { d = x; }
+  Demo &operator=(double x) {
+    d = x; return *this;
+  }
+  double getd() { return d; }
+};
+
+bool operator<(Demo a, Demo b)
+{
+  return a.getd() < b.getd();
+}
+
+bool operator==(Demo a, Demo b)
+{
+  return a.getd() == b.getd();
+}
+
+int main()
+{
+  vector<Demo> v;
+  int i;
+
+  for(i=0; i<10; i++)
+    v.push_back(Demo(i/3.0));
+
+  for(i=0; i<v.size(); i++)
+    cout << v[i].getd() << " ";
+
+  cout << endl;
+
+  for(i=0; i<v.size(); i++)
+    v[i] = v[i].getd() * 2.1;
+
+  for(i=0; i<v.size(); i++)
+    cout << v[i].getd() << " ";
+
+  cout << endl;
+
+  return 0;
+}
+
+●リスト14.3：練習問題【3】
+class Coord {
+public:
+  int x, y;
+  Coord() { x = y = 0; }
+  Coord(int a, int b) { x = a; y = b; }
+};
+
+●リスト14.4：例【1】
+// リストの基本操作
+#include <iostream>
+#include <list>
+using namespace std;
+
+int main()
+{
+  list<char> lst; // 空のリストを作成する
+  int i;
+
+  for(i=0; i<10; i++) lst.push_back('A'+i);
+
+  cout << "大きさ = " << lst.size() << endl;
+
+  list<char>::iterator p;
+
+  cout << "内容: ";
+  while(!lst.empty()) {
+    p = lst.begin();
+    cout << *p;
+    lst.pop_front();
+  }
+  cout << endl;
+  
+  return 0;
+}
+
+●リスト14.4：例【2】
+list<char>::iterator p = lst.begin();
+
+while(p != lst.end()) {
+  cout << *p;
+  p++;
+}
+
+●リスト14.4：例【3】
+// 要素をリストの前方からでも後方からでも追加することができる
+#include <iostream>
+#include <list>
+using namespace std;
+
+int main()
+{
+  list<char> lst;
+  list<char> revlst;
+  int i;
+
+  for(i=0; i<10; i++) lst.push_back('A'+i);
+
+  cout << "lstの大きさ = " << lst.size() << endl;
+  cout << "もとの内容: ";
+
+  list<char>::iterator p;
+  
+  /* lstから要素を削除し、その要素を
+     revlstに逆順に追加する */
+  while(!lst.empty()) {
+    p = lst.begin();
+    cout << *p;
+    lst.pop_front();
+    revlst.push_front(*p);
+  }
+  cout << endl << endl;
+  
+  cout << "revlstの大きさ = ";
+  cout << revlst.size() << endl;
+  cout << "逆順の内容: ";
+  p = revlst.begin();
+  while(p != revlst.end()) {
+    cout << *p;
+    p++;
+  }
+  cout << endl;
+    
+  return 0;
+}
+
+●リスト14.4：例【4】
+// リストをソートする
+#include <iostream>
+#include <list>
+#include <cstdlib>
+using namespace std;
+
+int main()
+{
+  list<char> lst;
+  int i;
+
+  // 無作為の文字を含むリストを作成する
+  for(i=0; i<10; i++)
+    lst.push_back('A'+ (rand()%26));
+
+  cout << "もとの内容: ";
+  list<char>::iterator p = lst.begin();
+
+  while(p != lst.end()) {
+    cout << *p;
+    p++;
+  }
+  cout << endl << endl;
+
+  // リストをソートする
+  lst.sort();
+
+  cout << "処理した内容: ";
+  p = lst.begin();
+  while(p != lst.end()) {
+    cout << *p;
+    p++;
+  }
+  cout << endl;
+  
+  return 0;
+}
+
+●リスト14.4：例【5】
+// 2つのリストを結合する
+#include <iostream>
+#include <list>
+using namespace std;
+
+int main()
+{
+  list<char> lst1, lst2;
+  int i;
+
+  for(i=0; i<10; i+=2) lst1.push_back('A'+i);
+  for(i=1; i<11; i+=2) lst2.push_back('A'+i);
+
+  cout << "lst1の内容: ";
+  list<char>::iterator p = lst1.begin();
+  while(p != lst1.end()) {
+    cout << *p;
+    p++;
+  }
+  cout << endl << endl;
+  cout << "lst2の内容: ";
+  p = lst2.begin();
+  while(p != lst2.end()) {
+    cout << *p;
+    p++;
+  }
+  cout << endl << endl;
+
+  // 2つのリストを結合する
+  lst1.merge(lst2);
+  if(lst2.empty())
+    cout << "lst2は現在、空\n";
+  cout << "結合後のlst1の内容:\n";
+  p = lst1.begin();
+  while(p != lst1.end()) {
+    cout << *p;
+    p++;
+  }
+  cout << endl;
+
+  return 0;
+}
+
+●リスト14.4：例【6】
+#include <iostream>
+#include <list>
+#include <cstring>
+using namespace std;
+
+class Project {
+public:
+  char name[40];
+  int days_to_completion;
+  Project() { 
+    strcpy(name, "");
+    days_to_completion = 0;
+  }
+  Project(char *n, int d) {
+    strcpy(name, n);
+    days_to_completion = d;
+  }
+
+  void add_days(int i) {
+    days_to_completion += i;
+  }
+
+  void sub_days(int i) {
+    days_to_completion -= i;
+  }
+
+  bool completed() { return !days_to_completion; }
+ 
+  void report() {
+    cout << name << ": ";
+    cout << days_to_completion;
+    cout << "日（残り）\n";
+  }
+};
+
+bool operator<(const Project &a, const Project &b)
+{
+  return a.days_to_completion < b.days_to_completion;
+}
+
+bool operator>(const Project &a, const Project &b)
+{
+  return a.days_to_completion > b.days_to_completion;
+}
+
+bool operator==(const Project &a, const Project &b)
+{
+  return a.days_to_completion == b.days_to_completion;
+}
+
+bool operator!=(const Project &a, const Project &b)
+{
+  return a.days_to_completion != b.days_to_completion;
+}
+
+int main()
+{
+  list<Project> proj;
+
+  proj.push_back(Project("コンパイラ", 35));
+  proj.push_back(Project("スプレッドシート", 190));
+  proj.push_back(Project("STL実装", 1000));
+  list<Project>::iterator p = proj.begin();
+
+  /* プロジェクトを表示する */
+  while(p != proj.end()) {
+    p->report();
+    p++;
+  }
+
+  // 1つ目のプロジェクトに10日を追加する
+  p = proj.begin();
+  p->add_days(10);
+
+  // 1つ目のプロジェクトを完了まで移動する
+  do {
+    p->sub_days(5);
+    p->report();
+  } while (!p->completed());
+
+  return 0;
+}
+
+●リスト14.5：例【1】
+// 単純なマップの使用例
+#include <iostream>
+#include <map>
+using namespace std;
+
+int main()
+{
+  map<char, int> m;
+  int i;
+
+  // マップにキー/値を格納する
+  for(i=0; i<10; i++) {
+    m.insert(pair<char, int>('A'+i, i));
+  }
+
+  char ch;
+  cout << "キーを入力: ";
+  cin >> ch;
+
+  map<char, int>::iterator p;
+  
+  // 指定のキーの値を探す
+  p = m.find(ch);
+  if(p != m.end()) 
+    cout << p->second << "\n";
+  else
+    cout << "キーはマップにない\n";
+
+  return 0;
+}
+
+●リスト14.5：例【3】
+// 反対語のマップ
+#include <iostream>
+#include <map>
+#include <cstring>
+using namespace std;
+
+class word {
+  char str[20];
+public:
+  word() { strcpy(str, ""); }
+  word(char *s) { strcpy(str, s); }
+  char *get() { return str; }
+};
+
+// wordオブジェクトに対する<演算子を定義しなければならない
+bool operator<(word a, word b)
+{
+   return strcmp(a.get(), b.get()) < 0;
+}
+
+class opposite {
+  char str[20];
+public:
+  opposite() { strcmp(str, ""); }
+  opposite(char *s) { strcpy(str, s); }
+  char *get() { return str; }
+};
+
+int main()
+{
+  map<word, opposite> m;
+
+  // 単語と反対語をマップに格納する
+  m.insert(pair<word,
+    opposite>(word("yes"), opposite("no")));
+  m.insert(pair<word,
+    opposite>(word("good"), opposite("bad")));
+  m.insert(pair<word,
+    opposite>(word("left"), opposite("right")));
+  m.insert(pair<word,
+    opposite>(word("up"), opposite("down")));
+
+  // 単語に対する反対語を探す
+  char str[80];
+  cout << "単語を入力: ";
+  cin >> str;
+
+  map<word, opposite>::iterator p;
+  
+  p = m.find(word(str));
+  if(p != m.end()) 
+    cout << "反対語: " <<  p->second.get() << "\n";
+  else
+    cout << "単語がマップにない\n";
+
+  return 0;
+}
+
+●リスト14.6：例【1】
+// countとcount_ifの使用例
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+/* 値が偶数かどうかを判別する
+   単項条件式 */
+bool even(int x) 
+{
+  return !(x%2);
+}
+
+int main()
+{
+  vector<int> v; 
+  int i;
+
+  for(i=0; i<20; i++) {
+    if(i%2) v.push_back(1);
+    else v.push_back(2);
+  }
+
+  cout << "シーケンス: ";
+  for(i=0; i<v.size(); i++) cout << v[i] << " ";
+  cout << endl;
+
+  int n;
+  n = count(v.begin(), v.end(), 1);
+  cout << n << "個です（1の要素）\n";
+
+  n = count_if(v.begin(), v.end(), even);
+  cout << n << "個です（偶数の要素）\n";
+
+  return 0;
+}
+
+●リスト14.6：例【2】
+// remove_copyの使用例
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+  vector<int> v, v2(20); 
+  int i;
+
+  for(i=0; i<20; i++) {
+    if(i%2) v.push_back(1);
+    else v.push_back(2);
+  }
+
+  cout << "シーケンス: ";
+  for(i=0; i<v.size(); i++) cout << v[i] << " ";
+  cout << endl;
+
+  // 1を削除する
+  remove_copy(v.begin(), v.end(), v2.begin(), 1);
+  cout << "結果: ";
+  for(i=0; i<v2.size(); i++) cout << v2[i] << " ";
+  cout << endl << endl;
+
+  return 0;
+}
+
+●リスト14.6：例【3】
+// reverseの使用例
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+  vector<int> v;
+  int i;
+
+  for(i=0; i<10; i++) v.push_back(i);
+
+  cout << "初期状態: ";
+  for(i=0; i<v.size(); i++) cout << v[i] << " ";
+  cout << endl;
+
+  reverse(v.begin(), v.end());
+
+  cout << "逆順: ";
+  for(i=0; i<v.size(); i++) cout << v[i] << " ";
+  cout << endl;
+
+  return 0;
+}
+
+●リスト14.6：例【4】
+// 変形アルゴリズムの例
+#include <iostream>
+#include <list>
+#include <algorithm>
+using namespace std;
+
+// 単純な変形関数
+int xform(int i) {
+  return i * i; // 元の値を2乗する
+}
+
+int main()
+{
+  list<int> xl;
+  int i;
+
+  // 値をリストに格納する
+  for(i=0; i<10; i++) xl.push_back(i);
+
+  cout << "最初のxlの内容: ";
+  list<int>::iterator p = xl.begin();
+  while(p != xl.end()) {
+    cout << *p << " ";
+    p++;
+  }
+  cout << endl;
+ 
+  // xlを変形する
+  p = transform(xl.begin(), xl.end(), xl.begin(), xform);
+
+  cout << "変形後のxlの内容: ";
+  p = xl.begin();
+  while(p != xl.end()) {
+    cout << *p << " ";
+    p++;
+  }
+  cout << endl;
+
+  return 0;
+}
+
+●リスト14.7：例【1】
+// 文字列操作の短い例
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+  string str1("Demonstrating Strings");
+  string str2("String Two");
+  string str3;
+
+  // 文字列を代入する
+  str3 = str1; 
+  cout << str1 << "\n" << str3 << "\n";
+
+  // 2つの文字列を連結する
+  str3 = str1 + str2; 
+  cout << str3 << "\n";
+
+  // 2つの文字列を比較する
+  if(str3 > str1) cout << "str3 > str1\n";
+  if(str3 == str1+str2)
+    cout << "str3 == str1+str2\n";
+
+  /* stringオブジェクトに
+     通常の文字列を代入することができる */
+  str1 = "This is a normal string.\n";
+  cout << str1;
+
+  // ほかのstringオブジェクトを使用してstringオブジェクトを作成する
+  string str4(str1);
+  cout << str4;
+
+  // 文字列を入力する
+  cout << "文字列の入力: ";
+  cin >> str4;
+  cout << str4 << "\n";
+
+  return 0;
+}
+
+●リスト14.7：例【2】
+// insert()関数、erase()関数、replace()関数の使用例
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+  string str1("This is a test");
+  string str2("ABCDEFG");
+
+  cout << "最初の文字列:\n";
+  cout << "文字列1: " << str1 << endl;
+  cout << "文字列2: " << str2 << "\n\n";
+
+  // insert()関数の使用例
+  cout << "文字列2を文字列1に挿入:\n";
+  str1.insert(5, str2);
+  cout << str1 << "\n\n";
+
+  // erase()関数の使用例
+  cout << "文字列1から7文字を削除:\n";
+  str1.erase(5, 7);
+  cout << str1 <<"\n\n";
+
+  // replace()関数の使用例
+  cout << "文字列1の2文字を文字列2と入れ替え:\n";
+  str1.replace(5, 2, str2);
+  cout << str1 << endl;
+  
+  return 0;
+}
+
+●リスト14.7：例【3】
+// stringオブジェクトを使用して単語と反対語を対応付ける
+#include <iostream>
+#include <map>
+#include <string>
+using namespace std;
+
+int main()
+{
+  map<string, string> m;
+  int i;
+
+  m.insert(pair<string, string>("yes", "no"));
+  m.insert(pair<string, string>("up", "down"));
+  m.insert(pair<string, string>("left", "right"));
+  m.insert(pair<string, string>("good", "bad"));
+
+  string s;
+  cout << "単語を入力: ";
+  cin >> s;
+
+  map<string, string>::iterator p;
+  
+  p = m.find(s);
+  if(p != m.end()) 
+    cout << "反対語: " << p->second << endl;
+  else
+    cout << "単語がマップにない\n";
+
+  return 0;
+}

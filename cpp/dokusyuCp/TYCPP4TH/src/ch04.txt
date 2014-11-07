@@ -1,0 +1,964 @@
+■第4章：目次■
+･････････････････････
+●リスト第4章：前章の理解度チェック【5】
+●リスト第4章：前章の理解度チェック【7】
+●リスト4.1：例【1】
+●リスト4.1：例【2】
+●リスト4.1：例【3】
+●リスト4.1：例【4】
+●リスト4.1：練習問題【1】
+●リスト4.1：練習問題【2】
+●リスト4.2：例【1】
+●リスト4.3：例【1】
+●リスト4.3：例【1】
+●リスト4.3：練習問題【1】
+●リスト4.4：例【1】
+●リスト4.4：例【2】
+●リスト4.5：例【1】
+●リスト4.5：例【2】
+●リスト4.5：例【3】
+●リスト4.5：例【4】
+●リスト4.5：例【5】
+●リスト4.5：練習問題【1】
+●リスト4.6
+●リスト4.6
+●リスト4.6：例【1】
+●リスト4.6：例【2】
+●リスト4.6：練習問題【2】
+●リスト4.7：例【1】
+●リスト4.7：例【1】
+●リスト4.7：練習問題【1】
+●リスト4.8：例【1】
+●リスト4.8：例【2】
+●リスト4.8：例【3】
+●リスト4.8：練習問題【2】
+●リスト4.9：例【1】
+●リスト第4章の理解度チェック【1】
+●リスト第4章：総合理解度チェック【2】
+･････････････････････
+
+●リスト第4章：前章の理解度チェック【5】
+class summation {
+  int num;
+  long sum; // 数値の総計
+public:
+  void set_sum(int n);
+  void show_sum() {
+    cout << num << " 総計は " << sum << "\n";
+  }
+};
+
+void summation::set_sum(int n)
+{
+  int i;
+  num = n;
+  sum = 0;
+  for(i=1; i<=n; i++)
+    sum += i;
+}
+
+●リスト第4章：前章の理解度チェック【7】
+class myclass {
+  int num;
+public:
+  myclass(int x) { num = x; }
+};
+
+●リスト4.1：例【1】
+#include <iostream>
+using namespace std;
+ 
+class samp {
+  int a;
+public:
+  void set_a(int n) { a = n; }
+  int get_a() { return a; }
+};
+
+int main()
+{
+  samp ob[4];
+  int i;
+
+  for(i=0; i<4; i++) ob[i].set_a(i);
+  for(i=0; i<4; i++) cout << ob[i].get_a( );
+
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト4.1：例【2】
+// 配列を初期化する
+#include <iostream>
+using namespace std;
+ 
+class samp {
+  int a;
+public:
+  samp(int n) { a = n; }
+  int get_a() { return a; }
+};
+
+int main()
+{
+  samp ob[4] = { -1, -2, -3, -4 };
+  int i;
+
+  for(i=0; i<4; i++) cout << ob[i].get_a() << ' ';
+
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト4.1：例【3】
+// オブジェクトの2次元配列を作成する
+#include <iostream>
+using namespace std;
+
+class samp {
+  int a;
+public:
+  samp(int n) { a = n; }
+  int get_a() { return a; }
+};
+
+int main()
+{
+  samp ob[4][2] = {
+    1, 2,
+    3, 4,
+    5, 6,
+    7, 8
+  };
+
+  int i;
+
+  for(i=0; i<4; i++) {
+    cout << ob[i][0].get_a() << ' ';
+    cout << ob[i][1].get_a() << "\n";
+  }
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト4.1：例【4】
+#include <iostream>
+using namespace std;
+
+class samp {
+  int a, b;
+public:
+  samp(int n, int m) { a = n; b = m; }
+  int get_a() { return a; }
+  int get_b() { return b; }
+};
+
+int main()
+{
+  samp ob[4][2] = {
+    samp(1, 2), samp(3, 4), 
+    samp(5, 6), samp(7, 8),
+    samp(9, 10), samp(11, 12),
+    samp(13, 14), samp(15, 16)
+  };
+
+  int i;
+
+  for(i=0; i<4; i++) {
+    cout << ob[i][0].get_a() << ' ';
+    cout << ob[i][0].get_b() << "\n";
+    cout << ob[i][1].get_a() << ' ';
+    cout << ob[i][1].get_b() << "\n";
+  }
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト4.1：練習問題【1】
+#include <iostream>
+using namespace std;
+
+class letters {
+  char ch;
+public:
+  letters(char c) { ch = c; }
+  char get_ch() { return ch; }
+};
+
+●リスト4.1：練習問題【2】
+#include <iostream>
+using namespace std;
+
+class squares {
+  int num, sqr;
+public:
+  squares(int a, int b) { num = a; sqr = b; }
+  void show() {cout << num << ' ' << sqr << "\n"; }
+};
+
+●リスト4.2：例【1】
+// オブジェクトポインタ
+#include <iostream>
+using namespace std;
+
+class samp {
+  int a, b;
+public:
+  samp(int n, int m) { a = n; b = m; }
+  int get_a() { return a; }
+  int get_b() { return b; }
+};
+
+int main()
+{
+  samp ob[4] = {
+    samp(1, 2), 
+    samp(3, 4), 
+    samp(5, 6), 
+    samp(7, 8)
+  }; 
+  int i;
+
+  samp *p;
+  p = ob; // 配列の開始アドレスを取得する
+
+  for(i=0; i<4; i++) {
+    cout << p->get_a() << ' ';
+    cout << p->get_b() << "\n";
+    p++;  // 次のオブジェクトに進む
+  }
+
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト4.3：例【1】
+// thisポインタの使用例
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class inventory {
+  char item[20];
+  double cost;
+  int on_hand;
+public:
+  inventory(char *i, double c, int o)
+  {
+     strcpy(item, i);
+     cost = c;
+     on_hand = o;
+   }
+   void show();
+};
+
+void inventory::show()
+{
+  cout << item;
+  cout << ": $" << cost;
+  cout << "  在庫: " << on_hand << "\n";
+}
+
+int main()
+{
+  inventory ob("レンチ", 4.95, 4);
+  ob.show();
+  return 0;
+}
+
+●リスト4.3：例【1】
+// ポインタの使用例
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class inventory {
+  char item[20];
+  double cost;
+  int on_hand;
+public:
+  inventory(char *i, double c, int o)
+  {
+     strcpy(this->item, i); // thisポインタを
+     this->cost = c;        // 使用してメンバに
+     this->on_hand = o;     // アクセスする
+   }
+   void show();
+};
+
+void inventory::show()
+{
+  cout << this->item; // thisポインタを使用してメンバにアクセスする
+  cout << ": $" << this->cost;
+  cout << "  在庫: " << this->on_hand << "\n";
+}
+
+int main()
+{
+  inventory ob("レンチ", 4.95, 4);
+  ob.show();
+  return 0;
+}
+
+●リスト4.3：練習問題【1】
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int a, b;
+public: 
+  myclass(int n, int m) { a = n; b = m; }
+  int add() { return a+b; }
+  void show();
+};
+
+void myclass::show()
+{
+  int t;
+
+  t = add(); // メンバ関数を呼び出す
+  cout << t << "\n";
+}
+
+int main()
+{
+  myclass ob(10, 14);
+  ob.show();
+  return 0;
+}
+
+●リスト4.4：例【1】
+// new演算子とdelete演算子を使用する単純な例
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int *p;
+
+  p = new int; // 整数のメモリを割り当てる
+  if(!p) { 
+    cout << "メモリ割り当てエラー\n";
+    return 1;
+  }
+
+  *p = 1000;
+  cout << "pが指している整数型は: " << *p << "\n";
+  delete p;  // メモリを解放する
+  return 0;
+}
+
+●リスト4.4：例【2】
+// 動的オブジェクトを割り当てる
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i, j;
+public:
+  void set_ij(int a, int b) { i=a; j=b; }
+  int get_product() { return i*j; }
+};
+
+int main()
+{
+  samp *p;
+
+  p = new samp; // オブジェクトを割り当てる
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    return 1;
+  }
+
+  p->set_ij(4, 5);
+  cout << "積は: " << p->get_product() << "\n";
+  return 0;
+}
+
+●リスト4.5：例【1】
+// 動的変数を初期化する例
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int *p;
+
+  p = new int(9); // 初期値として9を格納する
+ 
+ if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    return 1;
+  }
+
+  cout << "pが指している整数型は: " << *p << "\n";
+
+  delete p;  // メモリを解放する
+
+  return 0;
+}
+
+●リスト4.5：例【2】
+// 動的オブジェクトを割り当てる
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i, j;
+public:
+  samp(int a, int b) { i=a; j=b; }
+  int get_product() { return i*j; }
+};
+
+int main()
+{
+  samp *p;
+
+  p = new samp(6, 5); // オブジェクトを割り当てて初期化する
+
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    return 1;
+  }
+
+  cout << "積は: " << p->get_product() << "\n";
+
+  delete p;
+
+  return 0;
+}
+
+●リスト4.5：例【3】
+// new演算子とdelete演算子の単純な例
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int *p;
+
+  p = new int [5]; // 5つの整数用のメモリを割り当てる
+
+  // 割り当てが成功したことを常に確認する
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    return 1;
+  }
+
+  int i;
+
+  for(i=0; i<5; i++) p[i] = i;
+
+  for(i=0; i<5; i++) {
+    cout << "整数型p[" << i << "]は: ";
+    cout << p[i] << "\n";
+  }
+
+  delete [] p;  // メモリを解放する
+
+  return 0;
+}
+
+●リスト4.5：例【4】
+// 動的オブジェクトを割り当てる
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i, j;
+public:
+  void set_ij(int a, int b) { i=a; j=b; }
+  int get_product() { return i*j; }
+};
+
+int main()
+{
+  samp *p;
+  int i;
+
+  p = new samp [10]; // オブジェクト配列を割り当てる
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    return 1;
+  }
+
+  for(i=0; i<10; i++) 
+    p[i].set_ij(i, i);
+
+  for(i=0; i<10; i++) {
+    cout << "積 [" << i << "] は: ";
+    cout << p[i].get_product() << "\n";
+  }
+
+  delete [] p;
+  return 0;
+}
+
+●リスト4.5：例【5】
+// 動的オブジェクトを割り当てる
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i, j;
+public:
+  void set_ij(int a, int b) { i=a; j=b; }
+  ~samp() { cout << "デストラクタ呼び出し\n"; }
+  int get_product() { return i*j; }
+};
+
+int main()
+{
+  samp *p;
+  int i;
+
+  p = new samp [10]; // オブジェクト配列を割り当てる
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    return 1;
+  }
+
+  for(i=0; i<10; i++) 
+    p[i].set_ij(i, i);
+
+  for(i=0; i<10; i++) {
+    cout << "積 [" << i << "] は: ";
+    cout << p[i].get_product() << "\n";
+  }
+
+  delete [] p;
+  return 0;
+}
+
+●リスト4.5：練習問題【1】
+char *p;
+
+p = (char *) malloc(100);
+// ...
+strcpy(p, "This is a test");
+
+
+●リスト4.6
+#include <iostream> 
+using namespace std;
+
+void f(int *n);  // ポインタ仮引数を使用する
+
+int main()
+{
+  int i = 0;
+
+  f(&i); 
+
+  cout << "iの新しい値: " << i << "\n";
+
+  return 0;
+}
+
+void f(int *n)
+{
+  *n = 100; // nが指す引数に100を格納する
+}
+
+
+●リスト4.6
+#include <iostream>
+using namespace std;
+
+void f(int &n); // 参照仮引数を宣言する
+
+int main()
+{
+  int i = 0;
+
+  f(i); 
+
+  cout << "iの新しい値: " << i << "\n";
+
+  return 0;
+}
+
+// f()関数は参照仮引数を使用する
+void f(int &n)
+{
+  // 次の文では*が必要ない
+  n = 100; // f()関数を呼び出すのに使用した引数に100を格納する
+}
+
+●リスト4.6：例【1】
+#include <iostream>
+using namespace std;
+
+void swapargs(int &x, int &y);
+
+int main()
+{
+  int i, j;
+
+  i = 10;
+  j = 19;
+
+  cout << "i: " << i << ", ";
+  cout << "j: " << j << "\n";
+
+  swapargs(i, j);
+
+  cout << "交換後: ";
+  cout << "i: " << i << ", ";
+  cout << "j: " << j << "\n";
+
+  return 0;
+}
+
+void swapargs(int &x, int &y)
+{
+  int t;
+
+  t = x;
+  x = y;
+  y = t;
+}
+
+●リスト4.6：例【2】
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+void my_round(double &num);
+
+int main()
+{
+  double i = 100.4;
+
+  cout << i << " を丸めると ";
+  my_round(i);
+  cout << i << "\n";
+
+  i = 10.9;
+  cout << i << " を丸めると ";
+  my_round(i);
+  cout << i << "\n";
+
+  return 0;
+}
+
+void my_round(double &num)
+{
+  double frac;
+  double val;
+
+  // numを整数部と小数部に分解する
+  frac = modf(num, &val);
+
+  if(frac < 0.5) num = val;
+  else num = val+1.0;
+}
+
+●リスト4.6：練習問題【2】
+// このプログラムにはエラーがある
+#include <iostream>
+using namespace std;
+
+void triple(double &num);
+
+int main()
+{
+  double d = 7.0;
+  triple(&d);
+  cout << d << "\n";
+  return 0;
+}
+
+// num値を3倍する
+void triple(double &num)
+{
+  num = 3 * num;
+}
+
+●リスト4.7：例【1】
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int who;
+public:
+  myclass(int n) {
+    who = n;
+    cout << "コンストラクタ呼び出し " << who << "\n";
+  }
+  ~myclass() { cout << "デストラクタ呼び出し " << who << "\n"; }
+  int id() { return who; }
+};
+
+// oを値によって渡す
+void f(myclass o)
+{
+  cout << "受け取り " << o.id() << "\n";
+}
+
+int main()
+{
+  myclass  x(1);
+  f(x);
+  return 0;
+}
+
+●リスト4.7：例【1】
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int who;
+public:
+  myclass(int n) {
+    who = n;
+    cout << "コンストラクタ呼び出し " << who << "\n";
+  }
+  ~myclass() { cout << "デストラクタ呼び出し " << who << "\n"; }
+  int id() { return who; }
+};
+
+// oを参照によって渡す
+void f(myclass &o)
+{
+  // .演算子を使用していることに注意
+  cout << "受け取り " << o.id() << "\n";
+}
+
+int main()
+{
+  myclass  x(1);
+  f(x);
+  return 0;
+}
+
+●リスト4.7：練習問題【1】
+// このプログラムにはエラーがある
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+public:
+  strtype(char *s);
+  ~strtype() { delete [] p; }
+  char *get() { return p; }
+};
+
+strtype::strtype(char *s)
+{
+  int l;
+
+  l = strlen(s)+1;
+  p = new char [l];
+
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(p, s);
+}
+
+void show(strtype x)
+{
+  char *s;
+   
+  s = x.get();
+  cout << s << "\n";
+}
+
+int main()
+{
+  strtype a("Hello"), b("There");
+
+  show(a);
+
+  show(b);
+
+  return 0;
+}
+
+●リスト4.8：例【1】
+// 参照を返す関数の例
+#include <iostream>
+using namespace std;
+
+int &f(); // 参照を返す
+int x;
+
+int main()
+{
+  f() = 100; // f()関数によって返される参照に100を代入する
+  cout << x << "\n";
+  return 0;
+}
+
+// int型の参照を返す
+int &f()
+{
+  return x;  // xへの参照を返す
+}
+
+●リスト4.8：例【2】
+// int型の参照を返す
+int &f()
+{
+  int x;     // xはローカル変数
+  return x;  // xへの参照を返す
+}
+
+●リスト4.8：例【3】
+// 単純な境界配列の例
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class array {
+  int size;
+  char *p;
+public:
+  array(int num);
+  ~array() { delete [] p; }
+  char &put(int i);
+  char get(int i);
+};
+
+array::array(int num)
+{
+  p = new char [num];
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  size = num;
+}
+
+// 配列に情報を格納する
+char &array::put(int i)
+{
+  if(i<0 || i>size-1) {
+    cout << "境界エラー!!!\n";
+    exit(1);
+  }
+  return p[i];  // p[i]への参照を返す
+}
+
+// 配列からデータを取得する
+char array::get(int i)
+{
+  if(i<0 || i>size-1) {
+    cout << "境界エラー!!!\n";
+    exit(1);
+  }
+  return p[i]; // 文字を返す
+}
+  
+int main()
+{
+  array a(10);
+
+  a.put(3) = 'X';
+  a.put(2) = 'R';
+
+  cout << a.get(3) << a.get(2);
+  cout << "\n";
+
+  // 実行時境界エラーを生成する
+  a.put(11) = '!';
+
+  return 0;
+}
+
+●リスト4.8：練習問題【2】
+int &f();
+.
+.
+.
+int *x;
+x = f();
+
+●リスト4.9：例【1】
+#include <iostream>
+using namespace std;
+int main()
+{
+  int x;
+  int &ref = x; // 独立参照を作成する
+
+  x = 10;       // この2つの文の
+  ref = 10;     // 機能は同等である
+
+  ref = 100;
+  // 100を2回出力する
+  cout << x << ' ' << ref << "\n";
+
+  return 0;
+}
+
+●リスト第4章の理解度チェック【1】
+class a_type {
+  double a, b;
+public:
+  a_type(double x, double y) {
+    a = x; 
+    b = y;
+  }
+  void show() { cout << a << ' ' << b << "\n"; }
+};
+
+
+●リスト第4章：総合理解度チェック【2】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype(char *ptr);
+  ~strtype();
+  void show();
+};
+
+strtype::strtype(char *ptr)
+{
+  len = strlen(ptr);
+  p = (char *) malloc(len+1);
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(p, ptr);
+}
+
+strtype::~strtype()
+{
+  cout << "pを解放する\n";
+  free(p);
+}
+
+void strtype::show()
+{
+  cout << p << " - 長さ: " << len;
+  cout << "\n";
+}
+
+int main()
+{
+  strtype s1("This is a test."), s2("I like C++.");
+
+  s1.show();
+  s2.show();
+
+  return 0;
+}
+

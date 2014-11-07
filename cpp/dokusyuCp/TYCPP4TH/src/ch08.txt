@@ -1,0 +1,671 @@
+■第8章：目次■
+･････････････････････
+●リスト第8章：前章の理解度チェック【3】
+●リスト第8章：前章の理解度チェック【5】
+●リスト8.2：例【1】
+●リスト8.2：例【2】
+●リスト8.2：例【3】
+●リスト8.2：例【4】
+●リスト8.3：例【1】
+●リスト8.3：例【2】
+●リスト8.4：例【1】
+●リスト8.4：例【2】
+●リスト8.4：例【3】
+●リスト8.5：例【1】
+●リスト8.5：例【2】
+●リスト8.5：例【3】
+●リスト8.5：練習問題【1】
+●リスト8.5：練習問題【2】
+●リスト8.6：例【1】
+●リスト8.6：例【2】
+●リスト第8章の理解度チェック【5】
+●リスト第8章：総合理解度チェック【1】
+●リスト第8章：総合理解度チェック【3】
+･････････････････････
+
+●リスト第8章：前章の理解度チェック【3】
+#include <iostream>
+using namespace std;
+
+class A {
+public:
+  A() { cout << "Aのコンストラクタ呼び出し\n"; }
+  ~A() { cout << "Aのデストラクタ呼び出し\n"; }
+};
+
+class B : public A {
+public:
+  B() { cout << "Bのコンストラクタ呼び出し\n"; }
+  ~B() { cout << "Bのデストラクタ呼び出し\n"; }
+};
+
+class C : public B {
+public:
+  C() { cout << "Cのコンストラクタ呼び出し\n"; }
+  ~C() { cout << "Cのデストラクタ呼び出し\n"; }
+};
+
+int main()
+{
+  C ob;
+  return 0;
+}
+
+●リスト第8章：前章の理解度チェック【5】
+#include <iostream>
+using namespace std;
+
+class base {
+  int i, j;
+public:
+  // コンストラクタが必要
+  void showij() { cout << i << ' ' << j << "\n"; }
+};
+
+class derived : public base {
+  int k;
+public:
+  // コンストラクタが必要
+  void show() { cout << k << ' '; showij(); }
+};
+
+int main()
+{
+  derived ob(1, 2, 3);
+
+  ob.show();
+
+  return 0;
+}
+
+●リスト8.2：例【1】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  // デフォルト設定で表示する
+  cout << 123.23 << " hello " << 100 << "\n";
+  cout << 10 << ' ' << -10 << "\n";
+  cout << 100.0 << "\n\n";
+
+  // 書式を変更する
+  cout.unsetf(ios::dec); // コンパイラによっては不要
+  cout.setf(ios::hex | ios::scientific);
+  cout << 123.23 << " hello " << 100 << "\n";
+
+  cout.setf(ios::showpos);
+  cout << 10 << ' ' << -10 << "\n";
+  cout. setf(ios::showpoint | ios::fixed);
+  cout << 100.0 << "\n";
+
+  return 0;
+}
+
+●リスト8.2：例【2】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout.unsetf(ios::dec);
+  cout.setf(ios::uppercase | ios::showbase | ios::hex);
+
+  cout << 88 << "\n";
+
+  cout.unsetf(ios::uppercase);
+
+  cout << 88 << "\n";
+
+  return 0;
+}
+
+●リスト8.2：例【3】
+#include <iostream>
+using namespace std;
+
+void showflags();
+int main()
+{
+  // 書式フラグのデフォルト状態を示す
+  showflags();
+
+  cout.setf(ios::oct | ios::showbase | ios::fixed);
+
+  showflags();
+
+  return 0; 
+}
+
+// この関数は、書式フラグのステータスを表示する
+void showflags()
+{
+  ios::fmtflags f;
+
+  f = cout.flags();  // フラグの設定値を取得する
+  
+  if(f & ios::skipws) cout << "skipws on\n";
+  else cout << "skipws off\n";
+
+  if(f & ios::left) cout << "left on\n";
+  else cout << "left off\n";
+
+  if(f & ios::right) cout << "right on\n";
+  else cout << "right off\n";
+
+  if(f & ios::internal) cout << "internal on\n";
+  else cout << "internal off\n";
+
+  if(f & ios::dec) cout << "dec on\n";
+  else cout << "dec off\n";
+
+  if(f & ios::oct) cout << "oct on\n";
+  else cout << "oct off\n";
+
+  if(f & ios::hex) cout << "hex on\n";
+  else cout << "hex off\n";
+
+  if(f & ios::showbase) cout << "showbase on\n";
+  else cout << "showbase off\n";
+
+  if(f & ios::showpoint) cout << "showpoint on\n";
+  else cout << "showpoint off\n";
+
+  if(f & ios::showpos) cout << "showpos on\n";
+  else cout << "showpos off\n";
+
+  if(f & ios::uppercase) cout << "uppercase on\n";
+  else cout << "uppercase off\n";
+
+  if(f & ios::scientific) cout << "scientific on\n";
+  else cout << "scientific off\n";
+
+  if(f & ios::fixed) cout << "fixed on\n";
+  else cout << "fixed off\n";
+
+  if(f & ios::unitbuf) cout << "unitbuf on\n";
+  else cout << "unitbuf off\n";
+
+  if(f & ios::boolalpha) cout << "boolalpha on\n";
+  else cout << "boolalpha off\n";
+
+  cout << "\n";
+}
+
+●リスト8.2：例【4】
+#include <iostream>
+using namespace std;
+
+void showflags();
+
+int main()
+{
+  // 書式フラグのデフォルト状態を示す
+  showflags();
+
+  // showpos、showbase、oct、rightがオンで、ほかはオフ
+  ios::fmtflags f = ios::showpos | ios::showbase |
+                    ios::oct | ios::right;
+
+  cout.flags(f);  // フラグを設定
+
+  showflags();
+
+  return 0; 
+}
+
+●リスト8.3：例【1】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout.width(10);          // 最小フィールド幅を設定する
+  cout << "hello" << "\n"; // デフォルトにより右寄せ
+  cout.fill('%');          // 充てん文字を設定する
+  cout.width(10);          // 幅を設定する
+  cout << "hello" << "\n"; // デフォルトにより右寄せ
+  cout.setf(ios::left);    // 左寄せ
+  cout.width(10);          // 幅を設定する
+  cout << "hello" << "\n"; // 左寄せで出力する
+
+  cout.width(10);          // 幅を設定する
+  cout.precision(10);      // 精度を10桁に設定する
+  cout << 123.234567 << "\n"; 
+  cout.width(10);          // 幅を設定する
+  cout.precision(6);       // 精度を6桁に設定する
+  cout << 123.234567 << "\n"; 
+  return 0;
+}
+
+●リスト8.3：例【2】
+// 平方根と平方の表を作成する
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+  double x;
+
+  cout.precision(4);
+  cout << "      x   sqrt(x)     x^2\n\n";
+
+  for(x = 2.0; x <= 20.0; x++) {
+    cout.width(7);
+    cout << x << "  ";
+    cout.width(7);
+    cout << sqrt(x) << "  ";
+    cout.width(7);
+    cout << x*x << "\n";
+  }
+ 
+  return 0;
+}
+
+●リスト8.4：例【1】
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main()
+{
+  cout << hex << 100 << endl;
+  cout << oct << 10 << endl;
+
+  cout << setfill('X') << setw(10);
+  cout << 100 << " hi " << endl;
+
+  return 0;
+}
+
+●リスト8.4：例【2】
+/* このバージョンは、入出力マニピュレータを使って、
+   平方と平方根の表を表示する */
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+  double x;
+
+  cout << setprecision(4);
+  cout << "      x   sqrt(x)     x^2\n\n";
+
+  for(x = 2.0; x <= 20.0; x++) {
+    cout << setw(7) << x << "  ";
+    cout << setw(7) << sqrt(x) << "  ";
+    cout << setw(7) << x*x << "\n";
+  }
+ 
+  return 0;
+}
+
+●リスト8.4：例【3】
+// boolalpha書式フラグの使用例
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  bool b;
+
+  cout << "boolalphaフラグをセットする前: ";
+  b = true;
+  cout << b << " ";
+  b = false;
+  cout << b << endl;
+
+  cout << "boolalphaフラグをセットした後: ";
+  b = true;
+  cout << boolalpha << b << " ";
+  b = false;
+  cout << b << endl;
+
+  cout << "ブール値を入力: ";
+  cin >> boolalpha >> b; // trueまたはfalseを入力できる
+  cout << b << " を入力しました\n";
+
+  return 0;
+}
+
+●リスト8.5：例【1】
+// coord型オブジェクトにフレンド挿入子を使用する
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y;
+public:
+  coord() { x = 0; y = 0; }
+  coord(int i, int j) { x = i; y = j; }
+  friend ostream &operator<<(ostream &stream, coord ob);
+};
+
+ostream &operator<<(ostream &stream, coord ob)
+{
+  stream << ob.x << ", " << ob.y << "\n";
+  return stream;
+}
+
+int main()
+{
+  coord a(1, 1), b(10, 23);
+  cout << a << b;
+
+  return 0;
+}
+
+●リスト8.5：例【2】
+/* coord型のオブジェクト用に挿入子を作成する。
+   非フレンド挿入子を使用 */
+#include <iostream>
+using namespace std;
+
+class coord {
+public:
+  int x, y;  // 公開でなければならない
+  coord() { x = 0; y = 0; }
+  coord(int i, int j) { x = i; y = j; }
+};
+
+// coordクラス用の挿入子
+ostream &operator<<(ostream &stream, coord ob)
+{
+  stream << ob.x << ", " << ob.y << "\n";
+  return stream;
+}
+
+int main()
+{
+  coord a(1, 1), b(10, 23);
+  cout << a << b;
+
+  return 0;
+}
+
+●リスト8.5：例【3】
+// このプログラムは、直角三角形を描く
+#include <iostream>
+using namespace std;
+
+class triangle {
+  int height, base;
+public:
+  triangle(int h, int b) { height = h; base = b; }
+  friend ostream &operator<<(ostream &stream, triangle ob);
+};
+
+// 三角形を描く
+ostream &operator<<(ostream &stream, triangle ob)
+{
+  int i, j, h, k;
+
+  i = j = ob.base-1;
+  for(h=ob.height-1; h; h--) {
+    for(k=i; k; k--) 
+      stream << ' ';
+    stream << '*';
+    
+    if(j!=i) {
+      for(k=j-i-1; k; k--)
+        stream << ' ';
+      stream << '*';
+    }
+
+    i--;
+    stream << "\n";
+  }
+  for(k=0; k<ob.base; k++) stream << '*';
+  stream << "\n";
+
+  return stream;
+}
+
+int main()
+{
+  triangle t1(5, 5), t2(10, 10), t3(12, 12);
+
+  cout << t1;
+  cout << endl << t2 << endl << t3;
+
+  return 0;
+}
+
+●リスト8.5：練習問題【1】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype(char *ptr);
+  ~strtype() {delete [] p;}
+  friend ostream &operator<<(ostream &stream, strtype &ob);
+};
+
+strtype::strtype(char *ptr)
+{
+  len = strlen(ptr)+1;
+  p = new char [len];
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(p, ptr);
+}
+
+// 演算子<<の挿入関数をここに作成する
+
+int main()
+{
+  strtype s1("This is a test."), s2("I like C++.");
+
+  cout << s1 << "\n" << s2;
+
+  return 0;
+}
+
+●リスト8.5：練習問題【2】
+#include <iostream>
+using namespace std;
+
+class planet {
+protected:
+  double distance; // 太陽からの距離（マイル数）
+  int revolve;     // 日数
+public:
+  planet(double d, int r) { distance = d; revolve = r; }
+};
+
+class earth : public planet {
+  double circumference; // 軌道の円周
+public:
+  earth(double d, int r) : planet(d, r) {
+    circumference = 2*distance*3.1416;
+  }
+
+ /* これを書き直し、情報表示に
+    挿入関数を使う */
+  void show() {
+    cout << "太陽からの距離: " << distance << "\n";
+    cout << "公転周期: " << revolve << "\n";
+    cout << "軌道の円周: " << circumference << "\n";
+  }
+};
+
+int main()
+{
+  earth ob(93000000, 365);
+
+  cout << ob;
+
+  return 0;
+}
+
+●リスト8.6：例【1】
+// coord型オブジェクトにフレンド抽出子を追加する
+#include <iostream>
+using namespace std;
+
+class coord {
+  int x, y;
+public:
+  coord() { x = 0; y = 0; }
+  coord(int i, int j) { x = i; y = j; }
+  friend ostream &operator<<(ostream &stream, coord ob);
+  friend istream &operator>>(istream &stream, coord &ob);
+};
+
+ostream &operator<<(ostream &stream, coord ob)
+{
+  stream << ob.x << ", " << ob.y << "\n";
+  return stream;
+}
+
+istream &operator>>(istream &stream, coord &ob)
+{
+  cout << "座標を入力: ";
+  stream >> ob.x >> ob.y;
+  return stream;
+}
+
+int main()
+{
+  coord a(1, 1), b(10, 23);
+
+  cout << a << b;
+  cin >> a;
+  cout << a;
+
+  return 0;
+}
+
+●リスト8.6：例【2】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class inventory {
+  char item[40]; // 品名
+  int onhand;    // 在庫数量
+  double cost;   // 原価
+public:
+  inventory(char *i, int o, double c)
+  {
+    strcpy(item, i);
+    onhand = o;
+    cost = c;
+  }
+  friend ostream &operator<<(ostream &stream, inventory ob);
+  friend istream &operator>>(istream &stream, inventory &ob);
+};
+
+ostream &operator<<(ostream &stream, inventory ob)
+{
+  stream << ob.item << ": 在庫数は: " << ob.onhand;
+  stream << " 費用は: $" << ob.cost << "\n";
+
+  return stream;
+}
+
+istream &operator>>(istream &stream, inventory &ob)
+{
+  cout << "品名を入力: ";
+  stream >> ob.item;
+  cout << "在庫数を入力: ";
+  stream >> ob.onhand;
+  cout << "原価を入力: ";
+  stream >> ob.cost;
+
+  return stream;
+}
+
+int main()
+{
+  inventory ob("金づち", 4, 12.55);
+
+  cout << ob;
+  cin >> ob;
+  cout << ob;
+
+  return 0;
+}
+
+●リスト第8章の理解度チェック【5】
+class pwr {
+  int base;
+  int exponent;
+  double result; // baseのexponent乗
+public:
+  pwr(int b, int e);
+};
+
+pwr::pwr(int b, int e)
+{
+  base = b;
+  exponent = e;
+
+  result = 1;
+  for( ; e; e--) result = result * base;
+}
+
+●リスト第8章：総合理解度チェック【1】
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 文字型stackクラスを宣言する
+class stack { 
+  char stck[SIZE]; // スタックを保持する
+  int tos;         // スタックの最上部のインデックス
+public:
+  stack(); 
+  void push(char ch); // 文字をスタックにプッシュする
+  char pop();         // 文字がスタックからポップする
+};
+
+// スタックを初期化する
+stack::stack()
+{
+  tos = 0;
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==SIZE) {
+    cout << "スタックは一杯です\n";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字がポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です\n";
+    return 0; // スタックが空ならnullを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+●リスト第8章：総合理解度チェック【3】
+class ft_to_inches {
+  double feet;
+  double inches;
+public:
+  void set(double f) {
+    feet = f;
+    inches = f * 12;
+  }
+};

@@ -1,0 +1,687 @@
+■第11章：目次■
+･････････････････････
+●リスト11.1：例【1】
+●リストa＃11.1：例【2】
+●リストb＃11.1：例【2】
+●リスト11.1：例【3】
+●リスト11.1：例【4】
+●リスト11.1：例【5】
+●リスト11.1：例【6】
+●リスト11.2：例【1】
+●リスト11.2：例【2】
+●リスト11.2：例【3】
+●リスト11.3：例【1】
+●リスト11.3：例【2】
+●リスト11.3：例【3】
+●リスト11.3：例【4】
+●リスト11.3：例【5】
+●リスト11.4：例【1】
+●リスト11.4：例【2】
+●リスト11.4：例【3】
+●リスト11.4：例【4】
+●リスト11.4：例【5】
+●リスト11.5：例【1】
+●リスト11.5：例【2】
+●リスト11.5：例【3】
+●リスト11.5：練習問題【2】
+･････････････････････
+
+●リスト11.1：例【1】
+// 汎用テンプレートの例
+#include <iostream>
+using namespace std;
+
+// 関数テンプレート
+template <class X> void swapargs(X &a, X &b)
+{
+  X temp;
+
+  temp = a;
+  a = b;
+  b = temp;
+}
+
+int main()
+{
+  int i=10, j=20;
+  float x=10.1, y=23.3;
+
+  cout << "オリジナル i, j: " << i << ' ' << j << endl;
+  cout << "オリジナル x, y: " << x << ' ' << y << endl;
+
+  swapargs(i, j); // 整数を入れ替える
+  swapargs(x, y); // floatを入れ替える
+
+  cout << "入れ替え後 i, j: " << i << ' ' << j << endl;
+  cout << "入れ替え後 x, y: " << x << ' ' << y << endl;
+
+  return 0;
+}
+
+●リストa＃11.1：例【2】
+template <class X> 
+void swapargs(X &a, X &b)
+{
+  X temp;
+
+  temp = a;
+  a = b;
+  b = temp;
+}
+
+●リストb＃11.1：例【2】
+// このプログラムコードはコンパイルできない
+template <class X>
+int i; // これはエラー
+void swapargs(X &a, X &b)
+{
+  X temp;
+
+  temp = a;
+  a = b;
+  b = temp;
+}
+
+●リスト11.1：例【3】
+// typenameキーワードを使用する
+template <typename X> void swapargs(X &a, X &b)
+{
+  X temp;
+
+  temp = a;
+  a = b;
+  b = temp;
+}
+
+●リスト11.1：例【4】
+#include <iostream>
+using namespace std;
+
+template <class type1, class type2>
+void myfunc(type1 x, type2 y)
+{
+  cout << x << ' ' << y << endl;
+}
+
+int main()
+{
+  myfunc(10, "hi");
+  myfunc(0.23, 10L);
+
+  return 0;
+}
+
+●リスト11.1：例【5】
+void outdata(int i)
+{
+  cout << i;
+}
+
+void outdata(double d)
+{
+  cout << setprecision(10) << setfill('#');
+  cout << d;
+  cout << setprecision(6) << setfill(' ');
+}
+
+●リスト11.1：例【6】
+// テンプレート関数を上書きする
+#include <iostream>
+using namespace std;
+
+template <class X> void swapargs(X &a, X &b)
+{
+  X temp;
+
+  temp = a;
+  a = b;
+  b = temp;
+}
+
+// これによって汎用のswapargs()関数が上書きされる
+void swapargs(int a, int b)
+{
+  cout << "swapargs(int,int)の内部です\n";
+}
+
+int main()
+{
+  int i=10, j=20;
+  float x=10.1, y=23.3;
+  
+  cout << "オリジナル i, j: " << i << ' ' << j << endl;
+  cout << "オリジナル x, y: " << x << ' ' << y << endl;
+
+  swapargs(i, j); // オーバーロードされたswapargs()関数を呼び出す
+  swapargs(x, y); // floatを入れ替える
+
+  cout << "入れ替え後 i, j: " << i << ' ' << j << endl;
+  cout << "入れ替え後 x, y: " << x << ' ' << y << endl;
+
+  return 0;
+}
+
+●リスト11.2：例【1】
+// 単純な汎用リンクリスト
+#include <iostream>
+using namespace std;
+
+template <class data_t> class list {
+  data_t data;
+  list *next;
+public:
+  list(data_t d);
+  void add(list *node) {node->next = this; next = 0; }
+  list *getnext() { return next; }
+  data_t getdata() { return data; }
+};
+
+template <class data_t> list<data_t>::list(data_t d)
+{
+  data = d;
+  next = 0;
+}
+
+int main()
+{
+  list<char> start('a'); 
+  list<char> *p, *last;
+  int i;
+  
+  // リストを作成する
+  last = &start;
+
+  for(i=1; i<26; i++) {
+    p = new list<char> ('a' + i);
+    p->add(last);
+    last = p;
+  }
+
+  // リストを追跡する
+  p = &start;
+
+  while(p) {
+    cout << p->getdata();
+    p = p->getnext();
+  }
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト11.2：例【2】
+// 汎用stackクラスの使用例
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 汎用stackクラスを作成する
+template <class StackType> class stack { 
+  StackType stck[SIZE];    // スタック領域を確保する
+  int tos;                 // スタックの先頭の索引
+public:
+  void init() { tos = 0; } // スタックを初期化する
+  void push(StackType ch); // スタックにオブジェクトをプッシュする
+  StackType pop();         // スタックからオブジェクトをポップする
+};
+
+// オブジェクトをプッシュする
+template <class StackType> 
+void stack<StackType>:: push(StackType ob)
+{ 
+  if(tos==SIZE) {
+    cout << "スタックは一杯です\n";
+    return;
+  }
+  stck[tos] = ob;
+  tos++;
+}
+
+// オブジェクトをポップする
+template <class StackType> 
+StackType stack<StackType>::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です\n";
+    return 0; // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+int main()
+{
+  // 文字スタックの動作を確認する
+  stack<char> s1, s2;  // 2つのスタックを作成する
+  int i;
+ 
+  // スタックを初期化する
+  s1.init();
+  s2.init();
+  s1.push('a');
+  s2.push('x');
+  s1.push('b');
+  s2.push('y');
+  s1.push('c');
+  s2.push('z');
+
+  for(i=0; i<3; i++) cout << "s1をポップする: " << s1.pop() << "\n";
+  for(i=0; i<3; i++) cout << "s2をポップする: " << s2.pop() << "\n";
+
+  // double型スタックの動作を確認する
+  stack<double> ds1, ds2;  // 2つのスタックを作成する
+
+  // スタックを初期化する
+  ds1.init();
+  ds2.init();
+
+  ds1.push(1.1);
+  ds2.push(2.2);
+  ds1.push(3.3);
+  ds2.push(4.4);
+  ds1.push(5.5);
+  ds2.push(6.6);
+
+  for(i=0; i<3; i++) cout << "ds1をポップする: " << ds1.pop() << "\n";
+  for(i=0; i<3; i++) cout << "ds2をポップする: " << ds2.pop() << "\n";
+
+  return 0;
+}
+
+●リスト11.2：例【3】
+/* このプログラムでは、1つのクラス定義内で
+   2つの汎用データ型を使用する
+*/
+#include <iostream>
+using namespace std;
+
+template <class Type1, class Type2> class myclass
+{
+  Type1 i;
+  Type2 j;
+public:
+  myclass(Type1 a, Type2 b) { i = a; j = b; }
+  void show() { cout << i << ' ' << j << "\n"; }
+};
+
+int main()
+{
+  myclass<int, double> ob1(10, 0.23);
+  myclass<char, char *> ob2('X', "This is a test");
+
+  ob1.show(); // int, doubleを表示する
+  ob2.show(); // char, char *を表示する
+ 
+  return 0;
+}
+
+●リスト11.3：例【1】
+// 単純な例外処理の例
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout << "開始\n";
+
+  try { // tryブロックの開始
+    cout << "tryブロックの内部\n";
+    throw 10; // エラーを投げる
+    cout << "ここは実行されないはず";
+  }
+
+  catch (int i) { // エラーを捕獲する
+    cout << "捕獲！ 数字は: ";
+    cout << i << "\n";
+  }
+
+  cout << "終了\n";
+
+  return 0;
+}
+
+●リスト11.3：例【2】
+// このプログラムは正しく動作しない
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout << "開始\n";
+
+  try { // tryブロックの開始
+    cout << "tryブロックの内部\n";
+    throw 10; // エラーを投げる
+    cout << "ここは実行されないはず";
+  }
+
+  catch (double i) { // 整数例外を処理しない
+    cout << "捕獲！ 数字は: ";
+    cout << i << "\n";
+  }
+
+  cout << "終了\n";
+
+  return 0;
+}
+
+●リスト11.3：例【3】
+/* tryブロック外の関数から
+   例外を投げる
+*/
+#include <iostream>
+using namespace std;
+
+void Xtest(int test)
+{
+  cout << "Xtestの内部。testは: " << test << "\n";
+  if(test) throw test;
+}
+
+int main()
+{
+  cout << "開始\n";
+
+  try { // tryブロックの開始
+    cout << "tryブロックの内部\n";
+    Xtest(0);
+    Xtest(1);
+    Xtest(2);
+  }
+
+  catch (int i) { // エラーを捕獲する
+    cout << "捕獲！ 数字は: ";
+    cout << i << "\n";
+  }
+
+  cout << "終了\n";
+
+  return 0;
+}
+
+●リスト11.3：例【4】
+#include <iostream>
+using namespace std;
+
+// main()以外の関数にtry/catch文を含めることができる
+void Xhandler(int test)
+{
+  try{
+    if(test) throw test;
+  }
+  catch(int i) {
+    cout << "捕獲！  Ex. #: " << i << "\n";
+  }
+}
+
+int main()
+{
+  cout << "開始\n";
+
+  Xhandler(1);
+  Xhandler(2);
+  Xhandler(0);
+  Xhandler(3);
+
+  cout << "終了";
+
+  return 0;
+}
+
+●リスト11.3：例【5】
+#include <iostream>
+using namespace std;
+
+// 異なる型の例外を捕獲できる
+void Xhandler(int test)
+{
+  try{
+    if(test) throw test;
+    else throw "値は0";
+  }
+
+  catch(int i) {
+    cout << "捕獲！  Ex. #: " << i << "\n";
+  }
+
+  catch(char const *str) {
+    cout << "文字列を捕獲: ";
+    cout << str << "\n";
+  }
+}
+
+int main()
+{
+  cout << "開始\n";
+
+  Xhandler(1);
+  Xhandler(2);
+  Xhandler(0);
+  Xhandler(3);
+
+  cout << "終了\n";
+
+  return 0;
+}
+
+●リスト11.4：例【1】
+// すべての例外を捕獲する
+#include <iostream>
+using namespace std;
+
+void Xhandler(int test)
+{
+  try{
+    if(test==0) throw test;   // intを投げる
+    if(test==1) throw 'a';    // charを投げる
+    if(test==2) throw 123.23; // doubleを投げる
+  }
+
+  catch(...) { // すべての例外を捕獲する
+    cout << "捕獲！\n";
+  }
+}
+
+int main()
+{
+  cout << "開始\n";
+  Xhandler(0);
+  Xhandler(1);
+  Xhandler(2);
+  cout << "終了\n";
+
+  return 0;
+}
+
+●リスト11.4：例【2】
+// catch(...)をデフォルトとして使用する
+#include <iostream>
+using namespace std;
+
+void Xhandler(int test)
+{
+  try{
+    if(test==0) throw test;   // intを投げる
+    if(test==1) throw 'a';    // charを投げる
+    if(test==2) throw 123.23; // doubleを投げる
+  }
+
+  catch(int i) { // int例外を捕獲する
+    cout << "捕獲 " << i << "\n";
+  }
+
+  catch(...) { // その他のすべての例外を捕獲する
+    cout << "捕獲！\n";
+  }
+}
+
+int main()
+{
+  cout << "開始\n";
+
+  Xhandler(0);
+  Xhandler(1);
+  Xhandler(2);
+
+  cout << "終了\n";
+
+  return 0;
+}
+
+●リスト11.4：例【3】
+// 関数が投げる型を限定する
+#include <iostream>
+using namespace std;
+
+// この関数は、int、char、doubleしか投げることができない
+void Xhandler(int test) throw(int, char, double)
+{
+  if(test==0) throw test;   // intを投げる
+  if(test==1) throw 'a';    // charを投げる
+  if(test==2) throw 123.23; // doubleを投げる
+}
+
+int main()
+{
+  cout << "開始\n";
+  try{
+    Xhandler(0); // Xhandler()に1と2も渡して実験すること
+  }
+
+  catch(int i) {
+    cout << "intを捕獲\n";
+  }
+
+  catch(char c) { 
+    cout << "charを捕獲\n";
+  }
+
+  catch(double d) { 
+    cout << "doubleを捕獲\n";
+  }
+
+  cout << "終了\n";
+
+  return 0;
+}
+
+●リスト11.4：例【4】
+// この関数は例外を投げられない
+void Xhandler(int test) throw()
+{
+  /* 次の文は動作しなくなる
+     これらの文によって、
+     プログラムの異常終了が発生する */
+  if(test==0) throw test; 
+  if(test==1) throw 'a'; 
+  if(test==2) throw 123.23; 
+}
+
+●リスト11.4：例【5】
+// 例外を再度投げる例
+#include <iostream>
+using namespace std;
+
+void Xhandler()
+{
+  try {
+    throw "hello"; // char *を投げる
+  }
+  catch(char const *) { // char *を捕獲する
+    cout << "Xhandler()のchar *を捕獲\n";
+    throw ; // char *を関数外に再度投げる
+  }
+}
+
+int main()
+{
+  cout << "開始\n";
+
+  try{
+    Xhandler();
+  }
+  catch(char const *) {
+    cout << "main()のchar *を捕獲\n";
+  }
+
+  cout << "終了\n";
+
+  return 0;
+}
+
+●リスト11.5：例【1】
+#include <iostream>
+#include <new>
+using namespace std;
+
+int main()
+{
+  int *p;
+  try { 
+    p = new int; // intにメモリを割り当てる
+  } catch (bad_alloc xa) {
+    cout << "メモリ割り当て失敗\n";
+    return 1;
+  }
+
+  for(*p = 0; *p < 10; (*p)++)
+    cout << *p << " ";
+  cout << "\n";
+
+  delete p; // メモリを解放する
+
+  return 0;
+}
+
+●リスト11.5：例【2】
+// 割り当てエラーを強制的に発生させる
+#include <iostream>
+#include <new>
+using namespace std;
+
+int main()
+{
+  double *p;
+
+  // 最終的にメモリが不足する
+  do {
+    try { 
+      p = new double[100000];
+    } catch (bad_alloc xa) {
+      cout << "メモリ割り当て失敗\n";
+      return 1;
+    }
+    cout << "メモリ割り当て成功\n";
+  } while(p);
+
+  return 0;
+}
+
+●リスト11.5：例【3】
+// new(nothrow)オプションの使用例
+#include <iostream>
+#include <new>
+using namespace std;
+
+int main()
+{
+  double *p;
+
+  // 最終的にメモリが不足する
+  do {
+    p = new(nothrow) double[100000];
+    if(p) cout << "メモリ割り当て成功\n";
+    else cout << "メモリ割り当て失敗\n";
+  } while(p);
+
+  return 0;
+}
+
+●リスト11.5：練習問題【2】
+p = malloc(sizeof(int));
+
+if(!p) {
+  cout << "メモリ割り当てエラー\n";
+  exit(1);
+}

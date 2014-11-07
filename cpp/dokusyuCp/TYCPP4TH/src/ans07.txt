@@ -1,0 +1,553 @@
+■第7章の解答：目次■
+･････････････････････
+第7章：前章の理解度チェック
+7.1：練習問題
+7.2：練習問題
+7.3：練習問題
+7.4：練習問題
+7.5：練習問題
+第7章の理解度チェック
+第7章：総合理解度チェック
+･････････････････････
+
+第7章：前章の理解度チェック
+
+【1】いいえ。演算子のオーバーロードは、単に演算できるデータ型を拡張するもので、もともとの演算には影響を与えません。
+
+【2】はい。演算子をC++の組み込み型に関してオーバーロードすることはできません。
+
+【3】いいえ。優先順位は変更できません。いいえ。オペランドの数は変更できません。
+
+【4】
+#include <iostream>
+using namespace std;
+
+class array {
+  int nums[10];
+public:
+  array();
+  void set(int n[10]);
+  void show();
+  array operator+(array ob2);
+  array operator-(array ob2);
+  int operator==(array ob2);
+};
+
+array::array()
+{
+  int i;
+  for(i=0; i<10; i++) nums[i] = 0;
+}  
+
+void array::set(int *n)
+{
+  int i;
+  
+  for(i=0; i<10; i++) nums[i] = n[i];
+}
+
+void array::show()
+{
+  int i;
+
+  for(i=0; i<10; i++) 
+    cout << nums[i] << ' ';
+
+  cout << "\n";
+}
+
+array array::operator+(array ob2)
+{
+  int i;
+  array temp;
+
+  for(i=0; i<10; i++) 
+    temp.nums[i] = nums[i] + ob2.nums[i];
+
+  return temp;
+}
+
+array array::operator-(array ob2)
+{
+  int i;
+  array temp;
+
+  for(i=0; i<10; i++) 
+    temp.nums[i] = nums[i] - ob2.nums[i];
+
+  return temp;
+}
+
+int array::operator==(array ob2)
+{
+  int i;
+
+  for(i=0; i<10; i++) 
+    if(nums[i]!=ob2.nums[i]) return 0;
+
+  return 1;
+}
+ 
+int main()
+{
+  array o1, o2, o3;
+
+  int i[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+  o1.set(i);
+  o2.set(i);
+
+  o3 = o1 + o2;
+  o3.show();
+
+  o3 = o1 - o3;
+  o3.show();
+
+  if(o1==o2) cout << "o1とo2は同じ\n";
+  else cout << "o1とo2は異なる\n";
+
+  if(o1==o3) cout << "o1とo3は同じ\n";
+  else cout << "o1とo3は異なる\n";
+
+  return 0;
+}
+
+【5】
+#include <iostream>
+using namespace std;
+
+class array {
+  int nums[10];
+public:
+  array();
+  void set(int n[10]);
+  void show();
+  friend array operator+(array ob1, array ob2);
+  friend array operator-(array ob1, array ob2);
+  friend int operator==(array ob1, array ob2);
+};
+
+array::array()
+{
+  int i;
+  for(i=0; i<10; i++) nums[i] = 0;
+}  
+
+void array::set(int *n)
+{
+  int i;
+  
+  for(i=0; i<10; i++) nums[i] = n[i];
+}
+
+void array::show()
+{
+  int i;
+
+  for(i=0; i<10; i++) 
+    cout << nums[i] << ' ';
+
+  cout << "\n";
+}
+
+array operator+(array ob1, array ob2)
+{
+  int i;
+  array temp;
+
+  for(i=0; i<10; i++) 
+    temp.nums[i] = ob1.nums[i] + ob2.nums[i];
+
+  return temp;
+}
+
+array operator-(array ob1, array ob2)
+{
+  int i;
+  array temp;
+
+  for(i=0; i<10; i++) 
+    temp.nums[i] = ob1.nums[i] - ob2.nums[i];
+
+  return temp;
+}
+
+int operator==(array ob1, array ob2)
+{
+  int i;
+
+  for(i=0; i<10; i++) 
+    if(ob1.nums[i]!=ob2.nums[i]) return 0;
+
+  return 1;
+}
+ 
+int main()
+{
+  array o1, o2, o3;
+
+  int i[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+  o1.set(i);
+  o2.set(i);
+
+  o3 = o1 + o2;
+  o3.show();
+
+  o3 = o1 - o3;
+  o3.show();
+
+  if(o1==o2) cout << "o1とo2は同じ\n";
+  else cout << "o1とo2は異なる\n";
+
+  if(o1==o3) cout << "o1とo3は同じ\n";
+  else cout << "o1とo3は異なる\n";
+
+  return 0;
+}
+
+【6】
+#include <iostream>
+using namespace std;
+
+class array {
+  int nums[10];
+public:
+  array();
+  void set(int n[10]);
+  void show();
+  array operator++();
+  friend array operator--(array &ob);
+};
+
+array::array()
+{
+  int i;
+  
+  for(i=0; i<10; i++) nums[i] = 0;
+}  
+
+void array::set(int *n)
+{
+  int i;
+  
+  for(i=0; i<10; i++) nums[i] = n[i];
+}
+
+void array::show()
+{
+  int i;
+
+  for(i=0; i<10; i++) 
+    cout << nums[i] << ' ';
+
+  cout << "\n";
+}
+
+// メンバ関数を使って、単項演算子をオーバーロードする
+array array::operator++()
+{
+  int i;
+
+  for(i=0; i<10; i++) 
+    nums[i]++;
+
+  return *this;
+}
+
+// フレンド関数を使用する
+array operator--(array &ob)
+{
+  int i;
+
+  for(i=0; i<10; i++) 
+    ob.nums[i]--;
+
+  return ob;
+}
+ 
+int main()
+{
+  array o1, o2, o3;
+
+  int i[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+  o1.set(i);
+  o2.set(i);
+
+  o3 = ++o1;
+  o3.show();
+
+  o3 = --o1;
+  o3.show();
+
+  return 0;
+}
+
+【7】いいえ。代入演算子をオーバーロードするには、メンバ関数を使用しなければなりません。
+
+7.1：練習問題
+
+【1】AとCが正しい文です。
+
+【2】基本クラスがpublicとして継承されると、基本クラスの公開メンバは、派生クラスの公開メンバになります。基本クラスの公開メンバがprivateとして継承されると、それは派生クラスの非公開メンバになります。
+
+【3】（省略）
+
+7.2：練習問題
+
+【1】基本クラスの被保護メンバがpublicとして継承されると、派生クラスの被保護メンバとなります。privateとして継承されると、派生クラスの非公開メンバになります。protectedとして継承されると、派生クラスの被保護メンバになります。
+
+【2】被保護カテゴリが必要とされるのは、基本クラスがあるメンバを非公開にしたまま、派生クラスによるアクセスを許可するためです。
+
+【3】変わりません。
+
+7.3：練習問題
+
+【1】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class mybase {
+  char str[80];
+public:
+  mybase(char *s) { strcpy(str, s); }
+  char *get() { return str; }
+};
+
+class myderived : public mybase {
+  int len;
+public:
+  myderived(char *s) : mybase(s) {
+    len = strlen(s);
+  }
+  int getlen() { return len; }
+  void show() { cout << get() << "\n"; }
+};
+
+int main()
+{
+  myderived ob("hello");
+
+  ob.show();
+  cout << ob.getlen() << "\n";
+ 
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+// 各種車両の基本クラス
+class vehicle {
+  int num_wheels;
+  int range;
+public:
+  vehicle(int w, int r) 
+  {
+    num_wheels = w; range = r;
+  }
+  void showv() 
+  {
+    cout << "車輪の数: " << num_wheels << "\n";
+    cout << "走行距離: " << range << "\n";
+  }
+};
+
+class car : public vehicle {
+  int passengers;
+public:
+  car(int p, int w, int r) : vehicle(w, r)
+  {
+    passengers = p;
+  }
+  void show()
+  {
+    showv();
+    cout << "乗車定員: " << passengers << "\n";
+  }
+};
+
+class truck : public vehicle {
+  int loadlimit;
+public:
+  truck(int l, int w, int r) : vehicle(w, r)
+  {
+    loadlimit = l;
+  }
+  void show()
+  {
+    showv();
+    cout << "積載量: " << loadlimit << "\n";
+  }
+};
+
+int main()
+{
+  car c(5, 4, 500);
+  truck t(30000, 12, 1200);
+
+  cout << "乗用車: \n";
+  c.show();
+  cout << "\nトラック:\n";
+  t.show();
+
+  return 0;
+}
+
+7.4：練習問題
+
+【1】
+Aのコンストラクタ呼び出し
+Bのコンストラクタ呼び出し
+Cのコンストラクタ呼び出し
+Cのデストラクタ呼び出し
+Bのデストラクタ呼び出し
+Aのデストラクタ呼び出し
+
+【2】
+#include <iostream>
+using namespace std;
+
+class A {
+  int i;
+public:
+  A(int a) { i = a; }
+};
+
+class B {
+  int j;
+public:
+  B(int a) { j = a; }
+};
+
+class C : public A, public B {
+  int k;
+public:
+  C(int c, int b, int a) : A(a), B(b) {
+    k = c;
+  }
+};
+
+7.5：練習問題
+
+【1】（省略）
+
+【2】派生クラスが2つ以上のクラスを継承し、そのいずれもが同じ基本クラスからの派生クラスであるときは、仮想基本クラスが必要です。仮想基本クラスがないと、同一基本クラスのコピーが2つ以上も最終派生クラスに存在することになりますが、元の基本クラスが仮想基本クラスであれば、最終派生クラスにあるコピーは1つで済みます。
+
+第7章の理解度チェック
+
+【1】
+#include <iostream>
+using namespace std;
+
+class building {
+protected:
+  int floors;
+  int rooms;
+  double footage;
+};
+
+class house : public building {
+  int bedrooms;
+  int bathrooms;
+public:
+  house(int f, int r, double ft, int br, int bth) {
+    floors = f;  rooms = r;  footage = ft;
+    bedrooms = br; bathrooms = bth;
+  }
+  void show() {
+    cout << "階数: " << floors << "\n";
+    cout << "部屋数: " << rooms << "\n";
+    cout << "床の総面積: " << footage << "\n";
+    cout << "寝室数: " << bedrooms << "\n";
+    cout << "浴室数: " << bathrooms << "\n";
+  }
+}; 
+
+class office : public building {
+  int phones;
+  int extinguishers;
+public:
+  office(int f, int r, double ft, int p, int ext) {
+    floors = f;  rooms = r;  footage = ft;
+    phones = p; extinguishers = ext;
+  }
+  void show() {
+    cout << "階数: " << floors << "\n";
+    cout << "部屋数: " << rooms << "\n";
+    cout << "床の総面積: " << footage << "\n";
+    cout << "電話台数: " << phones << "\n";
+    cout << "消火器台数: ";
+    cout << extinguishers << "\n";
+   }
+}; 
+
+int main()
+{
+  house h_ob(2, 12, 5000, 6, 4);
+  office o_ob(4, 25, 12000, 30, 8);
+
+  cout << "家: \n";
+  h_ob.show();
+
+  cout << "\n会社: \n";
+  o_ob.show();
+
+  return 0;
+}
+
+【2】基本クラスがpublicとして継承されると、基本クラスの公開メンバは派生クラスの公開メンバになり、基本クラスの非公開メンバは非公開のまま（基本クラス以外には非公開）です。基本クラスがprivateとして継承されると、基本クラスのすべてのメンバが派生クラスの非公開メンバになります。
+
+【3】protectedとして宣言されたメンバは、基本クラス以外には非公開ですが、派生クラスはそれを継承（かつアクセス）できます。継承アクセス指定子としてprotectedを使用すると、基本クラスのすべての公開メンバと被保護メンバが派生クラスの被保護メンバになります。
+
+【4】コンストラクタは派生順に呼ばれます。デストラクタは、その逆の順序で呼ばれます。
+
+【5】
+#include <iostream>
+using namespace std;
+
+class planet {
+protected:
+  double distance;      // 太陽からの距離（マイル数）
+  int revolve;          // 日数
+public:
+  planet(double d, int r) { distance = d; revolve = r; }
+};
+
+class earth : public planet {
+  double circumference; // 軌道の円周
+public:
+  earth(double d, int r) : planet(d, r) {
+    circumference = 2*distance*3.1416;
+  }
+  void show() {
+    cout << "太陽からの距離: " << distance << "\n";
+    cout << "公転周期: " << revolve << "\n";
+    cout << "軌道の円周: ";
+    cout << circumference << "\n";
+  }
+};
+
+int main()
+{
+  earth ob(93000000, 365);
+
+  ob.show();
+
+  return 0;
+}
+
+【6】このプログラムを修正するには、vehicleを仮想基本クラスとしてmotorizedとroad_useに継承させます。また、この章の「総合理解度チェック」の問1を参照してください。
+
+第7章：総合理解度チェック
+
+【1】コンパイラによっては、インライン関数でswitchを使用できないことがあります。ご使用のコンパイラがそれに該当する場合、関数は自動的に「正規」関数に直されます。
+
+【2】継承されない演算子は、唯一、代入演算子です。この理由は簡単です。派生クラスには、基本classにないメンバが含まれますが、基本クラスに関してオーバーロードされた=は、派生クラスで追加されたメンバについては何も知りません。したがって、=はその新しいメンバを正しくコピーできません。
+
+【3】（省略）
+
+【4】（省略）

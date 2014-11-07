@@ -1,0 +1,821 @@
+■第8章の解答：目次■
+･････････････････････
+第8章：前章の理解度チェック
+8.2：練習問題
+8.3：練習問題
+8.4：練習問題
+8.5：練習問題
+8.6：練習問題
+第8章の理解度チェック
+第8章：総合理解度チェック
+･････････････････････
+
+第8章：前章の理解度チェック
+
+【1】
+#include <iostream>
+using namespace std;
+
+class airship {
+protected:
+  int passengers;
+  double cargo;
+};
+
+class airplane : public airship {
+  char engine;   // プロペラがp、ジェットがj
+  double range;
+public:
+  airplane(int p, double c, char e, double r)
+  {
+    passengers = p;
+    cargo = c;
+    engine = e;
+    range = r;
+  }
+  void show();
+};
+
+class balloon : public airship {
+  char gas;      // 水素がh、ヘリウムがe
+  double altitude;
+public:
+  balloon(int p, double c, char g, double a)
+  {
+    passengers = p;
+    cargo = c;
+    gas = g;
+    altitude = a;
+  }
+  void show();
+};
+
+void airplane::show()
+{
+  cout << "搭乗可能乗客数: " << passengers << "\n";
+  cout << "積載可能貨物量: " << cargo << "\n";
+  cout << "搭載エンジン: ";
+  if(engine=='p') cout << "プロペラ\n";
+  else cout << "ジェット\n";
+  cout << "航続距離: " << range << "\n";
+}
+
+void balloon::show()
+{
+  cout << "搭乗可能乗客数: " << passengers << "\n";
+  cout << "積載可能貨物量: " << cargo << "\n";
+  cout << "気体: ";
+  if(gas=='h') cout << "水素\n";
+  else cout << "ヘリウム\n";
+  cout << "最大高度: " << altitude << "\n";
+}
+
+int main()
+{
+  balloon b(2, 500.0, 'h', 12000.0);
+  airplane b727(100, 40000.0, 'j', 40000.0);
+
+  b.show();
+  cout << "\n";
+  b727.show();
+
+  return 0;
+}
+
+【監修者注：添付のコンパイラGCC 4.4には、一部日本語処理に不完全な箇所があるため、上記のコードをコンパイルすると、“unknown escape sequence”の警告が出ます。また、実行すると「搭乗可能」と「積載可能」の文字が文字化けしますが、「搭乗可能\」「積載可能\」とすると文字化けは解消します。】
+
+【2】protectedアクセス指定子は、クラスメンバをそのクラス以外には非公開にします。ただし、派生クラスからはそれにアクセスできます。
+
+【3】このプログラムは次の出力を表示します。ここから、コンストラクタとデストラクタの呼び出し順序がわかります。
+
+Aのコンストラクタ呼び出し
+Bのコンストラクタ呼び出し
+Cのコンストラクタ呼び出し
+Cのデストラクタ呼び出し
+Bのデストラクタ呼び出し
+Aのデストラクタ呼び出し
+
+【4】コンストラクタはABCの順序で呼ばれ、デストラクタはCBAの順序で呼ばれます。
+
+【5】
+#include <iostream>
+using namespace std;
+
+class base {
+  int i, j;
+public:
+  base(int x, int y) { i = x; j = y; }
+  void showij() { cout << i << ' ' << j << "\n"; }
+};
+
+class derived : public base {
+  int k;
+public:
+  derived(int a, int b, int c) : base(b, c) {
+    k = a;
+  }
+  void show() { cout << k << ' '; showij(); }
+};
+
+int main()
+{
+  derived ob(1, 2, 3);
+
+  ob.show();
+
+  return 0;
+}
+
+【6】抜けている単語は、「一般的」と「個別的」です。
+
+8.2：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout.setf(ios::showpos);
+
+  cout << -10 << ' ' << 10 << "\n";
+  
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout.setf(ios::showpoint | ios::uppercase |
+            ios::scientific);
+
+  cout << 100.0 << "\n";
+
+  return 0;
+}
+
+【3】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  ios::fmtflags f;
+
+  f = cout.flags(); // フラグを格納
+
+  cout.unsetf(ios::dec);
+  cout.setf(ios::showbase | ios::hex);
+  cout << 100 << "\n";
+
+  cout.flags(f);    // フラグをリセット
+
+  return 0;
+}
+
+8.3：練習問題
+
+【1】
+// 2から100までの自然対数と常用対数の表を作成する
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+  double x;
+
+  cout.precision(5);
+  cout.setf(ios::showpoint);
+  cout << "         x       log x        ln e\n\n";
+
+  for(x = 2.0; x <= 100.0; x++) {
+    cout.width(10);
+    cout << x << "  ";
+    cout.width(10);
+    cout << log10(x) << "  ";
+    cout.width(10);
+    cout << log(x) << "\n";
+  }
+ 
+  return 0;
+}
+
+【2】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+void center(char *s);
+
+int main()
+{
+  center("Hi there!");
+  center("I like C++.");
+
+  return 0;
+}
+
+void center(char *s)
+{
+  int len;
+
+  len = 40+(strlen(s)/2);
+
+  cout.width(len);
+  cout << s << "\n";
+}
+
+【3】（省略）
+
+8.4：練習問題
+1a.
+// 2から100までの自然対数と常用対数の表を作成する
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+  double x;
+
+  cout << setprecision(5);
+  cout << "         x       log x        ln e\n\n";
+
+  for(x = 2.0; x <= 100.0; x++) {
+    cout << setw(10) << x << "  ";
+    cout << setw(10) << log10(x) << "  ";
+    cout << setw(10) << log(x) << "\n";
+  }
+ 
+  return 0;
+}
+
+1b.
+#include <iostream>
+#include <iomanip>
+#include <cstring>
+using namespace std;
+
+void center(char *s);
+
+int main()
+{
+  center("Hi there!");
+  center("I like C++.");
+
+  return 0;
+}
+
+void center(char *s)
+{
+  int len;
+  len = 40+(strlen(s)/2);
+
+  cout << setw(len) << s << "\n";
+}
+
+【2】
+cout << resetiosflags(ios::basefield) << setiosflags(ios | ::hex) <<100;
+
+【3】出力ストリームのboolalphaフラグをオンにすると、ブール値がtrueとfalseという単語で表示されます。入力ストリームのboolalphaをオンにすると、trueとfalseという単語でブール値を入力できます。
+
+8.5：練習問題
+
+【1】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype(char *ptr);
+  ~strtype() {delete [] p;}
+  friend ostream &operator<<(ostream &stream, strtype &ob);
+};
+
+strtype::strtype(char *ptr)
+{
+  len = strlen(ptr)+1;
+  p = new char [len];
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(p, ptr);
+}
+
+ostream &operator<<(ostream &stream, strtype &ob)
+{
+  stream << ob.p;
+  
+  return stream;
+}
+
+int main()
+{
+  strtype s1("This is a test."), s2("I like C++.");
+
+  cout << s1;
+  cout << endl << s2 << endl;
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+class planet {
+protected:
+  double distance;      // 太陽からの距離（マイル数）
+  int revolve;          // 日数
+public:
+  planet(double d, int r) { distance = d; revolve = r; }
+};
+
+class earth : public planet {
+  double circumference; // 軌道の円周
+public:
+  earth(double d, int r) : planet(d, r) {
+    circumference = 2*distance*3.1416;
+  }
+
+  friend ostream &operator<<(ostream &stream, earth ob);
+};
+
+ostream &operator<<(ostream &stream, earth ob)
+{
+  stream << "太陽からの距離: " << ob.distance << "\n";
+  stream << "公転周期: " << ob.revolve << "\n";
+  stream << "軌道の円周: " << ob.circumference << "\n";
+
+  return stream;
+}
+
+int main()
+{
+  earth ob(93000000, 365);
+
+  cout << ob;
+
+  return 0;
+}
+
+【3】挿入子への呼び出しを生成するオブジェクトは、ユーザーが定義したクラスのオブジェクトではありません。そのため、挿入子はメンバ関数になりえません。
+
+8.6：練習問題
+
+【1】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype(char *ptr);
+  ~strtype() {delete [] p;}
+  friend ostream &operator<<(ostream &stream, strtype &ob);
+  friend istream &operator>>(istream &stream, strtype &ob);
+};
+
+strtype::strtype(char *ptr)
+{
+  len = strlen(ptr)+1;
+  p = new char [len];
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(p, ptr);
+}
+ostream &operator<<(ostream &stream, strtype &ob)
+{
+  stream << ob.p;
+  
+  return stream;
+}
+
+istream &operator>>(istream &stream, strtype &ob)
+{
+  char temp[255];
+
+  stream >> temp;
+
+  if(strlen(temp) >= ob.len) {
+    delete [] ob.p;
+    ob.len = strlen(temp)+1;
+    ob.p = new char [ob.len];
+    if(!ob.p) {
+      cout << "メモリ割り当てエラー\n";
+      exit(1);
+    }
+  }
+  strcpy(ob.p, temp);
+
+  return stream;
+}
+
+int main()
+{
+  strtype s1("This is a test."), s2("I like C++.");
+
+  cout << s1;
+  cout << "\n" << s2;
+
+  cout << "\n文字列の入力: ";
+  cin >> s1;
+  cout << s1 << "\n";
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+class factor {
+  int num;   // 数
+  int lfact; // 最小因数
+public:
+  factor(int i);
+  friend ostream &operator<<(ostream &stream, factor ob);
+  friend istream &operator>>(istream &stream, factor &ob);
+};
+
+factor::factor(int i)
+{
+  int n;
+
+  num = i;
+
+  for(n=2; n < (i/2); n++)
+    if(!(i%n)) break;
+
+  if(n<(i/2)) lfact = n;
+  else lfact = 1;
+}
+
+istream &operator>>(istream &stream, factor &ob)
+{
+  stream >> ob.num;
+
+  int n;
+
+  for(n=2; n < (ob.num/2); n++)
+    if(!(ob.num%n)) break;
+  if(n<(ob.num/2)) ob.lfact = n;
+  else ob.lfact = 1;
+
+  return stream;
+}
+
+ostream &operator<<(ostream &stream, factor ob)
+{
+  stream << ob.lfact << "は";
+  stream << ob.num << "の最小因数です\n";
+
+  return stream;
+}
+
+int main()
+{
+  factor o(32);
+  cout << o;
+
+  cin >> o;
+  cout << o;
+
+  return 0;
+}
+
+第8章の理解度チェック
+
+【1】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout << 100 << ' ';
+
+  cout.unsetf(ios::dec); // decフラグをクリア
+  cout.setf(ios::hex);
+  cout << 100 << ' ';
+
+  cout.unsetf(ios::hex); // hexフラグをクリア
+  cout.setf(ios::oct);
+  cout << 100 << "\n";
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout.setf(ios::fixed | ios::left);
+  cout.precision(2);
+  cout.fill('*');
+  cout.width(20);
+
+  cout << 1000.5364 << "\n";
+
+  return 0;
+}
+
+【3】
+3a.
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout << 100 << ' ';
+
+  cout << hex << 100 << ' ';
+
+  cout << oct << 100 << "\n";
+
+  return 0;
+}
+
+3b.
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main()
+{
+  cout << setiosflags(ios::fixed | ios::left);
+  cout << setprecision(2);
+  cout << setfill('*');
+  cout << setw(20);
+
+  cout << 1000.5364 << "\n";
+
+  return 0;
+}
+
+【4】
+ios::fmtflags f;
+
+f = cout.flags();  // 保存
+
+// ...
+
+cout.flags(f);     // 復元
+
+【5】
+#include <iostream>
+using namespace std;
+
+class pwr {
+  int base;
+  int exponent;
+  double result;   // baseのexponent乗
+public:
+  pwr(int b, int e);
+  friend ostream &operator<<(ostream &stream, pwr ob);
+  friend istream &operator>>(istream &stream, pwr &ob);
+};
+
+pwr::pwr(int b, int e)
+{
+  base = b;
+  exponent = e;
+
+  result = 1;
+  for( ; e; e--) result = result * base;
+}
+
+ostream &operator<<(ostream &stream, pwr ob)
+{
+  stream << ob.base << "^" << ob.exponent;
+  stream << " は " << ob.result << "\n";
+
+  return stream;
+}
+
+istream &operator>>(istream &stream, pwr &ob)
+{
+  int b, e;
+
+  cout << "基数とベキ指数を入力: ";
+  stream >> b >> e;
+
+  pwr temp(b, e); // 一時オブジェクトの作成
+
+  ob = temp;
+
+  return stream;
+}
+
+int main()
+{
+  pwr ob(10, 2);
+
+  cout << ob;
+
+  cin >> ob;
+
+  cout << ob;
+
+  return 0;
+}
+
+【6】
+// このプログラムは四角形を描く
+#include <iostream>
+using namespace std;
+
+class box {
+  int len;
+public:
+  box(int l) { len = l; }
+  friend ostream &operator<<(ostream &stream, box ob);
+};
+
+// 四角形を描く
+ostream &operator<<(ostream &stream, box ob)
+{
+  int i, j;
+
+  for(i=0; i<ob.len; i++) stream << '*';
+  stream << "\n";
+  for(i=0; i<ob.len-2; i++) {
+    stream << '*';
+    for(j=0; j<ob.len-2; j++) stream << ' ';
+    stream << "*\n";
+  }
+  for(i=0; i<ob.len; i++) stream << '*';
+  stream << "\n";
+
+  return stream;
+}
+
+int main()
+{
+  box b1(4), b2(7);
+
+  cout << b1 << endl << b2;
+
+  return 0;
+}
+
+第8章：総合理解度チェック
+
+【1】
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 文字型stackクラスを宣言
+class stack { 
+  char stck[SIZE]; // スタック領域を確保する
+  int tos;         // スタック先頭の索引
+public:
+  stack(); 
+  void push(char ch); // スタックに文字をプッシュする
+  char pop();         // スタックから文字をポップする
+  friend ostream &operator<<(ostream &stream, stack ob);
+};
+
+// スタックを初期化する
+stack::stack()
+{
+  tos = 0;
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==SIZE) {
+    cout << "スタックは一杯です\n";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字をポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です\n";
+    return 0;         // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+ostream &operator<<(ostream &stream, stack ob)
+{
+  char ch;
+
+  while(ch=ob.pop()) stream << ch;
+  stream << endl;
+
+  return stream;
+}
+
+int main()
+{
+  stack s;
+
+  s.push('a');
+  s.push('b');
+  s.push('c');
+
+  cout << s;
+  cout << s;
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+#include <ctime>
+using namespace std;
+
+class watch {
+  time_t t;
+public:
+  watch() { t = time(NULL); }
+  friend ostream &operator<<(ostream &stream, watch ob);
+};
+
+ostream &operator<<(ostream &stream, watch ob)
+{
+  struct tm *localt;
+
+  localt = localtime(&ob.t);
+  stream << asctime(localt) << endl;
+  return stream;
+}
+
+int main()
+{
+  watch w;
+
+  cout << w;
+
+  return 0;
+}
+
+【3】
+#include <iostream>
+using namespace std;
+
+class ft_to_inches {
+  double feet;
+  double inches;
+public:
+  void set(double f) {
+    feet = f;
+    inches = f * 12;
+  }
+  friend istream &operator>>(istream &stream, ft_to_inches &ob);
+  friend ostream &operator<<(ostream &stream, ft_to_inches ob);
+};
+
+istream &operator>>(istream &stream, ft_to_inches &ob)
+{
+  double f;
+
+  cout << "フィート数を入力する: ";
+  stream >> f;
+  ob.set(f);
+
+  return stream;
+}
+
+ostream &operator<<(ostream &stream, ft_to_inches ob)
+{
+  stream << ob.feet << "フィートは" << ob.inches;
+  stream << "インチです\n";
+  return stream;
+}
+
+int main()
+{
+  ft_to_inches x;
+
+  cin >> x;
+  cout << x;
+
+  return 0;
+}

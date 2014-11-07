@@ -1,0 +1,596 @@
+■第10章の解答：目次■
+･････････････････････
+第10章：前章の理解度チェック
+10.1：練習問題
+10.2：練習問題
+10.3：練習問題
+10.4：練習問題
+第10章の理解度チェック
+第10章：総合理解度チェック
+･････････････････････
+
+第10章：前章の理解度チェック
+
+【1】
+#include <iostream>
+using namespace std;
+
+ostream &setsci(ostream &stream)
+{
+  stream.setf(ios::scientific | ios::uppercase);
+  
+  return stream;
+}
+
+int main()
+{
+  double f = 123.23;
+
+  cout << setsci << f;
+  cout << "\n";
+
+  return 0;
+}
+
+【2】
+// コピーし、タブをスペースに置き換える
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  if(argc!=3) {
+    cout << "使い方: CPY <入力> <出力>\n";
+    return 1;
+  }
+
+  ifstream in(argv[1]);
+  if(!in) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  ofstream out(argv[2]);
+  if(!out) {
+    cout << "出力ファイルが開けません\n";
+    return 1;
+  }
+
+  char ch;
+  int i = 8;
+    
+  while(!in.eof()) {
+    in.get(ch); 
+    if(ch=='\t') for( ; i>0; i--) out.put(' ');
+    else out.put(ch);
+    if(i == -1 || ch=='\n') i = 8;
+    i--;
+  }
+
+  in.close();
+  out.close();
+
+  return 0;
+}
+
+【3】
+// ファイル内検索
+#include <iostream>
+#include <fstream>
+#include <cstring>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+  if(argc!=3) {
+    cout << "使い方: SEARCH <ファイル> <単語>\n";
+    return 1;
+  }
+
+  ifstream in(argv[1]);
+  if(!in) {
+    cout << "入力ファイルが開けません\n";
+    return 1;
+  }
+
+  char str[255];
+  int count=0;
+
+  while(!in.eof()) {
+    in >> str;
+    if(!strcmp(str, argv[2])) count++;
+  }
+
+  cout << argv[2] << "が" << count;
+  cout << "つ見つかりました\n";
+
+  in.close();
+
+  return 0;
+}
+
+【4】
+次の文でできます。
+out.seekp(234, ios::beg);
+
+【5】rdstate()、good()、eof()、fail()、bad()です。
+
+【6】C++入出力システムは、プログラマが独自に作成したクラスを扱えるようカスタマイズできます。
+
+10.1：練習問題
+
+【1】（省略）
+
+10.2：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+
+class num {
+public:
+  int i;
+  num(int x) { i = x; }
+  virtual void shownum() { cout << i << "\n"; }
+};
+
+class outhex : public num {
+public: 
+  outhex(int n) : num(n) {}
+  void shownum() { cout << hex << i << "\n"; }
+};
+
+class outoct : public num {
+public: 
+  outoct(int n) : num(n) {}
+  void shownum() { cout << oct << i << "\n"; }
+};
+
+int main()
+{
+  outoct o(10);
+  outhex h(20);
+
+  o.shownum();
+  h.shownum();
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+class dist {
+public:
+  double d;
+  dist(double f) { d = f; }
+  virtual void trav_time() 
+  {
+    cout << "時速60マイルでの移動時間: ";
+    cout << d / 60 << "\n";
+  }
+};
+
+class metric : public dist {
+public:
+  metric(double f) : dist(f) {}
+  void trav_time()
+  {
+    cout << "時速100キロメートルでの移動時間: ";
+    cout << d / 100 << "\n";
+  }
+};
+ 
+int main()
+{
+  dist *p, mph(88.0);
+  metric kph(88);
+
+  p = &mph;
+  p->trav_time();
+
+  p = &kph;
+  p->trav_time();
+
+  return 0;
+}
+
+10.3：練習問題
+
+【1】（省略）
+
+【2】抽象クラスは、定義上、少なくとも1つの純粋仮想関数を含んでいるクラスです。つまり、その関数には、このクラスに関する本体が存在しません。クラス定義が不完全であるため、オブジェクトを作成しようにも作成できません。
+
+【3】derived1に関してfunc()を呼んだとき、使用されるのはbase内のfunc()です。このしくみが機能するのは、仮想関数が階層的であるためです。
+
+10.4：練習問題
+
+【1】
+// 仮想関数の実例
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class list {
+public:
+  list *head;  // リスト先頭へのポインタ
+  list *tail;  // リスト末尾へのポインタ
+  list *next;  // 次項目へのポインタ
+  int num;     // 格納される値
+  list() { head = tail = next = NULL; }
+  virtual void store(int i) = 0;
+  virtual int retrieve() = 0;
+};
+
+// キュー型リストの作成
+class queue : public list {
+public:
+  void store(int i);
+  int retrieve();
+};
+
+void queue::store(int i)
+{
+  list *item;
+
+  item = new queue;
+  if(!item) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  item->num = i;
+
+  // リスト末尾に置く
+  if(tail) tail->next = item;
+  tail = item;
+  item->next = NULL;
+  if(!head) head = tail;
+}
+int queue::retrieve()
+{
+  int i;
+  list *p;
+
+  if(!head) {
+    cout << "リストは空です\n";
+    return 0;
+  }
+
+  // リスト先頭から取り除く
+  i = head->num;
+  p = head;
+  head = head->next;
+  delete p;
+
+  return i;
+}
+
+// スタック型リストの作成
+class stack : public list {
+public:
+  void store(int i);
+  int retrieve();
+};
+
+void stack::store(int i)
+{
+  list *item;
+
+  item = new stack;
+  if(!item) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  item->num = i;
+
+  // スタックのような操作になるよう、リスト最前部に置く
+  if(head) item->next = head;
+  head = item;
+  if(!tail) tail = head;
+}
+
+int stack::retrieve()
+{
+  int i;
+  list *p;
+
+  if(!head) {
+    cout << "リストは空です\n";
+    return 0;
+  }
+
+  // リストの先頭から取り除く
+  i = head->num;
+  p = head;
+  head = head->next;
+  delete p;
+
+  return i;
+}
+
+// ソート済みリストの作成
+class sorted : public list {
+public:
+  void store(int i);
+  int retrieve();
+};
+
+void sorted::store(int i)
+{
+  list *item;
+  list *p, *p2;
+
+  item = new sorted;
+  if(!item) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+
+  }
+  item->num = i;
+
+  // 次項目の置き場所を見つける
+  p = head;
+  p2 = NULL;
+  while(p) { // 中へ
+    if(p->num > i) {
+      item->next = p;
+      if(p2) p2->next = item;  // 先頭要素でない
+      if(p==head) head = item; // 新しい先頭要素
+      break;
+    }
+    p2 = p;
+    p = p->next;
+  }
+  if(!p) {                    // 終わりへ
+    if(tail) tail->next = item;
+    tail = item;
+    item->next = NULL;
+  }
+  if(!head) // 先頭要素
+    head = item;
+}
+
+int sorted::retrieve()
+{
+  int i;
+  list *p;
+
+  if(!head) {
+    cout << "リストは空です\n";
+    return 0;
+  }
+
+  // リスト先頭から取り除く
+  i = head->num;
+  p = head;
+  head = head->next;
+  delete p;
+
+  return i;
+}
+
+int main()
+{
+  list *p;
+
+  // キューのデモ
+  queue q_ob;
+  p = &q_ob; // キューを指し示す
+
+  p->store(1);
+  p->store(2);
+  p->store(3);
+  cout << "キュー: ";
+  cout << p->retrieve();
+  cout << p->retrieve();
+  cout << p->retrieve();
+
+  cout << "\n";
+
+  // スタックのデモ
+  stack s_ob;
+  p = &s_ob; // スタックを指し示す
+
+  p->store(1);
+  p->store(2);
+  p->store(3);
+
+  cout << "スタック: ";
+  cout << p->retrieve();
+  cout << p->retrieve();
+  cout << p->retrieve();
+
+  cout << "\n";
+
+  // ソート済みリストのデモ
+  sorted sorted_ob;
+  p = &sorted_ob;
+
+  p->store(4);
+  p->store(1);
+  p->store(3);
+  p->store(9);
+  p->store(5);
+
+  cout << "ソート: ";
+  cout << p->retrieve();
+  cout << p->retrieve();
+  cout << p->retrieve();
+  cout << p->retrieve();
+  cout << p->retrieve();
+
+  cout << "\n";
+
+
+  return 0;
+}
+
+【監修者注：添付のコンパイラGCC 4.4には、一部日本語処理に不完全な箇所があるため、上記のコードをコンパイルすると、“unknown escape sequence”の警告が出ます。また、実行すると「ソート」の文字が文字化けしますが、「ソ\ート」とすると文字化けは解消します。】
+
+【2】（省略）
+
+第10章の理解度チェック
+
+【1】仮想関数とは本質的にはプレースホルダ関数であり、基本クラスで宣言され、その基本クラスから派生したクラスで再定義されます。この再定義をオーバーライドと言います。
+
+【2】非メンバ関数とコンストラクタ関数は、仮想関数になれません。
+
+【3】仮想関数は、基本クラスポインタを使って実行時ポリモーフィズムをサポートします。基本クラスポインタが、仮想関数を含む派生クラスのオブジェクトを指し示していると、指し示されているオブジェクトの型によって、呼ばれる関数が決まります。
+
+【4】純粋仮想関数とは、基本クラスに関する定義をまったく含まない関数です。
+
+【5】抽象クラスとは、少なくとも1つの純粋仮想関数を含んでいる基本クラスです。ポリモーフィッククラスとは、少なくとも1つの仮想関数を含んでいるクラスです。
+
+【6】このコードは正しくありません。仮想関数の再定義では、戻り型、およびパラメータの型と数が、もとの関数と同じでなければなりません。この場合、f()の再定義で、パラメータの数が違っています。
+
+【7】はい。
+
+【8】（省略）
+
+第10章：総合理解度チェック
+
+【1】
+// 仮想関数の実例
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class list {
+public:
+  list *head;  // リスト先頭へのポインタ
+  list *tail;  // リスト末尾へのポインタ
+  list *next;  // 次項目へのポインタ
+  int num;     // 格納される値
+ 
+  list() { head = tail = next = NULL; }
+  virtual void store(int i) = 0;
+  virtual int retrieve() = 0;
+};
+
+// キュー型リストの作成
+class queue : public list {
+public:
+  void store(int i);
+  int retrieve();
+  queue operator+(int i) { store(i); return *this; }
+  int operator--(int unused) { return retrieve(); }
+};
+
+void queue::store(int i)
+{
+  list *item;
+
+  item = new queue;
+  if(!item) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  item->num = i;
+
+  // リスト末尾に置く
+  if(tail) tail->next = item;
+  tail = item;
+  item->next = NULL;
+  if(!head) head = tail;
+}
+
+int queue::retrieve()
+{
+  int i;
+  list *p;
+
+  if(!head) {
+    cout << "リストは空です\n";
+    return 0;
+  }
+
+  // リスト先頭から取り除く
+  i = head->num;
+  p = head;
+  head = head->next;
+  delete p;
+  return i;
+}
+
+// スタック型リストの作成
+class stack : public list {
+public:
+  void store(int i);
+  int retrieve();
+  stack operator+(int i) { store(i); return *this; }
+  int operator--(int unused) { return retrieve(); }
+};
+
+void stack::store(int i)
+{
+  list *item;
+
+  item = new stack;
+  if(!item) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  item->num = i;
+
+  // スタックのような操作になるよう、リストの最前部に置く
+  if(head) item->next = head;
+  head = item;
+  if(!tail) tail = head;
+}
+
+int stack::retrieve()
+{
+  int i;
+  list *p;
+
+  if(!head) {
+    cout << "リストは空です\n";
+    return 0;
+  }
+
+  // リスト先頭から取り除く
+  i = head->num;
+  p = head;
+  head = head->next;
+  delete p;
+  return i;
+}
+
+int main()
+{
+  // キューのデモ
+  queue q_ob;
+
+  q_ob + 1;
+  q_ob + 2;
+  q_ob + 3;
+
+  cout << "キュー: ";
+  cout << q_ob--;
+  cout << q_ob--;
+  cout << q_ob--;
+
+  cout << "\n";
+
+  // スタックのデモ
+  stack s_ob;
+
+  s_ob + 1;
+  s_ob + 2;
+  s_ob + 3;
+
+  cout << "スタック: ";
+  cout << s_ob--;
+  cout << s_ob--;
+  cout << s_ob--;
+
+  cout << "\n";
+
+  return 0;
+}
+
+【2】オーバーロードされた関数どうしの間では、パラメータの数または型が必ず違っていなければなりません。オーバーライドされた仮想関数は、元の関数とプロトタイプが同一（つまり、戻り型が同じで、パラメータの型と数も同じ）でなければなりません。
+
+【3】（省略）

@@ -1,0 +1,467 @@
+■第1章：目次■
+･････････････････････
+●リスト1.3：例【1】
+●リスト1.3：例【2】
+●リスト1.3：例【3】
+●リスト1.3：例【4】
+●リスト1.3：例【5】
+●リスト1.3：練習問題【3】
+●リスト1.4：例【1】
+●リスト1.5：例【1】
+●リスト1.5：例【2】
+●リスト1.5：例【3】
+●リスト1.5：例【4】
+●リスト1.6：例【2】
+●リスト1.6：例【3】
+●リスト1.6：例【4】
+●リスト1.6：練習問題【1】
+●リスト1.7：例【1】
+●リスト1.7：例【2】
+●リスト1.7：例【3】
+･････････････････････
+
+●リスト1.3：例【1】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int i, j;
+  double d;
+
+  i = 10;
+  j = 20;
+  d = 99.101;
+
+  cout << "値を出力: ";
+  cout << i;
+  cout << ' ';
+  cout << j;
+  cout << ' ';
+  cout << d;
+
+  return 0;
+}
+
+●リスト1.3：例【2】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int i, j;
+  double d;
+
+  i = 10;
+  j = 20;
+  d = 99.101;
+
+  cout << "値を出力: ";
+  cout << i << ' ' << j << ' ' << d;
+
+  return 0;
+}
+
+●リスト1.3：例【3】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int i;
+
+  cout << "値を入力: ";
+  cin >> i;
+  cout << "入力した値: " << i << "\n";
+
+  return 0;
+}
+
+●リスト1.3：例【4】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int i;
+  float f;
+  char s[80];
+
+  cout << "整数値、浮動小数点数値、文字列を入力: ";
+  cin >> i >> f >> s;
+  cout << "入力した値: ";
+  cout << i << ' ' << f << ' ' << s;
+
+  return 0;
+}
+
+●リスト1.3：例【5】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  char ch;
+
+  cout << "キーを入力。xで停止\n";
+
+  do {
+    cout << ": ";
+    cin >> ch;
+  } while (ch != 'x');
+
+  return 0;
+}
+
+●リスト1.3：練習問題【3】
+/* このCプログラムをC++スタイルに書き直す
+   このプログラムは、最大公約数を計算する
+*/
+#include <stdio.h>
+
+int gcd(int a, int b)
+{
+  if(!b) return a;
+  return gcd(b, a%b);
+}
+
+int main(void) {
+  int a, b, c;
+
+  printf("2つの整数を入力: ");
+  scanf("%d%d", &a, &b);
+  c = gcd(a, b);
+  printf("最大公約数は %d\n", c);
+  return 0;
+}
+
+●リスト1.4：例【1】
+/*
+   これはC形式のコメント
+   このプログラムは、整数が奇数か偶数かを判別する
+*/
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int num;  // これはC++形式の単一行コメント
+
+  // 数値を読み取る
+  cout << "テスト値を入力: ";
+  cin >> num;
+
+  // 奇数か偶数かを調べる
+  if((num%2)==0) cout << "数字は偶数\n";
+  else cout << "数字は奇数\n";
+
+  return 0;
+}
+
+●リスト1.5：例【1】
+#include <iostream>
+using namespace std;
+
+class myclass {
+  // myclassクラスの非公開メンバ
+  int a;
+public:
+  void set_a(int num);
+  int get_a();
+};
+
+void myclass::set_a(int num)
+{
+  a = num;
+}
+
+int myclass::get_a()
+{
+  return a;
+}
+
+int main()
+{
+  myclass ob1, ob2;
+
+  ob1.set_a(10);
+  ob2.set_a(99);
+
+  cout << ob1.get_a() << "\n";
+  cout << ob2.get_a() << "\n";
+
+  return 0;
+}
+
+●リスト1.5：例【2】
+// このプログラムコードにはエラーが含まれている
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  myclass ob1, ob2;
+
+  ob1.a = 10; // エラー。メンバ関数以外からは
+  ob2.a = 99; // 非公開メンバにアクセスできない
+
+  cout << ob1.get_a() << "\n";
+  cout << ob2.get_a() << "\n";
+
+  return 0;
+}
+
+●リスト1.5：例【3】
+#include <iostream>
+using namespace std;
+
+class myclass {
+public:
+  // aは公開変数
+  int a;
+  // したがって、set_a()関数とget_a()関数は必要ない
+};
+
+int main()
+{
+  myclass ob1, ob2;
+
+  // 変数aは直接アクセスされる
+  ob1.a = 10;
+  ob2.a = 99;
+
+  cout << ob1.a << "\n";
+  cout << ob2.a << "\n";
+
+  return 0;
+}
+
+
+●リスト1.5：例【4】
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 文字を保存するstackクラスを宣言する
+class stack {
+  char stck[SIZE]; // スタック領域を確保する
+  int tos; // スタック先頭の索引
+public:
+  void init(); // スタックを初期化する
+  void push(char ch); // スタックに文字をプッシュする
+  char pop(); // スタックから文字をポップする
+};
+
+// スタックを初期化する
+void stack::init()
+{
+  tos = 0;
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==SIZE) {
+    cout << "スタックは一杯です";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字をポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です";
+    return 0; // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+int main()
+{
+  stack s1, s2;  // 2つのスタックを作成する
+  int i;
+
+  // スタックを初期化する
+  s1.init();
+  s2.init();
+  s1.push('a');
+  s2.push('x');
+  s1.push('b');
+  s2.push('y');
+  s1.push('c');
+  s2.push('z');
+
+  for(i=0; i<3; i++) cout << "s1をポップする: " << s1.pop() << "\n";
+  for(i=0; i<3; i++) cout << "s2をポップする: " << s2.pop() << "\n";
+
+  return 0;
+}
+
+●リスト1.6：例【2】
+// このプログラムはコンパイルされない
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int a, b, c;
+
+  cout << "2つの数字を入力: ";
+  cin >> a >> b;
+  c = sum(a, b);
+  cout << "合計: " << c;
+  
+  return 0;
+}
+
+// この関数にはプロトタイプが必要である
+sum(int a, int b)
+{
+  return a+b;
+}
+
+●リスト1.6：例【3】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int i; // ローカル変数をブロックの先頭で宣言する
+
+  cout << "数字を入力: ";
+  cin >> i;
+
+  // 階乗を計算する
+  int j, fact=1; // アクション文の後に変数を宣言する
+  
+  for(j=i; j>=1; j--) fact = fact * j;
+  cout << "階乗は " << fact << "\n";
+
+  return 0;
+}
+
+●リスト1.6：例【4】
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  bool outcome;
+
+  outcome = false;
+
+  if(outcome) cout << "真\n";
+  else cout << "偽\n";
+
+  return 0;
+}
+
+●リスト1.6：練習問題【1】
+// このプログラムにはエラーがある
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  f();
+  return 0;
+}
+
+void f()
+{
+  cout << "うまく動かない\n";
+}
+
+●リスト1.7：例【1】
+#include <iostream>
+using namespace std;
+
+// myabs()関数を3とおりにオーバーロードする
+int myabs(int n);
+long myabs(long n);
+double myabs(double n);
+
+int main()
+{
+  cout << "-10の絶対値: " << myabs(-10) << "\n\n";
+  cout << "-10Lの絶対値: " << myabs(-10L) << "\n\n";
+  cout << "-10.01の絶対値: " << myabs(-10.01) << "\n\n";
+  return 0;
+}
+
+// 整数用のmyabs()関数
+int myabs(int n)
+{
+  cout << "整数用のmyabs()\n";
+  return n<0 ? -n : n;
+}
+
+// 長整数用のmyabs()関数
+long myabs(long n)
+{
+  cout << "長整数用のmyabs()\n";
+  return n<0 ? -n : n;
+}
+
+// 倍精度浮動小数点数用のmyabs()関数
+double myabs(double n)
+{
+  cout << "倍精度浮動小数点数用のmyabs()\n";
+  return n<0 ? -n : n;
+}
+
+●リスト1.7：例【2】
+#include <iostream>
+using namespace std;
+
+void date(char *date); // 文字列の日付
+void date(int month, int day, int year); // 数値の日付
+
+int main()
+{
+  date("8/23/99");
+  date(8, 23, 99);
+  return 0;
+}
+
+// 文字列の日付
+void date(char *date)
+{
+  cout << "日付: " << date << "\n";
+}
+
+// 整数の日付
+void date(int month, int day, int year)
+{
+  cout << "日付: " << month << "/";
+  cout << day << "/" << year << "\n";
+}
+
+●リスト1.7：例【3】
+#include <iostream>
+using namespace std;
+
+void f1(int a);
+void f1(int a, int b);
+
+int main()
+{
+  f1(10);
+  f1(10, 20);
+  return 0;
+}
+
+void f1(int a)
+{
+  cout << "f1(int a)内\n";
+}
+
+void f1(int a, int b)
+{
+  cout << "f1(int a, int b)内\n";
+}

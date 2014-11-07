@@ -1,0 +1,580 @@
+■第3章の解答：目次■
+･････････････････････
+第3章：前章の理解度チェック
+3.1：練習問題
+3.2：練習問題
+3.3：練習問題
+3.4：練習問題
+第3章の理解度チェック
+第3章：総合理解度チェック
+･････････････････････
+
+第3章：前章の理解度チェック
+
+【1】コンストラクタの名前はwidgit()、デストラクタの名前は~widgit()です。
+
+【2】コンストラクタ関数は、オブジェクトの作成時（オブジェクトが存在するようになるとき）に呼び出されます。デストラクタはオブジェクトを破棄するときに呼び出されます。
+
+【3】
+class Mars : public planet {
+// ...
+};
+
+【4】関数をインラインで展開するには、関数定義の前にinline指定子を指定するか、関数の定義をクラス宣言に含めます。
+
+【5】インライン関数は、最初に使用する前に定義しなければなりません。このほかに主な制限としては、ループを含めることができないこと、再帰してはいけないこと、goto文およびswitch文を含めることができないこと、変数staticを使用できないことが挙げられます。
+
+【6】
+sample ob(100, 'X');
+
+3.1：練習問題
+
+【1】cl1とcl2は2つの別個のクラスであり、クラス型の異なるクラスを代入することはできないので、x = yという代入文は誤りです。
+
+【2】
+#include <iostream>
+using namespace std;
+
+#define SIZE 100
+
+class q_type {
+  int queue[SIZE]; // キューを保存する
+  int head, tail;  // 先頭と末尾の索引
+public:
+  q_type();        // コンストラクタ
+  void q(int num); // 設定
+  int deq();       // 取得
+};
+
+// コンストラクタ
+q_type::q_type()
+{
+  head = tail = 0;
+}
+
+// 値をキューに格納する
+void q_type::q(int num)
+{
+  if(tail+1==head || (tail+1==SIZE && !head)) {
+    cout << "キューは一杯です\n";
+    return;
+  }
+  tail++;
+  if(tail==SIZE) tail = 0; // 循環する
+  queue[tail] = num;
+}
+
+// キューから値を削除する
+int q_type::deq()
+{
+  if(head == tail) {
+    cout << "キューは空です\n";
+    return 0;             // またはその他のエラーインジケータ
+  }
+  head++;
+  if(head==SIZE) head = 0; // 循環する
+  return queue[head];
+}
+
+int main()
+{
+  q_type q1, q2;
+  int i;
+
+  for(i=1; i<=10; i++) {
+    q1.q(i);
+  }
+
+  // キューをほかのキューに代入する
+  q2 = q1;
+
+  // 両方のキューの内容が同じであることを示す
+  for(i=1; i<=10; i++) 
+    cout << "キューから値を削除する（q1）: " << q1.deq() << "\n";
+
+  for(i=1; i<=10; i++) 
+    cout << "キューから値を削除する（q2）: " << q2.deq() << "\n";
+
+  return 0;
+}
+
+【3】キューを格納するメモリを動的に割り当てる場合、1つのキューをほかのキューに代入すると、代入文の左辺にあるキューに割り当てられた動的メモリが失われ、オブジェクトを破棄する際に、右辺のキューに割り当てられたメモリが2回解放されます。どちらの状況も容認できないエラーです。
+
+3.2：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 文字のstackクラスを宣言する
+class stack { 
+  char stck[SIZE];    // スタック領域を確保する
+  int tos;            // スタック先頭の索引
+public:
+  stack();            // コンストラクタ
+  void push(char ch); // スタックに文字をプッシュする
+  char pop();         // スタックから文字をポップする
+};
+
+// スタックを初期化する
+stack::stack()
+{
+  cout << "スタックを生成する\n";
+  tos = 0;
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==SIZE) {
+    cout << "スタックは一杯です\n";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字をポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です\n";
+    return 0;         // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+void showstack(stack o);
+
+int main()
+{
+  stack s1;
+  int i;
+
+  s1.push('a');
+  s1.push('b');
+  s1.push('c');
+
+  showstack(s1);
+
+  // main()関数内のs1はまだ存在する
+  cout << "スタックs1はまだここに存在する: \n";
+  for(i=0; i<3; i++) cout << s1.pop() << "\n";
+
+  return 0;
+}
+
+// スタックの内容を表示する
+void showstack(stack o)
+{
+  char c;
+  
+  // この文が終了すると、oスタックは空になる
+  while(c=o.pop()) cout << c << "\n"; 
+  cout << "\n";
+}
+
+このプログラムからの出力は次のようになります。
+
+スタックを生成する
+c
+b
+a
+スタックは空です
+
+スタックs1はまだここに存在する: 
+c
+b
+a
+
+【2】neg()関数を呼び出す際に使用したoオブジェクトのpが指す整数を格納するメモリは、main()関数内でまだ必要であるにもかかわらず、neg()関数が終了してoオブジェクトのコピーが破棄されるときに解放されます。
+
+3.3：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+
+class who {
+  char name;
+public:
+  who(char c) { 
+     name = c;
+     cout << name;
+     cout << "のコンストラクタ" << "\n";
+  }
+  ~who() { cout << name << "のデストラクタ" << "\n"; }
+};
+
+who make_who()
+{
+  who temp('B');
+  return temp;
+}
+
+int main()
+{
+  who ob('A');
+
+  make_who();
+
+  return 0;
+}
+
+【2】オブジェクトを返すのが適さない状況もあります。たとえば、オブジェクトの作成時にディスクファイルを開き、破棄時にそのファイルを閉じる場合、関数からそのオブジェクトを返すと、ファイルは一時オブジェクトを破棄するときに閉じられてしまいます。
+
+3.4：練習問題
+
+【1】
+#include <iostream>
+using namespace std;
+class pr2;  // 前方宣言
+
+class pr1 {
+  int printing;
+  // ...
+public:
+  pr1() { printing = 0; }
+  void set_print(int status) { printing = status; }
+  // ...
+  friend int inuse(pr1 o1, pr2 o2);
+};
+
+class pr2 {
+  int printing;
+  // ...
+public:
+  pr2() { printing = 0; }
+  void set_print(int status) { printing = status; }
+  // ...
+  friend int inuse(pr1 o1, pr2 o2);
+};
+
+// プリンタが使用中であれば真を返す
+int inuse(pr1 o1, pr2 o2)
+{
+  if(o1.printing || o2.printing) return 1;
+  else return 0;
+}
+
+int main()
+{
+  pr1 p1;
+  pr2 p2;
+
+  if(!inuse(p1, p2)) cout << "プリンタはアイドル状態です\n";
+
+  cout << "p1は印字設定中です\n";
+  p1.set_print(1);
+  if(inuse(p1, p2)) cout << "プリンタは使用中です\n";
+
+  cout << "p1を解除する\n";
+  p1.set_print(0);
+  if(!inuse(p1, p2)) cout << "プリンタはアイドル状態です\n";
+
+  cout << "p2に切り替える\n";
+  p2.set_print(1);
+  if(inuse(p1, p2)) cout << "プリンタは使用中です\n";
+
+  return 0;
+}
+
+第3章の理解度チェック
+
+【1】オブジェクトを別のオブジェクトに代入するには、両方のオブジェクトのクラス型が同じでなければなりません。
+
+【2】ob1をob2に代入する際に問題となるのは、ob2の初期値pが指すメモリが代入によって上書きされ、失われるということです。
+	したがって、このメモリを解放することができなくなり、ob1のpが参照するメモリは、破棄時に2回解放されることになります。これによって動的割り当てシステムが破壊される可能性があります。
+
+【3】
+int light(planet p)
+{
+  return p.get_miles() / 186000;
+}
+
+【4】できます。
+
+【5】
+// スタックにアルファベットを格納する
+#include <iostream>
+using namespace std;
+
+#define SIZE 27
+
+// 文字のstackクラスを宣言する
+class stack { 
+  char stck[SIZE];    // スタック領域を確保する
+  int tos;            // スタック先頭の索引
+public:
+  stack();            // コンストラクタ
+  void push(char ch); // スタックに文字をプッシュする
+  char pop();         // スタックから文字をポップする
+};
+
+// スタックを初期化する
+stack::stack()
+{
+  cout << "スタックを生成する\n";
+  tos = 0;
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==SIZE) {
+    cout << "スタックは一杯です\n";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字をポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です\n";
+    return 0;         // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+void showstack(stack o);
+stack loadstack();
+
+int main()
+{
+  stack s1;
+
+  s1 = loadstack();
+  showstack(s1);
+
+  return 0;
+}
+
+// スタックの内容を表示する
+void showstack(stack o)
+{
+  char c;
+  
+  // この文が終了すると、oスタックは空になる
+  while(c=o.pop()) cout << c << "\n"; 
+  cout << "\n";
+}
+
+// スタックにアルファベットを格納する
+stack loadstack()
+{
+  stack t;
+  char c;
+  for(c = 'a'; c <= 'z'; c++) t.push(c);
+  return t;
+}
+
+【6】関数にオブジェクトを渡したり、関数からオブジェクトを返すときにはそのオブジェクトのコピーが一時的に作成され、関数の終了時に破棄されます。オブジェクトの一時コピーを破棄する際には、デストラクタ関数によって、プログラム内のほかの箇所で必要なものが破壊されてしまう可能性があります。
+
+【7】フレンド関数とは、メンバ関数ではありませんが、フレンドであるクラスの非公開メンバにアクセスすることが許可されている関数のことです。
+
+第3章：総合理解度チェック
+
+【1】
+// スタックにアルファベットを格納する
+#include <iostream>
+#include <cctype>
+using namespace std;
+
+#define SIZE 27
+
+// 文字のstackクラスを宣言する
+class stack { 
+  char stck[SIZE];    // スタック領域を確保する
+  int tos;            // スタック先頭の索引
+public:
+  stack();            // コンストラクタ
+  void push(char ch); // スタックに文字をプッシュする
+  char pop();         // スタックから文字をポップする
+};
+
+// スタックを初期化する
+stack::stack()
+{
+  cout << "スタックを生成する\n";
+  tos = 0;
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==SIZE) {
+    cout << "スタックは一杯です\n";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字をポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です\n";
+    return 0;         // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+void showstack(stack o);
+stack loadstack();
+stack loadstack(int upper);
+
+int main()
+{
+  stack s1, s2, s3;
+
+  s1 = loadstack();
+  showstack(s1);
+
+  // 大文字を取得する
+  s2 = loadstack(1);
+  showstack(s2);
+
+   // 小文字を使用する
+  s3 = loadstack(0);
+  showstack(s3);
+
+  return 0;
+}
+// スタックの内容を表示する
+void showstack(stack o)
+{
+  char c;
+  
+  // この文が終了すると、oスタックは空になる
+  while(c=o.pop()) cout << c << "\n"; 
+  cout << "\n";
+}
+
+// スタックにアルファベットを格納する
+stack loadstack()
+{
+  stack t;
+  char c;
+
+  for(c = 'a'; c<='z'; c++) t.push(c);
+  return t;
+}
+
+/* スタックにアルファベット文字を格納する
+   upperが1の場合は大文字、1以外の場合は
+   小文字を格納する */
+stack loadstack(int upper)
+{
+  stack t;
+  char c;
+
+  if(upper == 1) c = 'A';
+  else c = 'a';
+
+  for(; toupper(c)<='Z'; c++) t.push(c);
+  return t;
+}
+
+【2】
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype(char *ptr);
+  ~strtype();
+  void show();
+  friend char *get_string(strtype *ob);
+};
+
+strtype::strtype(char *ptr)
+{
+  len = strlen(ptr);
+  p = (char *) malloc(len+1);
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(p, ptr);
+}
+
+strtype::~strtype()
+{
+  cout << "pを解放する\n";
+  free(p);
+}
+
+void strtype::show()
+{
+  cout << p << " - 長さ: " << len;
+  cout << "\n";
+}
+
+char *get_string(strtype *ob)
+{
+  return ob->p;
+}
+
+int main()
+{
+  strtype s1("This is a test.");
+
+  char *s;
+                    
+  s1.show();
+  // 文字列へのポインタを取得する
+  s = get_string(&s1);
+  cout << "ここに文字列s1が含まれる: ";
+  cout << s << "\n";
+
+  return 0;
+}
+
+【3】派生クラスのオブジェクトを同じクラスから派生したほかのオブジェクトに代入すると、基本クラスのデータもコピーされます。このことを確認するプログラムを次に示します。
+
+#include <iostream>
+using namespace std;
+
+class base {
+  int a;
+public:
+  void load_a(int n) { a = n; }
+  int get_a() { return a; }
+};
+
+class derived : public base {
+  int b;
+public:
+  void load_b(int n) { b = n; }
+  int get_b() { return b; }
+};
+
+int main()
+{
+  derived ob1, ob2;
+
+  ob1.load_a(5);
+  ob1.load_b(10);
+
+  // ob1をob2に代入する
+  ob2 = ob1;
+
+  cout << "ここにob1のaとbがあります: ";
+  cout << ob1.get_a() << ' ' << ob1.get_b() << "\n";
+  cout << "ここにob2のaとbがあります: ";
+  cout << ob2.get_a() << ' ' << ob2.get_b() << "\n";
+
+  return 0;
+}

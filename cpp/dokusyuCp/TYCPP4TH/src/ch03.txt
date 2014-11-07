@@ -1,0 +1,738 @@
+■第3章：目次■
+･････････････････････
+●リスト第3章：前章の理解度チェック【3】
+●リスト第3章：前章の理解度チェック【6】
+●リスト3.1
+●リスト3.1：例【1】
+●リスト3.1：例【2】
+●リスト3.1：例【3】
+●リスト3.1：練習問題【1】
+●リスト3.2：例【1】
+●リスト3.2：例【2】
+●リスト3.2：例【3】
+●リスト3.2：例【4】
+●リスト3.2：練習問題【2】
+●リスト3.3：例【1】
+●リスト3.3：例【2】
+●リスト3.4
+●リスト3.4：例【1】
+●リスト3.4：例【2】
+●リスト3.4：練習問題【1】
+●リスト第3章の理解度チェック【2】
+●リスト第3章の理解度チェック【3】
+●リスト第3章：総合理解度チェック【3】
+･････････････････････
+
+●リスト第3章：前章の理解度チェック【3】
+class planet {
+  int moons;
+  double dist_from_sun;
+  double diameter;
+  double mass;
+public:
+ // ...
+};
+
+●リスト第3章：前章の理解度チェック【6】
+class sample {
+  int a;
+  char c;
+public:
+  sample(int x, char ch) { a = x; c = ch; }
+  // ...
+};
+
+●リスト3.1
+// オブジェクト代入の例
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int a, b;
+public:
+  void set(int i, int j) { a = i; b = j; }
+  void show() { cout << a << ' ' << b << "\n"; }
+};
+
+int main()
+{
+  myclass o1, o2;
+
+  o1.set(10, 4);
+
+  // o1をo2に代入する
+  o2 = o1;
+
+  o1.show();
+  o2.show();
+
+  return 0;
+}
+
+●リスト3.1：例【1】
+// このプログラムには誤りがある
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int a, b;
+public:
+  void set(int i, int j) { a = i; b = j; }
+  void show() { cout << a << ' ' << b << "\n"; }
+};
+
+/* このクラスはmyclassに似ているが、
+   クラス名が異なるので、
+   コンパイラにとってはまったく別個の型のクラスである
+*/
+class yourclass {
+  int a, b;
+public:
+  void set(int i, int j) { a = i; b = j; }
+  void show() { cout << a << ' ' << b << "\n"; }
+};
+
+int main()
+{
+  myclass o1;
+  yourclass o2;
+
+  o1.set(10, 4);
+
+  o2 = o1; // エラー。オブジェクトの型が異なる
+
+  o1.show();
+  o2.show();
+
+  return 0;
+}
+
+●リスト3.1：例【2】
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 文字を格納するstackクラスを宣言する
+class stack { 
+  char stck[SIZE];    // スタック領域を確保する
+  int tos;            // スタックの先頭の索引
+public:
+  stack();            // コンストラクタ
+  void push(char ch); // スタックに文字をプッシュする
+  char pop();         // スタックから文字をポップする
+};
+
+// スタックを初期化する
+stack::stack()
+{
+  cout << "スタックを生成する\n";
+  tos = 0;
+}
+
+// 文字をプッシュする
+void stack::push(char ch)
+{
+  if(tos==SIZE) {
+    cout << "スタックは一杯です\n";
+    return;
+  }
+  stck[tos] = ch;
+  tos++;
+}
+
+// 文字をポップする
+char stack::pop()
+{
+  if(tos==0) {
+    cout << "スタックは空です\n";
+    return 0; // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+int main()
+{
+  // 自動的に初期化される2つのスタックを作成する
+  stack s1, s2;
+  int i;
+
+  s1.push('a');
+  s1.push('b');
+  s1.push('c');
+
+  // s1のクローンを作成する
+  s2 = s1;  // これで、s1とs2は同じになる
+
+  for(i=0; i<3; i++) cout << "s1をポップする: " << s1.pop() << "\n";
+  for(i=0; i<3; i++) cout << "s2をポップする: " << s2.pop() << "\n";
+
+  return 0;
+}
+
+●リスト3.1：例【3】
+// このプログラムにはエラーがある
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class strtype {
+  char *p;
+  int len;
+public:
+  strtype(char *ptr);
+  ~strtype();
+  void show();
+};
+
+strtype::strtype(char *ptr)
+{
+  len = strlen(ptr);
+  p = (char *) malloc(len+1);
+  if(!p) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(p, ptr);
+}
+
+strtype::~strtype()
+{
+  cout << "pを解放する\n";
+  free(p);
+}
+
+void strtype::show()
+{
+  cout << p << " - 長さ: " << len;
+  cout << "\n";
+}
+
+int main()
+{
+  strtype s1("This is a test."), s2("I like C++.");
+
+  s1.show();
+  s2.show();
+
+  // s1をs2に代入する。これによってエラーが発生する
+  s2 = s1;
+
+  s1.show();
+  s2.show();
+
+  return 0;
+}
+
+●リスト3.1：練習問題【1】
+// このプログラムにはエラーがある
+#include <iostream>
+using namespace std;
+
+class cl1 {
+  int i, j;
+public:
+  cl1(int a, int b) { i = a; j = b; }
+  // ...
+};
+
+class cl2 {
+  int i, j;
+public:
+  cl2(int a, int b) { i = a; j = b; }
+  // ...
+};
+
+int main()
+{
+  cl1 x(10, 20);
+  cl2 y(0, 0);
+  x = y;
+  // ...
+}
+
+●リスト3.2：例【1】
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i;
+public:
+  samp(int n) { i = n; }
+  int get_i() { return i; }
+};
+
+// o.iの2乗を返す
+int sqr_it(samp o)
+{
+  return o.get_i() * o.get_i();
+}
+
+int main()
+{
+  samp a(10), b(2);
+
+  cout << sqr_it(a) << "\n";
+  cout << sqr_it(b) << "\n";
+
+  return 0;
+}
+
+●リスト3.2：例【2】
+/*
+   オブジェクトは、ほかの仮引数と同様、値によって渡される
+   したがって、関数の内部で仮引数に変更を加えても、
+   呼び出し時に使用したオブジェクト自体には何の影響もない
+*/
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i;
+public:
+  samp(int n) { i = n; }
+  void set_i(int n) { i = n; }
+  int get_i() { return i; }
+};
+
+/* o.iをその2乗に設定する
+   ただし、sqr_it()を呼び出す際に使われた
+   オブジェクトには何の影響もない
+*/
+void sqr_it(samp o)
+{
+  o.set_i(o.get_i() * o.get_i());
+
+  cout << "iのコピーの値は " << o.get_i();
+  cout << "\n";
+}
+
+int main()
+{
+  samp a(10);
+  sqr_it(a); // 値呼び出し
+
+  cout << "しかし、a.iはmain()で変更されない: ";
+  cout << a.get_i();  // 10を表示する
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト3.2：例【3】
+/*
+   このプログラムでは、sqr_it()関数にオブジェクトのアドレスを渡す
+   関数を呼び出す際にオブジェクトのアドレスを渡すと、
+   関数内でオブジェクトの値を修正できる
+*/
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i;
+public:
+  samp(int n) { i = n; }
+  void set_i(int n) { i = n; }
+  int get_i() { return i; }
+};
+
+/* o.iをその2乗に設定する
+   sqr_it()関数を呼び出す際に使われた
+   オブジェクトに影響する
+*/
+void sqr_it(samp *o)
+{
+  o->set_i(o->get_i() * o->get_i());
+  cout << "iのコピーの値は " << o->get_i();
+  cout << "\n";
+}
+
+int main()
+{
+  samp a(10);
+ 
+  sqr_it(&a); // aのアドレスをsqr_it()関数に渡す
+
+  cout << "今、main()は変更された: ";
+  cout << a.get_i();  // 100を表示する
+  cout << "\n";
+
+  return 0;
+}
+
+●リスト3.2：例【4】
+#include <iostream>
+using namespace std;
+
+class samp {
+  int i;
+public:
+  samp(int n) { 
+    i = n; 
+    cout << "コンストラクタ呼び出し\n";
+  }
+  ~samp() { cout << "デストラクタ呼び出し\n"; }
+  int get_i() { return i; }
+};
+
+// o.iの2乗を返す
+int sqr_it(samp o)
+{
+  return o.get_i() * o.get_i();
+}
+
+int main()
+{
+  samp a(10);
+  cout << sqr_it(a) << "\n";
+ 
+  return 0;
+}
+
+●リスト3.2：練習問題【2】
+// このプログラムにはエラーがある
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class dyna {
+  int *p;
+public:
+  dyna(int i);
+  ~dyna() { free(p); cout << "解放\n"; }
+  int get() { return *p; }
+};
+
+dyna::dyna(int i)
+{
+  p = (int *) malloc(sizeof(int));
+
+  if(!p) {
+    cout << "メモリ割り当て失敗\n";
+    exit(1);
+  }
+  *p = i;
+}
+
+// *ob.pの負の値を返す
+int neg(dyna ob)  
+{
+  return -ob.get();
+}
+
+int main()
+{
+  dyna o(-10);
+
+  cout << o.get() << "\n";
+  cout << neg(o) << "\n";
+
+  dyna o2(20);
+  cout << o2.get() << "\n";
+  cout << neg(o2) << "\n";
+
+  cout << o.get() << "\n";
+  cout << neg(o) << "\n";
+
+  return 0;
+}
+
+●リスト3.3：例【1】
+// オブジェクトを返す
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class samp {
+  char s[80];
+public:
+  void show() { cout << s << "\n"; }
+  void set(char *str) { strcpy(s, str); }
+};
+
+// samp型のオブジェクトを返す
+samp input()
+{
+  char s[80];
+  samp str;
+
+  cout << "文字列の入力: ";
+  cin >> s;
+
+  str.set(s);
+
+  return str;
+}
+
+int main()
+{
+  samp ob;
+
+  // 返されたオブジェクトをobに代入する
+  ob = input();
+  ob.show();
+
+  return 0;
+}
+
+●リスト3.3：例【2】
+// オブジェクトを返すことによってエラーが生成される
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+class samp {
+  char *s;
+public:
+  samp() { s = '\0'; }
+  ~samp() { if(s) free(s); cout << "sを解放する\n"; }
+  void show() { cout << s << "\n"; }
+  void set(char *str);
+};
+
+// 文字列をロードする
+void samp::set(char *str)
+{
+  s = (char *) malloc(strlen(str)+1);
+  if(!s) {
+    cout << "メモリ割り当てエラー\n";
+    exit(1);
+  }
+  strcpy(s, str);
+}
+
+// samp型のオブジェクトを返す
+samp input()
+{
+  char s[80];
+  samp str;
+
+  cout << "文字列の入力: ";
+  cin >> s;
+
+  str.set(s);
+  return str;
+}
+
+int main()
+{
+  samp ob;
+
+  // 返されたオブジェクトをobに代入する
+  ob = input();  // ここでエラーが発生する
+  ob.show();
+
+  return 0;
+}
+
+●リスト3.4
+// フレンド関数の例
+#include <iostream>
+using namespace std;
+
+class myclass {
+  int n, d;
+public:
+  myclass(int i, int j) { n = i; d = j; }
+  // myclassのフレンドを宣言する
+  friend int isfactor(myclass ob);
+};
+
+/* ここでフレンド関数を定義する
+   この関数は、dがnの因数であれば真を返す
+   isfactor()関数の定義では、
+   friendキーワードを使用していないことに注意
+*/
+int isfactor(myclass ob)
+{
+  if(!(ob.n % ob.d)) return 1;
+  else return 0;
+}
+
+int main()
+{
+  myclass ob1(10, 2), ob2(13, 3);
+
+  if(isfactor(ob1)) cout << "2は10の因数\n";
+  else cout << "2は10の因数ではない\n";
+
+  if(isfactor(ob2)) cout << "3は13の因数\n";
+  else cout << "3は13の因数ではない\n";
+
+  return 0;
+}
+
+●リスト3.4：例【1】
+#include <iostream>
+using namespace std;
+
+class truck; // 前方宣言
+
+class car {
+  int passengers;
+  int speed;
+public:
+  car(int p, int s) { passengers = p; speed = s; }
+  friend int sp_greater(car c, truck t);
+};
+
+class truck {
+  int weight;
+  int speed;
+public:
+  truck(int w, int s) { weight = w, speed = s; }
+  friend int sp_greater(car c, truck t);
+};
+
+/* carの速度がtruckよりも速い場合は、正の値を返す
+   速度が同じであれば、0を返す
+   truckの速度がcarよりも速い場合は、負の値を返す
+*/
+int sp_greater(car c, truck t)
+{
+  return c.speed - t.speed;
+}
+
+int main()
+{
+  int t;
+  car c1(6, 55), c2(2, 120);
+  truck t1(10000, 55), t2(20000, 72);
+
+  cout << "c1とt1を比較:\n";
+  t = sp_greater(c1, t1);  
+  if(t<0) cout << "トラックが速い\n";
+  else if(t==0) cout << "乗用車とトラックの速度は同じ\n";
+  else cout << "乗用車が速い\n";
+
+  cout << "\nc2とt2を比較:\n";
+  t = sp_greater(c2, t2);
+  if(t<0) cout << "トラックが速い\n";
+  else if(t==0) cout << "乗用車とトラックの速度は同じ\n";
+  else cout << "乗用車が速い\n";
+
+  return 0;
+}
+
+●リスト3.4：例【2】
+#include <iostream>
+using namespace std;
+
+class truck; // 前方宣言
+
+class car {
+  int passengers;
+  int speed;
+public:
+  car(int p, int s) { passengers = p; speed = s; }
+  int sp_greater(truck t);
+};
+
+class truck {
+  int weight;
+  int speed;
+public:
+  truck(int w, int s) { weight = w, speed = s; }
+  // スコープ解決演算子を新しい方法で使用している
+  friend int car::sp_greater(truck t);
+};
+
+/* carの速度がtruckよりも速い場合は、正の値を返す
+   速度が同じであれば、0を返す
+   truckの速度がcarよりも速い場合は、負の値を返す
+*/
+int car::sp_greater(truck t)
+{
+  /* sp_greater()はcarクラスのメンバなので、
+     truckオブジェクトだけを渡せばよい */
+     
+  return speed-t.speed;
+}
+
+int main()
+{
+  int t;
+  car c1(6, 55), c2(2, 120);
+  truck t1(10000, 55), t2(20000, 72);
+
+  cout << "c1とt1を比較:\n";
+  t = c1.sp_greater(t1);  // carクラスのメンバとして呼び出す
+  if(t<0) cout << "トラックが速い\n";
+  else if(t==0) cout << "乗用車とトラックの速度は同じ\n";
+  else cout << "乗用車が速い\n";
+
+  cout << "\nc2とt2を比較:\n";
+  t = c2.sp_greater(t2); // carクラスのメンバとして呼び出す
+  if(t<0) cout << "トラックが速い\n";
+  else if(t==0) cout << "乗用車とトラックの速度は同じ\n";
+  else cout << "乗用車が速い\n";
+
+  return 0;
+}
+
+●リスト3.4：練習問題【1】
+class pr1 {
+  int printing;
+  // ...
+
+public:
+  pr1() { printing = 0; }
+  void set_print(int status) { printing = status; }
+  // ...
+};
+
+class pr2 {
+  int printing;
+  // ...
+public:
+  pr2() { printing = 0; }
+  void set_print(int status) { printing = status; }
+  // ...
+};
+
+●リスト第3章の理解度チェック【2】
+class samp {
+  double *p;
+public:
+  samp(double d) {
+    p = (double *) malloc(sizeof(double));
+    if(!p) exit(1);  // 代入エラー
+    *p = d;
+  }
+  ~samp() { free(p); }
+  // ...
+};
+
+// ...
+samp ob1(123.09), ob2(0.0);
+// ...
+ob2 = ob1;
+
+●リスト第3章の理解度チェック【3】
+class planet {
+  int moons;
+  double dist_from_sun; // マイル単位
+  double diameter;
+  double mass;
+public:
+  //...
+  double get_miles() { return dist_from_sun; }
+};
+
+●リスト第3章：総合理解度チェック【3】
+class base {
+  int a;
+public:
+  void load_a(int n) { a = n; }
+  int get_a() { return a; }
+};
+
+class derived : public base {
+  int b;
+public:
+  void load_b(int n) { b = n; }
+  int get_b() { return b; }
+};

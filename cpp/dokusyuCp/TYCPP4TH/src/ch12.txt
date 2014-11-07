@@ -1,0 +1,503 @@
+■第12章：目次■
+･････････････････････
+●リスト12.1：例【1】
+●リスト12.1：例【2】
+●リスト12.1：例【3】
+●リスト12.1：例【4】
+●リスト12.1：練習問題【4】
+●リスト12.2：例【1】
+●リスト12.2：例【2】
+●リスト12.2：練習問題【2】
+●リスト12.3：例【1】
+●リスト12.3：例【2】
+●リスト12.3：例【3】
+●リスト12.3：練習問題【2】
+●リスト第12章の理解度チェック【4】
+･････････････････････
+
+●リスト12.1：例【1】
+// typeidの使用例
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+
+class BaseClass {
+  virtual void f() {}; // BaseClassクラスをポリモーフィッククラスにする
+  // ...
+};
+
+class Derived1: public BaseClass {
+  // ...
+};
+
+class Derived2: public BaseClass {
+  // ...
+};
+
+int main()
+{
+  int i;
+  BaseClass *p, baseob;
+  Derived1 ob1;
+  Derived2 ob2;
+
+  // まず、組み込み型の型名を表示する
+  cout << "iのtypeidは ";
+  cout << typeid(i).name() << endl;
+  
+  // ポリモーフィック型へのtypeidの適用例
+  p = &baseob;
+  cout << "pが指しているのはオブジェクトタイプ ";
+  cout << typeid(*p).name() << endl;
+
+  p = &ob1;
+  cout << "pが指しているのはオブジェクトタイプ ";
+  cout << typeid(*p).name() << endl;
+
+  p = &ob2;
+  cout << "pが指しているのはオブジェクトタイプ ";
+  cout << typeid(*p).name() << endl;
+
+  return 0;
+}
+
+●リスト12.1：例【2】
+// 参照に対してtypeidを適用する
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+
+class BaseClass {
+  virtual void f() {}; // BaseClassクラスをポリモーフィッククラスにする
+  // ...
+};
+
+class Derived1: public BaseClass {
+  // ...
+};
+
+class Derived2: public BaseClass {
+  // ...
+};
+
+// 参照仮引数へのtypeidの適用例
+void WhatType(BaseClass &ob)
+{
+  cout << "obが参照しているのはオブジェクトタイプ ";
+  cout << typeid(ob).name() << endl;
+}
+
+int main()
+{
+  int i;
+  BaseClass baseob;
+  Derived1 ob1;
+  Derived2 ob2;
+
+  WhatType(baseob);
+  WhatType(ob1);
+  WhatType(ob2);
+
+  return 0;
+}
+
+●リスト12.1：例【3】
+// typeidに関する==演算子と!=演算子の使用例
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+class X {
+  virtual void f() {}
+};
+
+class Y {
+  virtual void f() {}
+};
+
+int main()
+{
+  X x1, x2;
+  Y y1;
+
+  if(typeid(x1) == typeid(x2))
+    cout << "x1とx2は同じタイプ\n";
+  else
+    cout << "x1とx2は異なるタイプ\n";
+
+  if(typeid(x1) != typeid(y1))
+    cout << "x1とy1は異なるタイプ\n";
+  else
+    cout << "x1とy1は同じタイプ\n";
+
+  return 0;
+}
+
+●リスト12.1：例【4】
+#include <iostream>
+#include <cstdlib>
+#include <typeinfo>
+using namespace std;
+
+class Shape {
+public:
+  virtual void example() = 0;
+};
+
+class Rectangle: public Shape {
+public:
+  void example() {
+    cout << "*****\n*   *\n*   *\n*****\n";
+  }
+};
+
+class Triangle: public Shape {
+public:
+  void example() {
+    cout << "*\n* *\n*  *\n*****\n";
+  }
+};
+
+class Line: public Shape {
+public:
+  void example() {
+    cout << "******\n";
+  }
+};
+
+class NullShape: public Shape {
+public:
+  void example() {
+  }
+};
+
+// Shape派生オブジェクトのファクトリ
+Shape *generator()
+{
+  switch(rand() % 4) {
+    case 0: 
+      return new Line;
+    case 1: 
+      return new Rectangle;
+    case 2: 
+      return new Triangle;
+    case 3: 
+      return new NullShape;
+  }
+  return NULL; 
+}
+    
+int main()
+{
+  int i;
+  Shape *p;
+
+  for(i=0; i<10; i++) {
+    p = generator(); // 次のオブジェクトを取得する
+
+    cout << typeid(*p).name() << endl;
+
+    // NullShapeではない場合だけ、オブジェクトを描画する
+    if(typeid(*p) != typeid(NullShape))
+      p->example();
+  }
+
+  return 0;
+}
+
+●リスト12.1：練習問題【4】
+class B {
+  virtual void f() {}
+};
+ 
+class D1: public B {
+  void f() {}
+};
+
+class D2: public B {
+  void f() {}
+};
+
+int main()
+{
+  B *p;
+
+●リスト12.2：例【1】
+// dynamic_castの使用例
+#include <iostream>
+using namespace std;
+
+class Base {
+public:
+  virtual void f() { cout << "Baseの内部\n"; } 
+  // ...
+};
+
+class Derived : public Base {
+public:
+  void f() { cout << "Derivedの内部\n"; }
+};
+
+int main()
+{
+  Base *bp, b_ob;
+  Derived *dp, d_ob;
+
+  dp = dynamic_cast<Derived *> (&d_ob);
+  if(dp) {
+    cout << "Derived *からDerived *への型変換成功\n";
+    dp->f();
+  } else
+    cout << "失敗\n";
+
+  cout << endl;
+
+  bp = dynamic_cast<Base *> (&d_ob);
+  if(bp) {
+    cout << "Derived *からBase *への型変換成功\n";
+    bp->f();
+  } else 
+    cout << "失敗\n"; 
+
+  cout << endl;
+
+  bp = dynamic_cast<Base *> (&b_ob);
+  if(bp) {
+    cout << "Base *からBase *への型変換成功\n";
+    bp->f();
+  } else 
+    cout << "失敗\n"; 
+
+  cout << endl;
+
+  dp = dynamic_cast<Derived *> (&b_ob);
+  if(dp) 
+    cout << "失敗\n";
+  else
+    cout << "Base *からDerived *への型変換不成功\n";
+
+  cout << endl;
+
+  bp = &d_ob; // bpはDerivedオブジェクトを指す
+  dp = dynamic_cast<Derived *> (bp);
+  if(dp) {
+    cout << "bpのDerived *への型変換成功\n" <<
+      "なぜならbpは実際には\n" <<
+      "Derivedオブジェクトを指しているから\n";
+    dp->f();
+  } else 
+    cout << "失敗\n";
+
+  cout << endl;
+
+  bp = &b_ob; // bpはBaseオブジェクトを指す
+  dp = dynamic_cast<Derived *> (bp);
+  if(dp)
+    cout << "失敗";
+  else {
+    cout << "bpのDerived *への型変換は不成功\n" <<
+      "なぜならbpは実際には\n" <<
+      "Baseオブジェクトを指しているから\n";
+  }  
+  
+  cout << endl;
+
+  dp = &d_ob; // dpはDerivedオブジェクトを指す
+  bp = dynamic_cast<Base *> (dp);
+  if(bp) {
+    cout << "dpのBase *への型変換は成功\n";
+    bp->f();
+  } else
+    cout << "失敗\n";  
+  
+  return 0;
+}
+
+●リスト12.2：例【2】
+// typeidの代わりにdynamic_castを使う
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+
+class Base {
+public:
+  virtual void f() {} 
+};
+
+class Derived : public Base {
+public:
+  void derivedOnly() {
+    cout << "Derivedオブジェクト\n";
+  }
+};
+
+int main()
+{
+  Base *bp, b_ob;
+  Derived *dp, d_ob;
+
+  // ************************************
+  // typeidを使う
+  // ************************************
+  bp = &b_ob;
+  if(typeid(*bp) == typeid(Derived)) {
+    dp = (Derived *) bp;
+    dp->derivedOnly();
+  }
+  else 
+    cout << "BaseからDerivedへの型変換失敗\n";
+  bp = &d_ob;
+  if(typeid(*bp) == typeid(Derived)) {
+    dp = (Derived *) bp;
+    dp->derivedOnly();
+  }
+  else
+    cout << "失敗、型変換はうまくいった\n";
+
+  // ************************************
+  // dynamic_castを使う
+  // ************************************
+  bp = &b_ob;
+  dp = dynamic_cast<Derived *> (bp);
+  if(dp) dp->derivedOnly();
+  else 
+    cout << "BaseからDerivedへの型変換失敗\n";
+
+  bp = &d_ob; 
+  dp = dynamic_cast<Derived *> (bp);
+  if(dp) dp->derivedOnly();
+  else
+    cout << "失敗、型変換はうまくいった\n";
+
+  return 0;
+}
+
+●リスト12.2：練習問題【2】
+class B {
+  virtual void f() {}
+};
+ 
+class D1: public B {
+  void f() {}
+};
+
+class D2: public B {
+  void f() {}
+};
+
+int main()
+{
+  B *p;
+
+●リスト12.3：例【1】
+// reinterpret_castを使用するプログラムの例
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int i;
+  char *p = "This is a string";
+
+  i = reinterpret_cast<int> (p); // ポインタを整数に型変換する
+
+  cout << i;
+  return 0;
+}
+
+●リスト12.3：例【2】
+// const_castを使用するプログラムの例
+#include <iostream>
+using namespace std;
+
+void f(const int *p)
+{
+  int *v;
+  // 型変換によってconst指定を取り除く
+  v = const_cast<int *> (p);
+  *v = 100; // vを介してオブジェクトを修正する
+}
+
+int main()
+{
+  int x = 99;
+
+  cout << "呼び出し前のx: " << x << endl;
+  f(&x);
+  cout << "呼び出し後のx: " << x << endl;
+
+  return 0;
+}
+
+●リスト12.3：例【3】
+// static_castを使用するプログラムの例
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int i;
+  float f;
+
+  f = 199.22;
+  i = static_cast<int> (f);
+
+  cout << i << endl;
+
+  return 0;
+}
+
+●リスト12.3：練習問題【2】
+#include <iostream>
+using namespace std;
+
+void f(const double &i)
+{
+  i = 100; // エラー -- const_castを使用して修正する
+}
+
+int main()
+{
+  double x = 98.6;
+
+  cout << x << endl;
+  f(x);
+  cout << x << endl;
+
+  return 0;
+}
+
+●リスト第12章の理解度チェック【4】
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+
+class A {
+  virtual void f() {}
+};
+
+class B : public A {
+};
+
+class C: public B {
+};
+
+int main()
+{
+  A *p, a_ob;
+  B b_ob;
+  C c_ob;
+  int i;
+
+  cout << "0を入力するとAオブジェクト、";
+  cout << "1でBオブジェクト、";
+  cout << "2でCオブジェクト\n";
+
+  cin >> i;
+
+  if(i==1) p = &b_ob;
+  else if(i==2) p = &c_ob;
+  else p = &a_ob;
+
+  // ユーザーが選択したオブジェクトの型を報告する
+  return 0;
+}

@@ -1,0 +1,545 @@
+■第11章の解答：目次■
+･････････････････････
+第11章：前章の理解度チェック
+11.1：練習問題
+11.2：練習問題
+11.3：練習問題
+11.4：練習問題
+11.5：練習問題
+第11章の理解度チェック
+第11章：総合理解度チェック
+･････････････････････
+
+第11章：前章の理解度チェック
+
+【1】仮想関数とは、基本クラスでvirtualキーワードを使って宣言され、派生クラスでオーバーライドされる関数のことです。
+
+【2】純粋仮想関数とは、基本クラスで本体が定義されていない関数のことです。つまり、派生クラスで関数を上書きしなければなりません。少なくとも1つの純粋仮想関数を含む基本クラスのことを抽象クラスと呼びます。
+
+【3】空欄に当てはまる語は「仮想」と「基本」です。
+
+【4】非純粋仮想関数を派生クラスで上書きしない場合、派生クラスは基本クラスの仮想関数を使用します。
+
+【5】実行時ポリモーフィズムを行う主な利点は、柔軟性が得られることです。主な欠点は実行速度が低下することです。        
+
+11.1：練習問題
+
+【1】（省略）
+
+【2】
+#include <iostream>
+using namespace std;
+
+template <class X> X my_min(X a, X b)
+{
+  if(a<=b) return a;
+  else return b;
+}
+
+int main()
+{
+  cout << my_min(12.2, 2.0);
+  cout << endl;
+  cout << my_min(3, 4);
+  cout << endl;
+  cout << my_min('c', 'a');
+  cout << endl;
+  return 0;
+}
+
+【3】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+template <class X> int find(X object, X *list, int size)
+{
+  int i;
+
+  for(i=0; i<size; i++)
+    if(object == list[i]) return i;
+  return -1;
+}
+
+int main()
+{
+  int a[] = {1, 2, 3, 4};
+  char *c = "this is a test";
+  double d[] = {1.1, 2.2, 3.3};
+
+  cout << find(3, a, 4);
+  cout << endl;
+  cout << find('a', c, (int) strlen(c));
+  cout << endl;
+  cout << find(0.0, d, 3);
+  cout << endl;
+
+  return 0;
+}
+
+【4】汎用関数を使うと、さまざまなデータ型に適用できる汎用のアルゴリズムを定義できます（つまり、データ型ごと特定のアルゴリズムを手作業で明示的に作成する必要がありません）。さらに、汎用関数はC++プログラミングの共通テーマである「1つのインターフェイスで複数のメソッド」という概念を実現するのにも役立ちます。
+
+11.2：練習問題
+
+【1】（省略）
+
+【2】
+// 汎用キューを作成する
+#include <iostream>
+using namespace std;
+
+#define SIZE 100
+
+template <class Qtype> class q_type {
+  Qtype queue[SIZE]; // キューを保存する
+  int head, tail;    // 先頭と末尾の索引
+public:
+  q_type() { head = tail = 0; }
+  void q(Qtype num); // 保存する
+  Qtype deq();       // 取得する
+};
+
+// キューに値をプットする
+template <class Qtype> void q_type<Qtype>::q(Qtype num)
+{
+  if(tail+1==head || (tail+1==SIZE && !head)) {
+    cout << "キューは一杯です\n";
+    return;
+  }
+  tail++;
+  if(tail==SIZE) tail = 0; // 循環する
+  queue[tail] = num;
+}
+
+// キューから値を削除する
+template <class Qtype> Qtype q_type<Qtype>::deq()
+{
+  if(head == tail) {
+    cout << "キューは空です\n";
+    return 0;              // またはその他のエラーインジケータ
+  }
+  head++;
+  if(head==SIZE) head = 0; // 循環する
+  return queue[head];
+}
+
+int main()
+{
+  q_type<int> q1;
+  q_type<char> q2;
+  int i;
+
+  for(i=1; i<=10; i++) {
+    q1.q(i);
+    q2.q(i-1+'A');
+  }
+
+  for(i=1; i<=10; i++) {
+    cout << "キューを取り除きます（q1）: " << q1.deq() << "\n";
+    cout << "キューを取り除きます（q2）: " << q2.deq() << "\n";
+  }
+  return 0;
+}
+
+【3】
+#include <iostream>
+using namespace std;
+
+template <class X> class input {
+  X data;
+public:
+  input(char *s, X min, X max);
+  // ...
+};
+
+template <class X> 
+input<X>::input(char *s, X min, X max)
+{
+  do {
+    cout << s << ": ";
+    cin >> data;
+  } while( data < min || data > max);
+}
+
+int main()
+{
+  input<int> i("整数を入力する", 0, 10);
+  input<char> c("文字を入力する", 'A', 'Z');
+
+  return 0;
+}
+
+11.3：練習問題
+
+【1】（省略）
+
+【2】tryブロックを通る前にthrow文が呼び出されています。
+
+【3】文字例外が投げられますが、catch文では文字ポインタしか処理していません（つまり、文字例外を処理するための対応するcatch文がありません）。
+
+【4】対応するcatch文のない例外が投げられると、terminate()関数が呼び出されてプログラムが異常終了します。
+
+11.4：練習問題
+
+【1】（省略）
+
+【2】throwに対応するcatch文がありません。
+
+【3】1つの解決法としては、catch(int)ハンドラを作成する方法があります。もう1つの解決法としては、catch(...)ハンドラを作成してすべて例外を捕獲する方法があります。
+
+【4】すべての例外を捕獲する文はcatch(...)です。
+
+【5】
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+double divide(double a, double b)
+{
+  try {
+    if(!b) throw(b);
+  }
+  catch(double) {
+    cout << "0で割れません\n";
+    exit(1);
+  }
+  return a/b;
+}
+
+int main()
+{
+  cout << divide(10.0, 2.5) << endl;
+  cout << divide(10.0, 0.0) << endl;
+
+  return 0;
+}
+
+11.5：練習問題
+
+【1】デフォルトでは、new演算子は割り当てエラーが発生したときに例外を投げます。これに対して、new(nothrow)は、メモリ割り当てエラーが発生したときにヌルポインタを返します。
+
+【2】
+p = new(nothrow) int;
+
+if(!p) {
+  cout << "メモリ割り当てエラー\n";
+  // ...
+}
+
+try {
+  p = new int;
+} catch(bad_alloc ba) {
+  cout << "メモリ割り当てエラー\n";
+  // ...
+}
+
+第11章の理解度チェック
+
+【1】
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+// 汎用のモード検索関数
+template <class X> X mode(X *data, int size)
+{
+  register int t, w;
+  X md, oldmd;
+  int count, oldcount;
+
+  oldmd = 0;
+  oldcount = 0;
+  for(t=0; t<size; t++) {
+    md = data[t];
+    count = 1;
+    for(w = t+1; w < size; w++) 
+      if(md==data[w]) count++;
+    if(count > oldcount) {
+      oldmd = md;
+      oldcount = count;
+    }
+  }
+  return oldmd;
+}
+
+int main()
+{
+  int i[] = { 1, 2, 3, 4, 2, 3, 2, 2, 1, 5};
+  char *p = "this is a test";
+
+  cout << "iのモード: " << mode(i, 10) << endl;
+  cout << "pのモード: " << mode(p, (int) strlen(p)) << endl;
+
+  return 0;
+}
+
+【2】
+#include <iostream>
+using namespace std;
+
+template <class X> X sum(X *data, int size)
+{
+  int i;
+  X result = 0;
+
+  for(i=0; i<size; i++) result += data[i];
+
+  return result;
+}
+
+int main()
+{
+  int i[] = {1, 2, 3, 4};
+  double d[] = {1.1, 2.2, 3.3, 4.4};
+
+  cout << sum(i, 4) << endl;
+  cout << sum(d, 4) << endl;
+
+  return 0;
+}
+
+【3】
+#include <iostream>
+using namespace std;
+
+// 汎用のバブルソート
+template <class X> void bubble(X *data, int size)
+{
+  register int a, b;
+  X t;
+
+  for(a=1; a < size; a++)
+    for(b=size-1; b >= a; b--)
+      if(data[b-1] > data[b]) {
+        t = data[b-1];
+        data[b-1] = data[b];
+        data[b] = t;
+      }
+}
+
+int main()
+{
+  int i[] = {3, 2, 5, 6, 1, 8, 9, 3, 6, 9};
+  double d[] = {1.2, 5.5, 2.2, 3.3};
+  int j;
+
+  bubble(i, 10); // intをソートする
+  bubble(d, 4);  // doubleをソートする
+
+  for(j=0; j<10; j++) cout << i[j] << ' ';
+  cout << endl;
+
+  for(j=0; j<4; j++) cout << d[j] << ' ';
+  cout << endl;
+
+  return 0;
+}
+
+【4】
+/* この関数では、2つの値を保持する汎用の
+   スタックを作成する */
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 汎用のスタッククラスを作成する
+template <class StackType> class stack {
+  StackType stck[SIZE][2]; // スタック領域を確保する
+  int tos;                 // スタック先頭の索引
+
+public:
+  void init() { tos = 0; } 
+  void push(StackType ob, StackType ob2); 
+  StackType pop(StackType &ob2); 
+};
+
+// オブジェクトをプッシュする
+template <class StackType>
+void stack<StackType>::push(StackType ob, StackType ob2)
+{
+  if(tos==SIZE) {
+    cout << "スタックが一杯です\n";
+    return;
+  }
+  stck[tos][0] = ob;
+  stck[tos][1] = ob2;
+  tos++;
+}
+
+// オブジェクトをポップする
+template <class StackType> 
+StackType stack<StackType>::pop(StackType &ob2)
+{
+  if(tos==0) {
+    cout << "スタックが空です\n";
+    return 0;             // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  ob2 = stck[tos][1];
+  return stck[tos][0];
+}
+
+int main()
+{
+  // 文字スタックの例
+  stack<char> s1, s2;      // 2つのスタックを作成する
+  int i;
+  char ch;
+
+  // スタックを初期化する
+  s1.init();
+  s2.init();
+
+  s1.push('a', 'b');
+  s2.push('x', 'z');
+  s1.push('b', 'd');
+  s2.push('y', 'e');
+  s1.push('c', 'a');
+  s2.push('z', 'x');
+
+  for(i=0; i<3; i++) {
+    cout << "s1をポップする: " << s1.pop(ch);
+    cout << ' ' << ch << "\n";
+  }
+  for(i=0; i<3; i++) {
+    cout << "s2をポップする: " << s2.pop(ch);
+    cout << ' ' << ch << "\n";
+  }
+
+  // doubleスタックの例
+  stack<double> ds1, ds2;  // 2つのスタックを作成する
+  double d;
+
+  // スタックを初期化する
+  ds1.init();
+  ds2.init();
+
+  ds1.push(1.1, 2.0);
+  ds2.push(2.2, 3.0);
+  ds1.push(3.3, 4.0);
+  ds2.push(4.4, 5.0);
+  ds1.push(5.5, 6.0);
+  ds2.push(6.6, 7.0);
+
+  for(i=0; i<3; i++) {
+    cout << "ds1をポップする: " << ds1.pop(d);
+    cout << ' '<< d << "\n";
+  }
+
+  for(i=0; i<3; i++) {
+    cout << "ds2をポップする: " << ds2.pop(d);
+    cout << ' '<< d << "\n";
+  }
+
+  return 0;
+}
+
+【5】try、catch、throwの一般形式は次のとおりです。
+
+try {
+  // tryブロック
+  throw exp;
+}
+catch(type arg) {
+  // ...
+}
+
+【6】
+/* この関数では、例外処理を含む
+   汎用スタックを作成する */
+#include <iostream>
+using namespace std;
+
+#define SIZE 10
+
+// 汎用スタッククラスを作成する
+template <class StackType> class stack {
+  StackType stck[SIZE];    // スタック領域を確保する
+  int tos;                 // スタック先頭の索引
+
+public:
+  void init() { tos = 0; } // スタックを初期化する
+  void push(StackType ch); // スタックにオブジェクトを
+                           // プッシュする
+  StackType pop();      // スタックからオブジェクトをポップする
+};
+
+// オブジェクトをプッシュする
+template <class StackType>
+void stack<StackType>::push(StackType ob)
+{
+  try {
+    if(tos==SIZE) throw SIZE;
+  }
+  catch(int) {
+    cout << "スタックが一杯です\n";
+    return;
+  }
+  stck[tos] = ob;
+  tos++;
+}
+
+// オブジェクトをポップする
+template <class StackType> 
+StackType stack<StackType>::pop()
+{
+  try {
+    if(tos==0) throw 0;
+  }
+  catch(int) {
+    cout << "スタックが空です\n";
+    return 0;              // スタックが空の場合はヌルを返す
+  }
+  tos--;
+  return stck[tos];
+}
+
+int main()
+{
+  // 文字スタックの例
+  stack<char> s1, s2;      // 2つのスタックを作成する
+  int i;
+  // スタックを初期化する
+  s1.init();
+  s2.init();
+
+  s1.push('a');
+  s2.push('x');
+  s1.push('b');
+  s2.push('y');
+  s1.push('c');
+  s2.push('z');
+
+  for(i=0; i<3; i++) cout << "s1をポップする: " << s1.pop() << "\n";
+  for(i=0; i<4; i++) cout << "s2をポップする: " << s2.pop() << "\n";
+
+  // doubleスタックの例
+  stack<double> ds1, ds2;  // 2つのスタックを作成する
+
+  // スタックを初期化する
+  ds1.init();
+  ds2.init();
+
+  ds1.push(1.1);
+  ds2.push(2.2);
+  ds1.push(3.3);
+  ds2.push(4.4);
+  ds1.push(5.5);
+  ds2.push(6.6);
+
+  for(i=0; i<3; i++) cout << "ds1をポップする: " << ds1.pop() << "\n";
+  for(i=0; i<4; i++) cout << "ds2をポップする: " << ds2.pop() << "\n";
+
+  return 0;
+}
+
+【7】（省略）
+
+【8】割り当てエラーが発生してnew演算子が例外を投げた場合は、何らかの方法で必ずエラーを処理することができます（単にプログラムを異常終了することもあります）。これに対して、ヌルポインタを返すことによって報告される割り当てエラーは、この点をプログラムコードでチェックしないと見過ごされてしまう可能性があります。問題となるのはプログラムでヌルポインタを使おうとしたときで、プログラムはしばらくは正常に動作するかもしれませんが、やがて誤動作を始め、最終的には予測不可能な（繰り返しが不可能な）方法でクラッシュします。これは診断の困難な種類のバグです。
+
+第11章：総合理解度チェック
+
+【1】（省略）
+
+【2】（省略）
