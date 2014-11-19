@@ -10,7 +10,7 @@ class strtype{
 		char *getstring(){return p;}
 		int getlength(){return len;}
 		strtype();
-		strtype(const char *,int bytes);
+		strtype(const char *,int);
 };
 
 strtype::strtype(){
@@ -30,13 +30,16 @@ strtype::strtype(const char *str,int bytes){
 
 int main(){
 	strtype s1;
-	strtype s2("this is strtype2.");
+	strtype s2("this is strtype2.",17);
+
 	cout << "s1:" << endl;
-	cout << s1.getstring << endl;
-	cout << s1.getlength << endl << endl;
+	cout << s1.getstring() << endl;
+	cout << s1.getlength() << endl;
 
 	cout << "s2:" << endl;
-		<< s2.getstring << endl;
-		<< s2.getlength << endl << endl;
+	cout << s2.getstring() << endl;
+	cout << s2.getlength() << endl;
+	
+
 	return 0;
 }
