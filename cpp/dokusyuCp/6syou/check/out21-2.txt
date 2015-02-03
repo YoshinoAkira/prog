@@ -1,0 +1,43 @@
+cons
+cons
+cons
+cons
+最初
+this is s1 hoge.
+This is s2 hogehoge.
+None
+None
+
+cons
+des
+
+copy cons
+des
+
+s3にs1とs2を連結したものを代入
+this is s1 hoge.
+This is s2 hogehoge.
+this is s1 hoge.This is s2 hogehoge.
+this is s1 hoge.
+
+s1==s2:0
+s1==s4:1
+cons
+cons
+cons
+s5ab
+s6bb
+s7ac
+s5>s6: 0
+s5<s6: 1
+s5>s7: 0
+s5<s7: 1
+s6>s7: 1
+s6<s7: 0
+des
+des
+des
+des
+des
+des
+des

@@ -15,7 +15,7 @@ class strtype{
 	~strtype(){delete [] p;cout << "des\n";}
 	void show(){cout << p << endl;}
 	
-	strtype operator+(strtype ob);
+	strtype operator+(strtype &ob);
 	strtype &operator=(strtype ob);
 	int operator<(strtype &ob);
 	int operator>(strtype &ob);
@@ -36,7 +36,7 @@ strtype::strtype(const strtype &ob){
 	cout << "copy cons\n";
 }
 
-strtype strtype::operator+(strtype ob){
+strtype strtype::operator+(strtype &ob){
 	int length = len+ob.len-1;
 	char *tempstr= new char [length];
 	strcpy(tempstr,p);
